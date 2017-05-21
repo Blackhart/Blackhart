@@ -16,22 +16,23 @@ struct  sVector4
 typedef struct sVector4     Vector4;
 typedef struct sVector4     vec4;
 
-vec4    Addition(vec4 const* const, vec4 const* const);
-vec4    Substract(vec4 const* const, vec4 const* const);
-vec4    Multiply(vec4 const* const, real);
-vec4    Divide(vec4 const* const, real);
-real    Magnitude(vec4 const* const);
-void    Set(vec4* const, real const x, real const y, real const z, real const w);
-vec4    Copy(vec4 const* const);
-void    Assign(vec4* const, vec4 const* const);
-real    Dot(vec4 const* const, vec4 const* const);
-vec4    Cross(vec4 const* const, vec4 const* const);
-vec4    Negate(vec4 const* const);
-real    Angle(vec4 const* const, vec4 const* const);
-real    Distance(vec4 const* const, vec4 const* const);
-vec4    Normalize(vec4 const* const);
-vec4    Lerp(vec4 const* const, vec4 const* const, real const t);
-vec4    Max(vec4 const* const, vec4 const* const);
-vec4    Min(vec4 const* const, vec4 const* const);
+vec4    Addition_vec4_vec4(vec4 const* const, vec4 const* const);
+vec4    Substract_vec4_vec4(vec4 const* const, vec4 const* const);
+vec4    Multiply_vec4_real(vec4 const* const, real);
+vec4    Multiply_vec4_mat4(vec4 const* const, mat4 const* const);
+vec4    Divide_vec4_real(vec4 const* const, real);
+real    Magnitude_vec4(vec4 const* const);
+void    Set_vec4(vec4* const, real const x, real const y, real const z, real const w);
+vec4    Copy_vec4(vec4 const* const);
+void    Assign_vec4(vec4* const, vec4 const* const);
+real    Dot_vec4(vec4 const* const, vec4 const* const);
+vec4    Cross_vec4(vec4 const* const, vec4 const* const);
+vec4    Negate_vec4(vec4 const* const);
+real    Angle_vec4(vec4 const* const, vec4 const* const);
+real    Distance_vec4(vec4 const* const, vec4 const* const);
+vec4    Normalize_vec4(vec4 const* const);
+vec4    Lerp_vec4(vec4 const* const, vec4 const* const, real const t);
+vec4    Max_vec4(vec4 const* const, vec4 const* const);
+vec4    Min_vec4(vec4 const* const, vec4 const* const);
 
 #endif
