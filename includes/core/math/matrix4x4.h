@@ -16,6 +16,8 @@ struct sMatrix4x4
 typedef struct sMatrix4x4   Matrix4x4;
 typedef struct sMatrix4x4   mat4;
 
+// ~~~~~ Impl(PUBLIC) ~~~~~
+
 mat4    Identity_mat4();
 mat4    Multiply_mat4_mat4(mat4 const* const, mat4 const* const);
 mat4    Multiply_mat4_real(mat4 const* const, real const);

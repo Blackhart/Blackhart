@@ -18,6 +18,8 @@ struct  sVector4
 typedef struct sVector4     Vector4;
 typedef struct sVector4     vec4;
 
+// ~~~~~ Impl(PUBLIC) ~~~~~
+
 vec4    Addition_vec4_vec4(vec4 const* const, vec4 const* const);
 vec4    Substract_vec4_vec4(vec4 const* const, vec4 const* const);
 vec4    Multiply_vec4_real(vec4 const* const, real);
