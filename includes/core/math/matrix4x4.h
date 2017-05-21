@@ -2,7 +2,8 @@
 #define __BK_MATRIX4X4_h__
 
 #include "../../pil/pil.h"
-#include "vector4.h"
+
+struct sVector4;
 
 struct sMatrix4x4
 {
@@ -18,7 +19,7 @@ typedef struct sMatrix4x4   mat4;
 mat4    Identity_mat4();
 mat4    Multiply_mat4_mat4(mat4 const* const, mat4 const* const);
 mat4    Multiply_mat4_real(mat4 const* const, real const);
-void    Set_mat4(mat4* const, vec4 const* const, vec4 const* const, vec4 const* const, vec4 const* const);
+void    Set_mat4(mat4* const, struct sVector4 const* const, struct sVector4 const* const, struct sVector4 const* const, struct sVector4 const* const);
 mat4    Copy_mat4(mat4 const* const);
 void    Assign_mat4(mat4* const, mat4 const* const);
 mat4    Transpose_mat4(mat4 const* const);

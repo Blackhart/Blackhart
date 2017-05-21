@@ -5,6 +5,8 @@
 
 #include "../../pil/pil.h"
 
+struct sMatrix4x4;
+
 struct  sVector4
 {
     real    x;
@@ -19,7 +21,7 @@ typedef struct sVector4     vec4;
 vec4    Addition_vec4_vec4(vec4 const* const, vec4 const* const);
 vec4    Substract_vec4_vec4(vec4 const* const, vec4 const* const);
 vec4    Multiply_vec4_real(vec4 const* const, real);
-vec4    Multiply_vec4_mat4(vec4 const* const, mat4 const* const);
+vec4    Multiply_vec4_mat4(vec4 const* const, struct sMatrix4x4 const* const);
 vec4    Divide_vec4_real(vec4 const* const, real);
 real    Magnitude_vec4(vec4 const* const);
 void    Set_vec4(vec4* const, real const x, real const y, real const z, real const w);

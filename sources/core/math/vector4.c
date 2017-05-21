@@ -1,4 +1,5 @@
 #include "../../../includes/core/math/vector4.h"
+#include "../../../includes/core/math/matrix4x4.h"
 
 real    Magnitude_vec4(vec4 const* const a)
 {
