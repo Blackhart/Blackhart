@@ -17,17 +17,16 @@ message("~~~ ${BLACKHART_PROJECT_NAME} ~~~")
 
 set(BLACKHART_PATH "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}")
 
-file(GLOB_RECURSE CppFiles src/*.cpp)
-file(GLOB_RECURSE HppFiles include/*.hpp)
-file(GLOB_RECURSE InlFiles include/*.inl)
+file(GLOB_RECURSE CFiles sources/*.c)
+file(GLOB_RECURSE HFiles includes/*.h)
 
 option(BUILD_BLACKHART_AS_SHARED_LIBS "Build Blackhart as shared libs ?" OFF)
 if (BUILD_BLACKHART_AS_SHARED_LIBS)
 	message("${BLACKHART_PROJECT_NAME}: Library:(SHARED)")
-	add_library(${BLACKHART_PROJECT_NAME} SHARED ${CppFiles} ${HppFiles} ${InlFiles})
+	add_library(${BLACKHART_PROJECT_NAME} SHARED ${CFiles} ${HFiles})
 else (BUILD_BLACKHART_AS_SHARED_LIBS)
 	message("${BLACKHART_PROJECT_NAME}: Library:(STATIC)")
-	add_library(${BLACKHART_PROJECT_NAME} STATIC ${CppFiles} ${HppFiles} ${InlFiles})
+	add_library(${BLACKHART_PROJECT_NAME} STATIC ${CFiles} ${HFiles})
 endif (BUILD_BLACKHART_AS_SHARED_LIBS)
 
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/include")
