@@ -5,7 +5,4 @@
 
 // ~~~~~ Dcl(INTERNAL | PUBLIC) ~~~~~
 
-extern void	Initialize(void);
-extern void	Uninitialize(void);
-
 #endif
