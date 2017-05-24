@@ -6,7 +6,7 @@
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	BkInitialize(char const* const* pExtensions, uint8 const pExtensionCount);
+extern void	BkInitialize(BkGraphicsInfo const* const);
 extern void	BkUninitialize();
 
 #endif

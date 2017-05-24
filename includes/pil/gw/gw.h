@@ -3,9 +3,25 @@
 
 #include "../adt.h"
 
+enum eGraphicsAPI
+{
+	BK_GRAPHICS_API_VULKAN
+};
+
+struct sGraphicsInfo
+{
+	enum eGraphicsAPI	api;
+	char const* const*	extensions;
+	uint32				extensionCount;
+};
+
+typedef struct sGraphicsInfo	BkGraphicsInfo;
+
+// ~~~~~ IMPL ~~~~~
+
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void		GwGetDeviceExtensions(char** pExtensions);
-extern void		GwGetDeviceExtensionCount(uint32* const pExtensionCount);
+extern void		BkGetSupportedExtensions(char** const* const pExtensions);
+extern void		BkGetSupportedExtensionCount(uint32* const pExtensionCount);
 
 #endif

@@ -1,11 +1,13 @@
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "../includes/pil/gw/gw.h"
 #include "../../../includes/pil/gw/vulkan.h"
 #include "../../../includes/pil/adt.h"
-#include <stdlib.h>
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(char const* const* pExtensions, uint8 const pExtensionCount);
+extern void	GwInitialize(BkGraphicsInfo const* const);
 extern void	GwUninitialize();
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
@@ -17,12 +19,12 @@ static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const, VkAppli
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	GwInitialize(char const* const* pExtensions, uint8 const pExtensionCount)
+void	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
 	VkApplicationInfo lAppInfo;
 	VkInstanceCreateInfo lInstInfo;
 	Initialize_VkApplicationInfo(&lAppInfo);
-	Initialize_VkInstanceCreateInfo(&lInstInfo, &lAppInfo, pExtensions, pExtensionCount);
+	Initialize_VkInstanceCreateInfo(&lInstInfo, &lAppInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
 	VkResult lResult = vkCreateInstance(&lInstInfo, NULL, &__vkInstance);
 	if (lResult != VK_SUCCESS)
 		return;
@@ -33,14 +35,24 @@ void	GwUninitialize()
 	vkDestroyInstance(__vkInstance, NULL);
 }
 
-void	GwGetDeviceExtensions(char** pExtensions)
+void	BkGetSupportedExtensions(char** const* const dst)
 {
+	VkExtensionProperties*	lExtensions = NULL;
 	uint32	lExtensionCount = 0;
-	GwGetDeviceExtensionCount(&lExtensionCount);
-	//vkEnumerateInstanceExtensionProperties(NULL, &lExtensionCount, pExtensions);
+
+	BkGetSupportedExtensionCount(&lExtensionCount);
+	lExtensions = malloc(lExtensionCount * sizeof(VkExtensionProperties));
+	if (lExtensions == NULL)
+		return;
+	vkEnumerateInstanceExtensionProperties(NULL, &lExtensionCount, lExtensions);
+	for (uint32 lIndex = 0; lIndex < lExtensionCount; ++lIndex)
+		(*dst)[lIndex] = lExtensions[lIndex].extensionName;
+	for (uint32 lIndex = 0; lIndex < lExtensionCount; ++lIndex)
+		printf("%s\n", (*dst)[lIndex]);
+	free(lExtensions);
 }
 
-void	GwGetDeviceExtensionCount(uint32* const pExtensionCount)
+void	BkGetSupportedExtensionCount(uint32* const pExtensionCount)
 {
 	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, NULL);
 }
@@ -49,8 +61,7 @@ static void	Initialize_VkApplicationInfo(VkApplicationInfo* const ptr)
 {
 	ptr->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	ptr->pNext = NULL;
-	ptr->pApplicationName = "Hello Triangle";
-	ptr->applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+	ptr->pApplicationName = NULL;
 	ptr->pEngineName = "Blackhart Engine | Vulkan Renderer";
 	ptr->engineVersion = VK_MAKE_VERSION(0, 1, 0);
 	ptr->apiVersion = VK_API_VERSION_1_0;

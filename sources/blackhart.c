@@ -2,14 +2,14 @@
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(char const* const* pExtensions, uint8 const pExtensionCount);
+extern void	GwInitialize(BkGraphicsInfo const* const);
 extern void	GwUninitialize();
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	BkInitialize(char const* const* pExtensions, uint8 const pExtensionCount)
+void	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
-	GwInitialize(pExtensions, pExtensionCount);
+	GwInitialize(pGraphicsInfo);
 }
 
 void	BkUninitialize()
