@@ -1,11 +1,9 @@
 #ifndef __BK_GW_H__
 #define __BK_GW_H__
 
-#include "../adt.h"
+// ~~~~~ Dcl(PUBLIC) ~~~~~
 
-// ~~~~~ Dcl(INTERNAL | PUBLIC) ~~~~~
-
-extern void	GwInitialize(char const* const pExtensions, uint8 const pExtensionCount);
-extern void	GwUninitialize();
+extern void		GwGetDeviceExtensions(char** pExtensions);
+extern void		GwGetDeviceExtensionCount(uint32* const pExtensionCount);
 
 #endif

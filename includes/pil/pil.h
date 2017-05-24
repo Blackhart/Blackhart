@@ -2,5 +2,6 @@
 #define __BK_PLATFORM_INDEPENDANCE_LAYER_H__
 
 #include "adt.h"
+#include "gw\gw.h"
 
 #endif

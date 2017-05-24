@@ -3,6 +3,6 @@
 
 #include <vulkan/vulkan.h>
 
-// ~~~~~ Dcl(INTERNAL | PUBLIC) ~~~~~
+// ~~~~~ Dcl(PUBLIC) ~~~~~
 
 #endif

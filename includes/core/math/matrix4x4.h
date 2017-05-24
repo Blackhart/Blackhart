@@ -1,7 +1,7 @@
 #ifndef __BK_MATRIX4X4_h__
 #define __BK_MATRIX4X4_h__
 
-#include "../../pil/pil.h"
+#include "../../pil/adt.h"
 
 struct sVector4;
 
@@ -16,7 +16,7 @@ struct sMatrix4x4
 typedef struct sMatrix4x4   Matrix4x4;
 typedef struct sMatrix4x4   mat4;
 
-// ~~~~~ Impl(PUBLIC) ~~~~~
+// ~~~~~ Dcl(PUBLIC) ~~~~~
 
 mat4    Identity_mat4();
 mat4    Multiply_mat4_mat4(mat4 const* const, mat4 const* const);
