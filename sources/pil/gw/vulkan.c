@@ -1,10 +1,11 @@
 #include "../includes/pil/gw/gw.h"
 #include "../../../includes/pil/gw/vulkan.h"
 #include "../../../includes/pil/adt.h"
+#include <stdlib.h>
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(char const* const pExtensions, uint8 const pExtensionCount);
+extern void	GwInitialize(char const* const* pExtensions, uint8 const pExtensionCount);
 extern void	GwUninitialize();
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
@@ -12,11 +13,11 @@ extern void	GwUninitialize();
 static VkInstance	__vkInstance = NULL;
 
 static void	Initialize_VkApplicationInfo(VkApplicationInfo* const);
-static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const, VkApplicationInfo const* const, char const* const pExtensions, uint8 const pExtensionCount);
+static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const, VkApplicationInfo const* const, char const* const* pExtensions, uint8 const pExtensionCount);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	GwInitialize(char const* const pExtensions, uint8 const pExtensionCount)
+void	GwInitialize(char const* const* pExtensions, uint8 const pExtensionCount)
 {
 	VkApplicationInfo lAppInfo;
 	VkInstanceCreateInfo lInstInfo;
@@ -41,22 +42,28 @@ void	GwGetDeviceExtensions(char** pExtensions)
 
 void	GwGetDeviceExtensionCount(uint32* const pExtensionCount)
 {
-	vkEnumerateInstanceExtensionProperties(NULL, &pExtensionCount, NULL);
+	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, NULL);
 }
 
 static void	Initialize_VkApplicationInfo(VkApplicationInfo* const ptr)
 {
 	ptr->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	ptr->pNext = NULL;
+	ptr->pApplicationName = "Hello Triangle";
+	ptr->applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 	ptr->pEngineName = "Blackhart Engine | Vulkan Renderer";
 	ptr->engineVersion = VK_MAKE_VERSION(0, 1, 0);
 	ptr->apiVersion = VK_API_VERSION_1_0;
 }
 
-static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const ptr, VkApplicationInfo const* const pAppInfo, char const* const pExtensions, uint8 const pExtensionCount)
+static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const ptr, VkApplicationInfo const* const pAppInfo, char const* const* pExtensions, uint8 const pExtensionCount)
 {
 	ptr->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	ptr->pNext = NULL;
+	ptr->flags = 0;
 	ptr->pApplicationInfo = pAppInfo;
 	ptr->enabledExtensionCount = pExtensionCount;
 	ptr->ppEnabledExtensionNames = pExtensions;
 	ptr->enabledLayerCount = 0;
+	ptr->ppEnabledLayerNames = NULL;
 }
