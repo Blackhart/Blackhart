@@ -1,7 +1,7 @@
 #ifndef __BK_MATRIX4X4_h__
 #define __BK_MATRIX4X4_h__
 
-#include "../../pil/adt.h"
+#include "pil/adt.h"
 
 struct sVector4;
 

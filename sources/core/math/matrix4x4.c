@@ -1,5 +1,5 @@
-#include "../../../includes/core/math/matrix4x4.h"
-#include "../../../includes/core/math/vector4.h"
+#include "core/math/matrix4x4.h"
+#include "core/math/vector4.h"
 
 mat4    Identity_mat4()
 {

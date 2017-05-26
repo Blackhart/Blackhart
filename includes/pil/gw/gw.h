@@ -1,7 +1,7 @@
 #ifndef __BK_GW_H__
 #define __BK_GW_H__
 
-#include "../adt.h"
+#include "pil\adt.h"
 
 enum eGraphicsAPI
 {

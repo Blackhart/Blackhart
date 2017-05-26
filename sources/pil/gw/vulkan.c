@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../includes/pil/gw/gw.h"
-#include "../../../includes/pil/gw/vulkan.h"
-#include "../../../includes/pil/adt.h"
+#include "pil/gw/gw.h"
+#include "pil/gw/vulkan.h"
+#include "pil/adt.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
@@ -22,6 +22,7 @@ static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const, VkAppli
 void	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
 	VkApplicationInfo lAppInfo;
+	// lAppInfo = 28 | lInstInfo = 32 |=> Memory Repacking = char[4]
 	VkInstanceCreateInfo lInstInfo;
 	Initialize_VkApplicationInfo(&lAppInfo);
 	Initialize_VkInstanceCreateInfo(&lInstInfo, &lAppInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
@@ -38,6 +39,7 @@ void	GwUninitialize()
 void	BkGetSupportedExtensions(char** const* const dst)
 {
 	VkExtensionProperties*	lExtensions = NULL;
+	// lExtensions = 4[x86] or 8[x64] | lExtensionCount = 4 |=> Memory Repacking = char[0] 
 	uint32	lExtensionCount = 0;
 
 	BkGetSupportedExtensionCount(&lExtensionCount);

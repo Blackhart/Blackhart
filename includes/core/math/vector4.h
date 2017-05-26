@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-#include "../../pil/adt.h"
+#include "pil/adt.h"
 
 struct sMatrix4x4;
 
