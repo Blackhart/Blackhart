@@ -63,7 +63,7 @@ void	GwGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensio
 		size_t lLength = strlen(lpExtensionsProp[lIndex].extensionName) + 1;
 
 		// Allocate memory block for the extension name
-		(*pppExtensions)[lIndex] = NULL;//malloc(lLength * sizeof(char));
+		(*pppExtensions)[lIndex] = malloc(lLength * sizeof(char));
 		if ((*pppExtensions)[lIndex] == NULL)
 			goto cleanup_pppExtensions;
 
