@@ -15,13 +15,11 @@ struct sGraphicsInfo
 	uint32				extensionCount;
 };
 
-typedef struct sGraphicsInfo	BkGraphicsInfo;
-
-// ~~~~~ IMPL ~~~~~
+typedef struct sGraphicsInfo	GwGraphicsInfo;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void		BkGetSupportedExtensions(char** const* const pExtensions);
-extern void		BkGetSupportedExtensionCount(uint32* const pExtensionCount);
+extern void	GwGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions);
+extern void	GwGetSupportedExtensionCount(uint32* const pExtensionCount);
 
 #endif

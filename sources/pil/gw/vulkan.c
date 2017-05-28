@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "pil/gw/gw.h"
 #include "pil/gw/vulkan.h"
@@ -7,7 +8,7 @@
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(BkGraphicsInfo const* const);
+extern void	GwInitialize(GwGraphicsInfo const* const);
 extern void	GwUninitialize();
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
@@ -15,68 +16,101 @@ extern void	GwUninitialize();
 static VkInstance	__vkInstance = NULL;
 
 static void	Initialize_VkApplicationInfo(VkApplicationInfo* const);
-static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const, VkApplicationInfo const* const, char const* const* pExtensions, uint8 const pExtensionCount);
+static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const, VkInstanceCreateInfo* const, char const* const* pExtensions, uint8 const pExtensionCount);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
+void	GwInitialize(GwGraphicsInfo const* const pGraphicsInfo)
 {
 	VkApplicationInfo lAppInfo;
 	// lAppInfo = 28 | lInstInfo = 32 |=> Memory Repacking = char[4]
 	VkInstanceCreateInfo lInstInfo;
 	Initialize_VkApplicationInfo(&lAppInfo);
-	Initialize_VkInstanceCreateInfo(&lInstInfo, &lAppInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
+	Initialize_VkInstanceCreateInfo(&lAppInfo, &lInstInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
 	VkResult lResult = vkCreateInstance(&lInstInfo, NULL, &__vkInstance);
 	if (lResult != VK_SUCCESS)
 		return;
 }
 
-void	GwUninitialize()
+void	GwUninitialize(void)
 {
 	vkDestroyInstance(__vkInstance, NULL);
 }
 
-void	BkGetSupportedExtensions(char** const* const dst)
+void	GwGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
 {
-	VkExtensionProperties*	lExtensions = NULL;
-	// lExtensions = 4[x86] or 8[x64] | lExtensionCount = 4 |=> Memory Repacking = char[0] 
-	uint32	lExtensionCount = 0;
+	VkExtensionProperties* lpExtensionsProp = NULL;
 
-	BkGetSupportedExtensionCount(&lExtensionCount);
-	lExtensions = malloc(lExtensionCount * sizeof(VkExtensionProperties));
-	if (lExtensions == NULL)
-		return;
-	vkEnumerateInstanceExtensionProperties(NULL, &lExtensionCount, lExtensions);
-	for (uint32 lIndex = 0; lIndex < lExtensionCount; ++lIndex)
-		(*dst)[lIndex] = lExtensions[lIndex].extensionName;
-	for (uint32 lIndex = 0; lIndex < lExtensionCount; ++lIndex)
-		printf("%s\n", (*dst)[lIndex]);
-	free(lExtensions);
+	// Get supported extensions count
+	GwGetSupportedExtensionCount(pExtensionCount);
+
+	// Allocate memory block for the extension properties
+	lpExtensionsProp = malloc(*pExtensionCount * sizeof(VkExtensionProperties));
+	if (lpExtensionsProp == NULL)
+		goto error;
+
+	// Allocate memory block for the extensions array to return
+	*pppExtensions = malloc(*pExtensionCount * sizeof(char*));
+	if (*pppExtensions == NULL)
+		goto cleanup_lpExtensionsProp;
+
+	// Retrieve the extensions supported by the device
+	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, lpExtensionsProp);
+
+	for (uint32 lIndex = 0; lIndex < *pExtensionCount; ++lIndex)
+	{
+		// Get the length of the extension name
+		size_t lLength = strlen(lpExtensionsProp[lIndex].extensionName) + 1;
+
+		// Allocate memory block for the extension name
+		(*pppExtensions)[lIndex] = NULL;//malloc(lLength * sizeof(char));
+		if ((*pppExtensions)[lIndex] == NULL)
+			goto cleanup_pppExtensions;
+
+		// Copy enxtension name from the extension properties struct to the extensions array to return
+		memcpy((*pppExtensions)[lIndex], lpExtensionsProp[lIndex].extensionName, lLength);
+		(*pppExtensions)[lIndex][lLength] = '\0';
+	}
+
+	// Return the extensions array
+	free(lpExtensionsProp);
+	return;
+
+cleanup_pppExtensions:
+	for (uint32 i = 0; i < *pExtensionCount && (*pppExtensions)[i] != NULL; ++i)
+			free((*pppExtensions)[i]);
+	free(*pppExtensions);
+
+cleanup_lpExtensionsProp:
+	free(lpExtensionsProp);
+
+error:
+	return;
 }
 
-void	BkGetSupportedExtensionCount(uint32* const pExtensionCount)
+void	GwGetSupportedExtensionCount(uint32* const pExtensionCount)
 {
 	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, NULL);
 }
 
-static void	Initialize_VkApplicationInfo(VkApplicationInfo* const ptr)
+static void	Initialize_VkApplicationInfo(VkApplicationInfo* const pAppInfo)
 {
-	ptr->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	ptr->pNext = NULL;
-	ptr->pApplicationName = NULL;
-	ptr->pEngineName = "Blackhart Engine | Vulkan Renderer";
-	ptr->engineVersion = VK_MAKE_VERSION(0, 1, 0);
-	ptr->apiVersion = VK_API_VERSION_1_0;
+	pAppInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	pAppInfo->pNext = NULL;
+	pAppInfo->pApplicationName = NULL;
+	pAppInfo->pEngineName = "Blackhart Engine | Vulkan Renderer";
+	pAppInfo->engineVersion = VK_MAKE_VERSION(0, 1, 0);
+	pAppInfo->apiVersion = VK_API_VERSION_1_0;
 }
 
-static void	Initialize_VkInstanceCreateInfo(VkInstanceCreateInfo* const ptr, VkApplicationInfo const* const pAppInfo, char const* const* pExtensions, uint8 const pExtensionCount)
+static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const pAppInfo, VkInstanceCreateInfo* const pInstInfo, char const* const* ppExtensions, uint8 const ExtensionCount)
 {
-	ptr->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	ptr->pNext = NULL;
-	ptr->flags = 0;
-	ptr->pApplicationInfo = pAppInfo;
-	ptr->enabledExtensionCount = pExtensionCount;
-	ptr->ppEnabledExtensionNames = pExtensions;
-	ptr->enabledLayerCount = 0;
-	ptr->ppEnabledLayerNames = NULL;
+	pInstInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	pInstInfo->pNext = NULL;
+	pInstInfo->flags = 0;
+	pInstInfo->pApplicationInfo = pAppInfo;
+	pInstInfo->enabledExtensionCount = ExtensionCount;
+	pInstInfo->ppEnabledExtensionNames = ppExtensions;
+	pInstInfo->enabledLayerCount = 0;
+	pInstInfo->ppEnabledLayerNames = NULL;
 }
