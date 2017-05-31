@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-#include "../../pil/pil.h"
+#include "pil/adt.h"
 
 struct  sMatrix4x4;
 struct  sVector4
@@ -17,7 +17,7 @@ struct  sVector4
 typedef struct sVector4     Vector4;
 typedef struct sVector4     vec4;
 
-// ~~~~~ Impl(PUBLIC) ~~~~~
+// ~~~~~ Dcl(PUBLIC) ~~~~~
 
 extern vec4    Addition_vec4_vec4(vec4 const* const, vec4 const* const);
 extern vec4    Substract_vec4_vec4(vec4 const* const, vec4 const* const);

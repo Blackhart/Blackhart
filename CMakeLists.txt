@@ -29,7 +29,7 @@ else (BUILD_BLACKHART_AS_SHARED_LIBS)
 	add_library(${BLACKHART_PROJECT_NAME} STATIC ${CFiles} ${HFiles})
 endif (BUILD_BLACKHART_AS_SHARED_LIBS)
 
-target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/include")
+target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/includes")
 
 
 # extlibs
