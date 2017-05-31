@@ -1,5 +1,6 @@
-#include "blackhart.h"
+#include <assert.h>
 
+#include "blackhart.h"
 #include "pil\gw\gw.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
@@ -13,6 +14,9 @@ extern void	GwGetSupportedExtensionCount(uint32* const pExtensionCount);
 
 void	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
+	assert(pGraphicsInfo != NULL);
+	assert(pGraphicsInfo->extensions == NULL && pGraphicsInfo->extensionCount > 0);
+
 	GwInitialize(pGraphicsInfo);
 }
 
@@ -23,6 +27,8 @@ void	BkUninitialize(void)
 
 void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
 {
+	assert(*pppExtensions == NULL);
+
 	GwGetSupportedExtensions(pExtensionCount, pppExtensions);
 }
 
