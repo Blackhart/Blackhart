@@ -32,6 +32,34 @@ void	GwInitialize(GwGraphicsInfo const* const pGraphicsInfo)
 		return;
 }
 
+static void	Initialize_VkApplicationInfo(VkApplicationInfo* const pAppInfo)
+{
+	assert(pAppInfo != NULL);
+
+	pAppInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	pAppInfo->pNext = NULL;
+	pAppInfo->pApplicationName = NULL;
+	pAppInfo->pEngineName = "Blackhart Engine | Vulkan Renderer";
+	pAppInfo->engineVersion = VK_MAKE_VERSION(0, 1, 0);
+	pAppInfo->apiVersion = VK_API_VERSION_1_0;
+}
+
+static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const pAppInfo, VkInstanceCreateInfo* const pInstInfo, char const* const* ppExtensions, uint8 const ExtensionCount)
+{
+	assert(pAppInfo != NULL);
+	assert(pInstInfo != NULL);
+	assert((ppExtensions == NULL || *ppExtensions == NULL) && ExtensionCount > 0);
+
+	pInstInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	pInstInfo->pNext = NULL;
+	pInstInfo->flags = 0;
+	pInstInfo->pApplicationInfo = pAppInfo;
+	pInstInfo->enabledExtensionCount = ExtensionCount;
+	pInstInfo->ppEnabledExtensionNames = ppExtensions;
+	pInstInfo->enabledLayerCount = 0;
+	pInstInfo->ppEnabledLayerNames = NULL;
+}
+
 void	GwUninitialize(void)
 {
 	vkDestroyInstance(__vkInstance, NULL);
@@ -91,32 +119,4 @@ error:
 void	GwGetSupportedExtensionCount(uint32* const pExtensionCount)
 {
 	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, NULL);
-}
-
-static void	Initialize_VkApplicationInfo(VkApplicationInfo* const pAppInfo)
-{
-	assert(pAppInfo != NULL);
-
-	pAppInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	pAppInfo->pNext = NULL;
-	pAppInfo->pApplicationName = NULL;
-	pAppInfo->pEngineName = "Blackhart Engine | Vulkan Renderer";
-	pAppInfo->engineVersion = VK_MAKE_VERSION(0, 1, 0);
-	pAppInfo->apiVersion = VK_API_VERSION_1_0;
-}
-
-static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const pAppInfo, VkInstanceCreateInfo* const pInstInfo, char const* const* ppExtensions, uint8 const ExtensionCount)
-{
-	assert(pAppInfo != NULL);
-	assert(pInstInfo != NULL);
-	assert((ppExtensions == NULL || *ppExtensions == NULL) && ExtensionCount > 0);
-
-	pInstInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	pInstInfo->pNext = NULL;
-	pInstInfo->flags = 0;
-	pInstInfo->pApplicationInfo = pAppInfo;
-	pInstInfo->enabledExtensionCount = ExtensionCount;
-	pInstInfo->ppEnabledExtensionNames = ppExtensions;
-	pInstInfo->enabledLayerCount = 0;
-	pInstInfo->ppEnabledLayerNames = NULL;
 }
