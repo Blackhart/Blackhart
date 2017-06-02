@@ -3,8 +3,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "pil/gw/gw.h"
-#include "pil/gw/vulkan.h"
+#include "pil/graphic_wrapper/gw.h"
+#include "pil/graphic_wrapper/vulkan.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
@@ -34,8 +34,6 @@ void	GwInitialize(GwGraphicsInfo const* const pGraphicsInfo)
 
 static void	Initialize_VkApplicationInfo(VkApplicationInfo* const pAppInfo)
 {
-	assert(pAppInfo != NULL);
-
 	pAppInfo->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	pAppInfo->pNext = NULL;
 	pAppInfo->pApplicationName = NULL;
@@ -46,10 +44,6 @@ static void	Initialize_VkApplicationInfo(VkApplicationInfo* const pAppInfo)
 
 static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const pAppInfo, VkInstanceCreateInfo* const pInstInfo, char const* const* ppExtensions, uint8 const ExtensionCount)
 {
-	assert(pAppInfo != NULL);
-	assert(pInstInfo != NULL);
-	assert((ppExtensions == NULL || *ppExtensions == NULL) && ExtensionCount > 0);
-
 	pInstInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	pInstInfo->pNext = NULL;
 	pInstInfo->flags = 0;
