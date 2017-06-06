@@ -3,8 +3,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "pil/graphic_wrapper/gw.h"
-#include "pil/graphic_wrapper/vulkan.h"
+#include "pil/gw/gw.h"
+#include "pil/gw/vulkan.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 

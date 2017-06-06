@@ -2,7 +2,7 @@
 #define __BK_PLATFORM_INDEPENDANCE_LAYER_H__
 
 #include "adt.h"
-#include "graphic_wrapper\gw.h"
-#include "file_system\file.h"
+#include "gw\gw.h"
+#include "fs\file.h"
 
 #endif

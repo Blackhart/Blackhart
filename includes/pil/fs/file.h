@@ -1,6 +1,8 @@
 #ifndef __BK_FILE_H__
 #define __BK_FILE_H__
 
+#define WINDOWS
+
 #include "pil\adt.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

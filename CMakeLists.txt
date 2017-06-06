@@ -55,4 +55,15 @@ set(VULKAN_INCLUDE_PATH "${VULKAN_PATH}/Include" CACHE PATH "Vulkan's include di
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${VULKAN_INCLUDE_PATH}")
 message("vulkan: include_path:(${VULKAN_INCLUDE_PATH})")
 
+
+# Samples
+
+set(BLACKHART_SAMPLES_PATH "${BLACKHART_PATH}/samples")
+
+option(BUILD_BLACKHART_SAMPLES "Build the Blackhart's samples" OFF)
+if (BUILD_BLACKHART_SAMPLES)
+	add_subdirectory("${BLACKHART_SAMPLES_PATH}")
+endif (BUILD_BLACKHART_SAMPLES)
+
+
 message("")

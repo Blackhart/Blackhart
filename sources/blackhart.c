@@ -1,5 +1,5 @@
 #include "blackhart.h"
-#include "pil\graphic_wrapper\gw.h"
+#include "pil\gw\gw.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
