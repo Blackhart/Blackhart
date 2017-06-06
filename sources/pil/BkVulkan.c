@@ -3,12 +3,12 @@
 #include <string.h>
 #include <assert.h>
 
-#include "pil/gw/gw.h"
-#include "pil/gw/vulkan.h"
+#include "pil\BkGraphicWrapper.h"
+#include "pil\BkVulkan.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(GwGraphicsInfo const* const);
+extern void	GwInitialize(BkGraphicsInfo const* const);
 extern void	GwUninitialize();
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
@@ -20,13 +20,15 @@ static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const, VkIn
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	GwInitialize(GwGraphicsInfo const* const pGraphicsInfo)
+void	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
-	VkApplicationInfo lAppInfo;
+	VkApplicationInfo		lAppInfo;
 	// lAppInfo = 28 | lInstInfo = 32 |=> Memory Repacking = char[4]
-	VkInstanceCreateInfo lInstInfo;
+	VkInstanceCreateInfo	lInstInfo;
+
 	Initialize_VkApplicationInfo(&lAppInfo);
 	Initialize_VkInstanceCreateInfo(&lAppInfo, &lInstInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
+
 	VkResult lResult = vkCreateInstance(&lInstInfo, NULL, &__vkInstance);
 	if (lResult != VK_SUCCESS)
 		return;
@@ -59,12 +61,12 @@ void	GwUninitialize(void)
 	vkDestroyInstance(__vkInstance, NULL);
 }
 
-void	GwGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
+void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
 {
 	VkExtensionProperties* lpExtensionsProp = NULL;
 
 	// Get supported extensions count
-	GwGetSupportedExtensionCount(pExtensionCount);
+	BkGetSupportedExtensionCount(pExtensionCount);
 
 	// Allocate memory block for the extension properties
 	lpExtensionsProp = malloc(*pExtensionCount * sizeof(VkExtensionProperties));
@@ -110,7 +112,7 @@ error:
 	return;
 }
 
-void	GwGetSupportedExtensionCount(uint32* const pExtensionCount)
+void	BkGetSupportedExtensionCount(uint32* const pExtensionCount)
 {
 	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, NULL);
 }

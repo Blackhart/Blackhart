@@ -1,8 +1,10 @@
 #ifndef __BK_LOGGER_H__
 #define __BK_LOGGER_H__
 
+#include <stdarg.h>
+
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	Log(char const* const pFormat);
+extern void	BkLog(char const* const pFormat, ...);
 
 #endif

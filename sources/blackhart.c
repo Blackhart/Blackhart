@@ -1,31 +1,23 @@
-#include "blackhart.h"
-#include "pil\gw\gw.h"
+#include "Blackhart.h"
+#include "pil\BkGraphicWrapper.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(GwGraphicsInfo const* const);
+extern void	GwInitialize(BkGraphicsInfo const* const);
 extern void	GwUninitialize(void);
-extern void	GwGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions);
-extern void	GwGetSupportedExtensionCount(uint32* const pExtensionCount);
+extern void	FsInitialize(void);
+extern void	FsUninitialize(void);
 
 // ~~~~~ Def(ALL) ~~~~~
 
 void	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
+	FsInitialize();
 	GwInitialize(pGraphicsInfo);
 }
 
 void	BkUninitialize(void)
 {
+	FsUninitialize();
 	GwUninitialize();
-}
-
-void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
-{
-	GwGetSupportedExtensions(pExtensionCount, pppExtensions);
-}
-
-void	BkGetSupportedExtensionCount(uint32* const pExtensionCount)
-{
-	GwGetSupportedExtensionCount(pExtensionCount);
 }

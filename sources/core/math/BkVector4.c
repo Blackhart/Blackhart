@@ -1,5 +1,5 @@
-#include "core/math/vector4.h"
-#include "core/math/matrix4x4.h"
+#include "core\math\BkVector4.h"
+#include "core\math\BkMatrix4x4.h"
 
 vec4    Lerp_vec4(vec4 const* const from, vec4 const* const to, real const t)
 {
