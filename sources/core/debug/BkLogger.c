@@ -16,7 +16,7 @@ static BkFlux*	__BkGlobalLogFile = NULL;
 
 void	FsInitialize(void)
 {
-	BkOpenFlux(&__BkGlobalLogFile, "Log\Global.txt", "w");
+	BkOpenFlux(&__BkGlobalLogFile, "Global.txt", "w");
 }
 
 void	FsUninitialize(void)

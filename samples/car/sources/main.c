@@ -25,9 +25,8 @@ int	main()
 	lGraphicsInfo.api = BK_GRAPHICS_API_VULKAN;
 	lGraphicsInfo.extensions = glfwGetRequiredInstanceExtensions(&lExtensionCount);
 	lGraphicsInfo.extensionCount = lExtensionCount;
-	BkInitialize(&lGraphicsInfo);
-
-	BkLog("%s", "Coucou Hiboux!");
+	if (BkInitialize(&lGraphicsInfo) != 0)
+		return -1;
 
 	glfwSetErrorCallback(Error_callback);
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -35,7 +34,7 @@ int	main()
 	if (lWindow == NULL)
 	{
 		glfwTerminate();
-		return 0;
+		return -1;
 	}
 	glfwSetKeyCallback(lWindow, key_callback);
 	while (!glfwWindowShouldClose(lWindow))
@@ -45,5 +44,5 @@ int	main()
 	BkUninitialize();
 	glfwDestroyWindow(lWindow);
 	glfwTerminate();
-	return 1;
+	return 0;
 }

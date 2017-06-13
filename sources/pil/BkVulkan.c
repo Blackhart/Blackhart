@@ -5,10 +5,11 @@
 
 #include "pil\BkGraphicWrapper.h"
 #include "pil\BkVulkan.h"
+#include "core\debug\BkLogger.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(BkGraphicsInfo const* const);
+extern int8	GwInitialize(BkGraphicsInfo const* const);
 extern void	GwUninitialize();
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
@@ -20,7 +21,7 @@ static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const, VkIn
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
+int8	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
 	VkApplicationInfo		lAppInfo;
 	// lAppInfo = 28 | lInstInfo = 32 |=> Memory Repacking = char[4]
@@ -30,8 +31,12 @@ void	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 	Initialize_VkInstanceCreateInfo(&lAppInfo, &lInstInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
 
 	VkResult lResult = vkCreateInstance(&lInstInfo, NULL, &__vkInstance);
-	if (lResult != VK_SUCCESS)
-		return;
+	if (lResult == VK_SUCCESS)
+	{
+		BkLog("GwInitialize() : FAILED TO INITIALIZE VULKAN!\n");
+		return -1;
+	}
+	return 0;
 }
 
 static void	Initialize_VkApplicationInfo(VkApplicationInfo* const pAppInfo)

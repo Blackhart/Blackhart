@@ -3,17 +3,18 @@
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	GwInitialize(BkGraphicsInfo const* const);
+extern int8	GwInitialize(BkGraphicsInfo const* const);
 extern void	GwUninitialize(void);
 extern void	FsInitialize(void);
 extern void	FsUninitialize(void);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo)
+int8	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
 	FsInitialize();
-	GwInitialize(pGraphicsInfo);
+	if (GwInitialize(pGraphicsInfo) != 0)
+		return -1;
 }
 
 void	BkUninitialize(void)
