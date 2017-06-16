@@ -16,7 +16,7 @@ void	BkCloseFlux(BkFlux const* const* const ppFlux)
 
 void	BkWriteToFlux_arglist(BkFlux const* const pFlux, char const* const pFormat, ...)
 {
-	va_list	lArgList;
+	va_list	lArgList; // 4 bytes
 
 	va_start(lArgList, pFormat);
 
@@ -40,8 +40,8 @@ void	BkCombinePath(char* const pDest, char const* const pStr1, char const* const
 		strcpy(pDest, pStr1);
 	else
 	{
-		uint8	lSeparatorIndex = strlen(pStr1);
-		uint8	lEOLIndex = 0;
+		uint8	lSeparatorIndex = strlen(pStr1); // 1 byte
+		uint8	lEOLIndex = 0; // 1 byte
 
 		strcpy(pDest, pStr1);
 		pDest[lSeparatorIndex] = '\\';

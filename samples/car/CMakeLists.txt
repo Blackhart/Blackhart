@@ -25,9 +25,15 @@ target_include_directories(${CAR_PROJECT_NAME} PUBLIC "${${BLACKHART_PROJECT_NAM
 if (NOT BUILD_BLACKHART_AS_SHARED_LIBS)
 	target_link_libraries(${CAR_PROJECT_NAME} Blackhart)
 	target_include_directories(${CAR_PROJECT_NAME} PUBLIC "${VULKAN_INCLUDE_PATH}")
+	target_include_directories(${CAR_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH}")
 	if (VULKAN_LIBRARY)
 		target_link_libraries(${CAR_PROJECT_NAME} "${VULKAN_LIBRARY}")
 	endif ()
+	if (GLEW_AUTO_COMPILE)
+		target_link_libraries(${CAR_PROJECT_NAME} glew)
+	else ()
+		target_link_libraries(${CAR_PROJECT_NAME} debug "${GLEW_DEBUG_LIBRARY}" optimized "${GLEW_RELEASE_LIBRARY}")
+	endif()
 endif()
 
 

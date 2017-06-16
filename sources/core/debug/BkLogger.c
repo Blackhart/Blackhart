@@ -5,8 +5,8 @@
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern void	FsInitialize(void);
-extern void	FsUninitialize(void);
+extern void	LgInitialize(void);
+extern void	LgUninitialize(void);
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
 
@@ -14,19 +14,19 @@ static BkFlux*	__BkGlobalLogFile = NULL;
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	FsInitialize(void)
+void	LgInitialize(void)
 {
-	BkOpenFlux(&__BkGlobalLogFile, "Global.txt", "w");
+	BkOpenFlux(&__BkGlobalLogFile, "Log.txt", "w");
 }
 
-void	FsUninitialize(void)
+void	LgUninitialize(void)
 {
 	BkCloseFlux(&__BkGlobalLogFile);
 }
 
 void	BkLog(char const* const pFormat, ...)
 {
-	va_list	lArgList;
+	va_list	lArgList; // 4 bytes
 
 	va_start(lArgList, pFormat);
 

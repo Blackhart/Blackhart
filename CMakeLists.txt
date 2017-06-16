@@ -56,6 +56,35 @@ target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${VULKAN_INCLUDE_PA
 message("vulkan: include_path:(${VULKAN_INCLUDE_PATH})")
 
 
+# Glew
+
+message("")
+set(GLEW_PATH "${BLACKHART_EXTLIBS_PATH}/glew")
+
+option(GLEW_AUTO_COMPILE "Will glew must be compile with ${BLACKHART_PROJECT_NAME}?!" OFF)
+if (GLEW_AUTO_COMPILE)
+	message("glew: AUTO COMPILE")
+	add_subdirectory("${GLEW_PATH}/build/cmake")
+	target_link_libraries(${BLACKHART_PROJECT_NAME} glew)
+else ()
+	message("glew: !(AUTO COMPILE)")
+	set(GLEW_LIBRARY_PATH "${GLEW_PATH}/lib" CACHE PATH "Library directory of the glew library")
+	find_library(GLEW_DEBUG_LIBRARY NAMES glew32d PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
+	find_library(GLEW_RELEASE_LIBRARY NAMES glew32 PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
+	if (NOT GLEW_DEBUG_LIBRARY OR NOT GLEW_RELEASE_LIBRARY)
+		message("glew: Library not found!")
+	else ()
+		message("glew: Library found!")
+		target_link_libraries(${BLACKHART_PROJECT_NAME} debug "${GLEW_DEBUG_LIBRARY}" optimized "${GLEW_RELEASE_LIBRARY}")
+	endif ()
+	message("glew: Debug/library_path:(${GLEW_DEBUG_LIBRARY}) | Release/library_path:(${GLEW_RELEASE_LIBRARY})")
+endif()
+
+set(GLEW_INCLUDE_PATH "${GLEW_PATH}/include" CACHE PATH "Include directory of the glew library")
+target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH}")
+message("glew: include_path:(${GLEW_INCLUDE_PATH})")
+
+
 # Samples
 
 set(BLACKHART_SAMPLES_PATH "${BLACKHART_PATH}/samples")

@@ -23,15 +23,15 @@ static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const, VkIn
 
 int8	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
-	VkApplicationInfo		lAppInfo;
-	// lAppInfo = 28 | lInstInfo = 32 |=> Memory Repacking = char[4]
-	VkInstanceCreateInfo	lInstInfo;
+	VkApplicationInfo		lAppInfo; // 28 bytes
+	VkResult				lResult; // 4 bytes
+	VkInstanceCreateInfo	lInstInfo; // 32 bytes
 
 	Initialize_VkApplicationInfo(&lAppInfo);
 	Initialize_VkInstanceCreateInfo(&lAppInfo, &lInstInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
 
-	VkResult lResult = vkCreateInstance(&lInstInfo, NULL, &__vkInstance);
-	if (lResult == VK_SUCCESS)
+	lResult = vkCreateInstance(&lInstInfo, NULL, &__vkInstance);
+	if (lResult != VK_SUCCESS)
 	{
 		BkLog("GwInitialize() : FAILED TO INITIALIZE VULKAN!\n");
 		return -1;
@@ -68,7 +68,7 @@ void	GwUninitialize(void)
 
 void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
 {
-	VkExtensionProperties* lpExtensionsProp = NULL;
+	VkExtensionProperties* lpExtensionsProp = NULL; // 4 bytes
 
 	// Get supported extensions count
 	BkGetSupportedExtensionCount(pExtensionCount);
@@ -83,7 +83,7 @@ void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensio
 	if (*pppExtensions == NULL)
 		goto cleanup_lpExtensionsProp;
 
-	// Retrieve the extensions supported by the device
+	// Retrieve the list of extension properties supported by the device
 	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, lpExtensionsProp);
 
 	for (uint32 lIndex = 0; lIndex < *pExtensionCount; ++lIndex)
@@ -96,7 +96,7 @@ void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensio
 		if ((*pppExtensions)[lIndex] == NULL)
 			goto cleanup_pppExtensions;
 
-		// Copy enxtension name from the extension properties struct to the extensions array to return
+		// Copy enxtension name from the extension property struct to the extensions array to return
 		memcpy((*pppExtensions)[lIndex], lpExtensionsProp[lIndex].extensionName, lLength);
 		(*pppExtensions)[lIndex][lLength] = '\0';
 	}

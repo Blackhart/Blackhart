@@ -12,8 +12,6 @@ enum eGraphicsAPI
 
 struct sGraphicsInfo
 {
-	char const* const*	extensions;
-	uint32				extensionCount;
 	enum eGraphicsAPI	api;
 };
 
@@ -21,7 +19,6 @@ typedef struct sGraphicsInfo	BkGraphicsInfo;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions);
-extern void	BkGetSupportedExtensionCount(uint32* const pExtensionCount);
+extern void	Render();
 
 #endif
