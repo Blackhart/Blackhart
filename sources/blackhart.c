@@ -14,6 +14,7 @@ int8	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 	LgInitialize();
 	if (GwInitialize(pGraphicsInfo) != 0)
 		return -1;
+	return 0;
 }
 
 void	BkUninitialize(void)

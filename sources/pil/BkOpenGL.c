@@ -11,7 +11,7 @@ void	GwUninitialize();
 
 int8	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
 {
-	GLenum	lResult = GLEW_OK;
+	GLenum	lResult = GLEW_OK; // 4 bytes
 
 	lResult = glewInit();
 	if (lResult != GLEW_OK)

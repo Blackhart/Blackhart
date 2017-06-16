@@ -19,6 +19,6 @@ typedef struct sGraphicsInfo	BkGraphicsInfo;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	Render();
+extern void	BkRender();
 
 #endif

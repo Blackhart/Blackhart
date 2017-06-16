@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static void key_callback(GLFWwindow* pWindow, int pKey, int pScancode, int pAction, int pMods)
+static void	key_callback(GLFWwindow* pWindow, int pKey, int pScancode, int pAction, int pMods)
 {
 	if (pKey == GLFW_KEY_ESCAPE && pAction == GLFW_PRESS)
 		glfwSetWindowShouldClose(pWindow, GLFW_TRUE);
@@ -22,8 +22,10 @@ int	main()
 
 	glfwSetErrorCallback(Error_callback);
 
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	GLFWwindow* lWindow = glfwCreateWindow(640, 480, "Models", NULL, NULL);
 	if (lWindow == NULL)
 	{
@@ -44,7 +46,7 @@ int	main()
 	uint32	lHeight = 0;
 	while (!glfwWindowShouldClose(lWindow))
 	{
-		glfwGetFramebufferSize(lWindow, lWidth, lHeight);
+		glfwGetFramebufferSize(lWindow, &lWidth, &lHeight);
 		glViewport(0, 0, lWidth, lHeight);
 		glfwSwapBuffers(lWindow);
 		glfwPollEvents();
