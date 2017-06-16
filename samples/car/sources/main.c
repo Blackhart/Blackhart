@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include <GLFW\glfw3.h>
 #include <blackhart.h>
 
@@ -38,6 +37,16 @@ int	main()
 	lGraphicsInfo.api = BK_GRAPHICS_API_OPENGL;
 	if (BkInitialize(&lGraphicsInfo) != 0)
 		return -1;
+
+	BkShader* lVertexShader = NULL;
+	BkShader* lPixelShader = NULL;
+	if (BkCreateShader(&lVertexShader, "../../../shaders/vertex.glsl") != 0)
+		return -1;
+	if (BkCreateShader(&lPixelShader, "../../../shaders/pixel.glsl") != 0)
+		return -1;
+
+	BkReleaseShader(&lPixelShader);
+	BkReleaseShader(&lVertexShader);
 
 	glfwSetKeyCallback(lWindow, key_callback);
 	glfwSwapInterval(1);

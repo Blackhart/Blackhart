@@ -31,6 +31,7 @@ void	GwUninitialize()
 
 void	BkRender()
 {
-	real	lClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	static real const	lClearColor[4] = { 0.0f, 1.0f, 0.0f, 1.0f }; // Float precision: 16 bytes | Double precision: 32 bytes
+	
 	glClearBufferfv(GL_COLOR, 0, lClearColor);
 }

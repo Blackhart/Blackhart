@@ -12,10 +12,11 @@ typedef FILE	BkFlux;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	BkOpenFlux(BkFlux const** const ppFlux, char const* const pFilename, char const* const pMode);
-extern void	BkCloseFlux(BkFlux const* const* const ppFlux);
-extern void	BkWriteToFlux_arglist(BkFlux const* const pFlux, char const* const pFormat, ...);
-extern void	BkWriteToFlux_valist(BkFlux const* const pFlux, char const* const pFormat, va_list const ArgList);
-extern void	BkCombinePath(char* const pDest, char const* const pStr1, char const* const pStr2);
+extern void	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode);
+extern int8	BkCloseFlux(BkFlux** ppFlux);
+extern int8	BkWriteToFlux_arglist(BkFlux const* pFlux, char const* pFormat, ...);
+extern int8	BkWriteToFlux_valist(BkFlux const* pFlux, char const* pFormat, va_list const ArgList);
+extern int8	BkReadFromFlux(BkFlux const* pFlux, char** ppBuffer, uint32* pBufferSize);
+extern void	BkCombinePath(char* pDest, char const* pStr1, char const* pStr2);
 
 #endif

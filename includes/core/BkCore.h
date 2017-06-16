@@ -3,5 +3,6 @@
 
 #include "math\BkMath.h"
 #include "debug\BkLogger.h"
+#include "graphics\BkShader.h"
 
 #endif
