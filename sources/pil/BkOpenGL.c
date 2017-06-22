@@ -15,7 +15,7 @@ BkResult	GwInitialize()
 
 	lResult = glewInit();
 	if (lResult != GLEW_OK)
-		BkDie("Glew error : %s\nFailed to initialize OpenGL!", glewGetErrorString(lResult));
+		BkDie(BK_ERROR_LOCATION "Glew error : %s\nFailed to initialize OpenGL!", glewGetErrorString(lResult));
 	
 	return BK_SUCCESS;
 }

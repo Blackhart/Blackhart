@@ -11,15 +11,11 @@ extern BkResult	LgUninitialize(void);
 
 BkResult	BkInitialize()
 {
-	BkResult	lResult = BK_SUCCESS; // 1 byte
+	if (BK_FAILED(LgInitialize()))
+		return BK_FAILURE;
 
-	lResult = LgInitialize();
-	if (BK_FAILED(lResult))
-		return lResult;
-
-	lResult = GwInitialize();
-	if (BK_FAILED(lResult))
-		return lResult;
+	if (BK_FAILED(GwInitialize()))
+		return BkError(BK_ERROR_LOCATION "Failed to initialize the graphics wrapper!");
 	
 	return BK_SUCCESS;
 }

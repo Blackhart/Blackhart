@@ -13,6 +13,10 @@
 #define BK_FAILED(Error)		(Error != BK_SUCCESS)
 #define BK_FAILED_ASSERT(Error)	(assert(!BK_FAILED(Error)))
 
+#define STRINGIFY(Msg)		#Msg
+#define TOSTRING(Msg)		STRINGIFY(Msg)
+#define BK_ERROR_LOCATION	__FILE__ ", Line" TOSTRING(__LINE__) ": "
+
 typedef int8	BkResult;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

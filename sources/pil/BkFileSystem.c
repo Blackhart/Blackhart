@@ -10,7 +10,7 @@ BkResult	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
 {
 	*ppFlux = fopen(pFilename, pMode);
 	if (*ppFlux == NULL)
-		return BkError("BkOpenFlux: File system has failed to open the flux (%s)", pFilename);
+		return BkError(BK_ERROR_LOCATION "File system has failed to open the flux [ $%s$ ]", pFilename);
 	return BK_SUCCESS;
 }
 
@@ -20,7 +20,7 @@ BkResult	BkCloseFlux(BkFlux** ppFlux)
 		return FALSE;
 
 	if (fclose(*ppFlux) == EOF)
-		return BkError("BkCloseFlux: File system has failed to close the flux");
+		return BkError(BK_ERROR_LOCATION "File system has failed to close the flux");
 
 	*ppFlux = NULL;
 
@@ -37,7 +37,7 @@ void	BkWriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...)
 	if (vfprintf(pFlux, pFormat, lArgList) < 0 || ferror(pFlux) != 0)
 	{
 		clearerr(pFlux);
-		BkWarning("BkWriteToFlux_arglist: File system has failed to write in the flux");
+		BkWarning(BK_ERROR_LOCATION "File system has failed to write in the flux");
 	}
 
 	va_end(lArgList);
@@ -48,7 +48,7 @@ void	BkWriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgL
 	if (vfprintf(pFlux, pFormat, ArgList) < 0 || ferror(pFlux) != 0)
 	{
 		clearerr(pFlux);
-		BkWarning("BkWriteToFlux_valist: File system has failed to write in the flux");
+		BkWarning(BK_ERROR_LOCATION "File system has failed to write in the flux");
 	}
 }
 
@@ -57,14 +57,14 @@ BkResult	BkReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
 	if (fseek(pFlux, 0, SEEK_END) != 0 || ferror(pFlux) != 0)
 	{
 		clearerr(pFlux);
-		return BkError("BkReadFromFlux: File system has failed to read from the flux");
+		return BkError(BK_ERROR_LOCATION "File system has failed to read from the flux");
 	}
 	
 	*pBufferSize = ftell(pFlux);
 	if (*pBufferSize < 0)
 	{
 		rewind(pFlux);
-		return BkError("BkReadFromFlux: File system has failed to read from the flux");
+		return BkError(BK_ERROR_LOCATION "File system has failed to read from the flux");
 	}
 	
 	rewind(pFlux);
@@ -73,7 +73,7 @@ BkResult	BkReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
 	if (*ppBuffer == NULL)
 	{
 		*pBufferSize = 0;
-		BkDie("BkReadFromFlux: Memory system has failed to allocate memory");
+		BkDie(BK_ERROR_LOCATION "Memory system has failed to allocate memory");
 	}
 
 	*pBufferSize = fread(*ppBuffer, sizeof(char), *pBufferSize, pFlux);
@@ -83,7 +83,7 @@ BkResult	BkReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
 		free(*ppBuffer);
 		*ppBuffer = NULL;
 		*pBufferSize = 0;
-		return BkError("BkReadFromFlux: File system has failed to read from the flux");
+		return BkError(BK_ERROR_LOCATION "File system has failed to read from the flux");
 	}
 
 	(*ppBuffer)[*pBufferSize] = '\0';
