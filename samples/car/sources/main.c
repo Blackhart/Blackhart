@@ -1,3 +1,4 @@
+#include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <blackhart.h>
 
@@ -17,7 +18,7 @@ void	Error_callback(int pError, const char* pMsg)
 int	main()
 {
 	if (!glfwInit())
-		return 0;
+		return FALSE;
 
 	glfwSetErrorCallback(Error_callback);
 
@@ -29,21 +30,19 @@ int	main()
 	if (lWindow == NULL)
 	{
 		glfwTerminate();
-		return -1;
+		return FALSE;
 	}
 	glfwMakeContextCurrent(lWindow);
 
-	BkGraphicsInfo lGraphicsInfo;
-	lGraphicsInfo.api = BK_GRAPHICS_API_OPENGL;
-	if (BkInitialize(&lGraphicsInfo) != 0)
-		return -1;
+	if (BK_FAILED(BkInitialize()))
+		return FALSE;
 
 	BkShader* lVertexShader = NULL;
 	BkShader* lPixelShader = NULL;
-	if (BkCreateShader(&lVertexShader, "../../../shaders/vertex.glsl") != 0)
-		return -1;
-	if (BkCreateShader(&lPixelShader, "../../../shaders/pixel.glsl") != 0)
-		return -1;
+	if (BK_FAILED(BkCreateShader(&lVertexShader, "../../../shaders/vertex.glsl")))
+		return FALSE;
+	if (BK_FAILED(BkCreateShader(&lPixelShader, "../../../shaders/pixel.glsl")))
+		return FALSE;
 
 	BkReleaseShader(&lPixelShader);
 	BkReleaseShader(&lVertexShader);
@@ -65,5 +64,5 @@ int	main()
 	BkUninitialize();
 	glfwDestroyWindow(lWindow);
 	glfwTerminate();
-	return 0;
+	return TRUE;
 }

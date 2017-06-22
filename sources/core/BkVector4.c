@@ -1,5 +1,5 @@
-#include "core\math\BkVector4.h"
-#include "core\math\BkMatrix4x4.h"
+#include "core\BkVector4.h"
+#include "core\BkMatrix4x4.h"
 
 vec4    Lerp_vec4(vec4 const* const from, vec4 const* const to, real const t)
 {
@@ -46,7 +46,7 @@ real    Distance_vec4(vec4 const* const a, vec4 const* const b)
 
 real    Magnitude_vec4(vec4 const* const a)
 {
-	return sqrt(a->x * a->x + a->y * a->y + a->z * a->z);
+	return (real)sqrt(a->x * a->x + a->y * a->y + a->z * a->z);
 }
 
 vec4    Max_vec4(vec4 const* const a, vec4 const* const b)
@@ -98,7 +98,7 @@ real    Angle_vec4(vec4 const* const a, vec4 const* const b)
 {
 	vec4 na = Normalize_vec4(a);
 	vec4 nb = Normalize_vec4(b);
-	return acos(Dot_vec4(&na, &nb));
+	return (real)acos(Dot_vec4(&na, &nb));
 }
 
 vec4    Normalize_vec4(vec4 const* const a)

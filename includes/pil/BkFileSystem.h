@@ -7,16 +7,17 @@
 #include <stdarg.h>
 
 #include "BkAtomicDataType.h"
+#include "core\BkError.h"
 
 typedef FILE	BkFlux;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode);
-extern int8	BkCloseFlux(BkFlux** ppFlux);
-extern int8	BkWriteToFlux_arglist(BkFlux const* pFlux, char const* pFormat, ...);
-extern int8	BkWriteToFlux_valist(BkFlux const* pFlux, char const* pFormat, va_list const ArgList);
-extern int8	BkReadFromFlux(BkFlux const* pFlux, char** ppBuffer, uint32* pBufferSize);
-extern void	BkCombinePath(char* pDest, char const* pStr1, char const* pStr2);
+extern BkResult	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode);
+extern BkResult	BkCloseFlux(BkFlux** ppFlux);
+extern void		BkWriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...);
+extern void		BkWriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgList);
+extern BkResult	BkReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize);
+extern void		BkCombinePath(char* pDest, char const* pStr1, char const* pStr2);
 
 #endif

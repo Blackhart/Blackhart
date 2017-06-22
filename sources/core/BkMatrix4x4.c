@@ -1,5 +1,5 @@
-#include "core\math\BkMatrix4x4.h"
-#include "core\math\BkVector4.h"
+#include "core\BkMatrix4x4.h"
+#include "core\BkVector4.h"
 
 mat4    Identity_mat4()
 {

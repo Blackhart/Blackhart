@@ -6,7 +6,7 @@
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern int8	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo);
-extern void	BkUninitialize(void);
+extern BkResult	BkInitialize();
+extern void		BkUninitialize(void);
 
 #endif

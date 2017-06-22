@@ -1,27 +1,23 @@
 #include "pil\BkGraphicWrapper.h"
 #include "pil\BkOpenGL.h"
-#include "core\debug\BkLogger.h"
+#include "core\BkLogger.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-int8	GwInitialize(BkGraphicsInfo const* const);
-void	GwUninitialize();
+BkResult	GwInitialize();
+void		GwUninitialize();
 
 // ~~~~~ Def(ALL) ~~~~~
 
-int8	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
+BkResult	GwInitialize()
 {
 	GLenum	lResult = GLEW_OK; // 4 bytes
 
 	lResult = glewInit();
 	if (lResult != GLEW_OK)
-	{
-		BkLog("Glew error : %s\n", glewGetErrorString(lResult));
-		BkLog("Failed to initialize OpenGL!\n");
-		return -1;
-	}
-	BkLog("OpenGL Initialized | v%s\n", glGetString(GL_VERSION));
-	return 0;
+		BkDie("Glew error : %s\nFailed to initialize OpenGL!", glewGetErrorString(lResult));
+	
+	return BK_SUCCESS;
 }
 
 void	GwUninitialize()

@@ -1,87 +1,70 @@
 #include "pil\BkFileSystem.h"
-#include "core\debug\BkLogger.h"
+#include "core\BkLogger.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
+BkResult	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
 {
 	*ppFlux = fopen(pFilename, pMode);
+	if (*ppFlux == NULL)
+		return BkError("BkOpenFlux: File system has failed to open the flux (%s)", pFilename);
+	return BK_SUCCESS;
 }
 
-int8	BkCloseFlux(BkFlux** ppFlux)
+BkResult	BkCloseFlux(BkFlux** ppFlux)
 {
 	if (ppFlux == NULL || *ppFlux == NULL)
-		return;
+		return FALSE;
 
 	if (fclose(*ppFlux) == EOF)
-	{
-#ifdef _DEBUG
-		BkLog("BkCloseFlux() : fclose has failed!\n");
-#endif
-		return -1;
-	}
+		return BkError("BkCloseFlux: File system has failed to close the flux");
 
 	*ppFlux = NULL;
 
-	return 0;
+	return BK_SUCCESS;
 }
 
-int8	BkWriteToFlux_arglist(BkFlux const* pFlux, char const* pFormat, ...)
+void	BkWriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...)
 {
-	va_list	lArgList; // 4 bytes
+	va_list		lArgList; // 4 bytes
+	BkResult	lResult = BK_SUCCESS; // 1 byte
 
 	va_start(lArgList, pFormat);
 
 	if (vfprintf(pFlux, pFormat, lArgList) < 0 || ferror(pFlux) != 0)
 	{
-#ifdef _DEBUG
-		BkLog("BkWriteToFlux_arglist() : vfprintf has failed!\n");
-#endif
 		clearerr(pFlux);
-		va_end(lArgList);
-		return -1;
+		BkWarning("BkWriteToFlux_arglist: File system has failed to write in the flux");
 	}
 
 	va_end(lArgList);
-
-	return 0;
 }
 
-int8	BkWriteToFlux_valist(BkFlux const* pFlux, char const* pFormat, va_list const ArgList)
+void	BkWriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgList)
 {
 	if (vfprintf(pFlux, pFormat, ArgList) < 0 || ferror(pFlux) != 0)
 	{
-#ifdef _DEBUG
-		BkLog("BkWriteToFlux_valist() : vfprintf has failed!\n");
-#endif
 		clearerr(pFlux);
-		return -1;
+		BkWarning("BkWriteToFlux_valist: File system has failed to write in the flux");
 	}
-	
-	return 0;
 }
 
-int8	BkReadFromFlux(BkFlux const* pFlux, char** ppBuffer, uint32* pBufferSize)
+BkResult	BkReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
 {
 	if (fseek(pFlux, 0, SEEK_END) != 0 || ferror(pFlux) != 0)
 	{
-#ifdef _DEBUG
-		BkLog("BkReadFromFlux() : fseek has failed!\n");
-#endif
 		clearerr(pFlux);
-		return -1;
+		return BkError("BkReadFromFlux: File system has failed to read from the flux");
 	}
 	
 	*pBufferSize = ftell(pFlux);
 	if (*pBufferSize < 0)
 	{
-#ifdef _DEBUG
-		BkLog("BkReadFromFlux() : ftell has failed!\n");
-#endif
 		rewind(pFlux);
-		return -1;
+		return BkError("BkReadFromFlux: File system has failed to read from the flux");
 	}
 	
 	rewind(pFlux);
@@ -89,29 +72,23 @@ int8	BkReadFromFlux(BkFlux const* pFlux, char** ppBuffer, uint32* pBufferSize)
 	*ppBuffer = malloc(((*pBufferSize) + 1) * sizeof(char));
 	if (*ppBuffer == NULL)
 	{
-#ifdef _DEBUG
-		BkLog("BkReadFromFlux() : Failed to allocate buffer!\n");
-#endif
 		*pBufferSize = 0;
-		return -1;
+		BkDie("BkReadFromFlux: Memory system has failed to allocate memory");
 	}
 
 	*pBufferSize = fread(*ppBuffer, sizeof(char), *pBufferSize, pFlux);
 	if (ferror(pFlux) != 0)
 	{
-#ifdef _DEBUG
-		BkLog("BkReadFromFlux() : Failed to read the flux!\n");
-#endif
 		clearerr(pFlux);
 		free(*ppBuffer);
 		*ppBuffer = NULL;
 		*pBufferSize = 0;
-		return -1;
+		return BkError("BkReadFromFlux: File system has failed to read from the flux");
 	}
 
 	(*ppBuffer)[*pBufferSize] = '\0';
 
-	return 0;
+	return BK_SUCCESS;
 }
 
 void	BkCombinePath(char* pDest, char const* pStr1, char const* pStr2)
@@ -124,14 +101,14 @@ void	BkCombinePath(char* pDest, char const* pStr1, char const* pStr2)
 		strcpy(pDest, pStr1);
 	else
 	{
-		uint8	lSeparatorIndex = strlen(pStr1); // 1 byte
+		uint8	lSeparatorIndex = (uint8)strlen(pStr1); // 1 byte
 		uint8	lEOLIndex = 0; // 1 byte
 
 		strcpy(pDest, pStr1);
 		pDest[lSeparatorIndex] = '/';
 		++lSeparatorIndex;
 		strcpy(pDest + lSeparatorIndex, pStr2);
-		lEOLIndex = lSeparatorIndex + strlen(pStr2);
+		lEOLIndex = lSeparatorIndex + (uint8)strlen(pStr2);
 		pDest[lEOLIndex] = '\0';
 	}
 }

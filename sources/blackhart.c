@@ -2,19 +2,26 @@
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern int8	GwInitialize(BkGraphicsInfo const* const);
-extern void	GwUninitialize(void);
-extern void	LgInitialize(void);
-extern void	LgUninitialize(void);
+extern BkResult	GwInitialize();
+extern void		GwUninitialize(void);
+extern BkResult	LgInitialize(void);
+extern BkResult	LgUninitialize(void);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-int8	BkInitialize(BkGraphicsInfo const* const pGraphicsInfo)
+BkResult	BkInitialize()
 {
-	LgInitialize();
-	if (GwInitialize(pGraphicsInfo) != 0)
-		return -1;
-	return 0;
+	BkResult	lResult = BK_SUCCESS; // 1 byte
+
+	lResult = LgInitialize();
+	if (BK_FAILED(lResult))
+		return lResult;
+
+	lResult = GwInitialize();
+	if (BK_FAILED(lResult))
+		return lResult;
+	
+	return BK_SUCCESS;
 }
 
 void	BkUninitialize(void)

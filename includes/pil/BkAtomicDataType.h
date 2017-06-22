@@ -19,4 +19,11 @@ typedef uint64_t    uint64;
     typedef float   real;
 #endif
 
+#ifndef TRUE
+	#define TRUE	1
+#endif
+#ifndef FALSE
+	#define FALSE	0
+#endif
+
 #endif

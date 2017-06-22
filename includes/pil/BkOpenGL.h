@@ -3,6 +3,13 @@
 
 #include <GL\glew.h>
 
+struct sShader
+{
+	char*	shader;
+};
+
+typedef struct sShader	BkShader;
+
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 #endif
