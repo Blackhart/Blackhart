@@ -3,12 +3,12 @@
 
 #include <GL\glew.h>
 
-struct sShader
+struct sOpenGLShader
 {
-	char*	shader;
+	GLuint	shader;
 };
 
-typedef struct sShader	BkShader;
+typedef struct sOpenGLShader	BkOpenGLShader;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 

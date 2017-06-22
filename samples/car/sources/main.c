@@ -37,15 +37,13 @@ int	main()
 	if (BK_FAILED(BkInitialize()))
 		return FALSE;
 
-	BkShader* lVertexShader = NULL;
-	BkShader* lPixelShader = NULL;
-	if (BK_FAILED(BkCreateShader(&lVertexShader, "../../../shaders/vertex.glsl")))
+	if (BK_FAILED(BkCreateShader("StandardVertex", "../../../shaders/vertex.glsl")))
 		return FALSE;
-	if (BK_FAILED(BkCreateShader(&lPixelShader, "../../../shaders/pixel.glsl")))
+	if (BK_FAILED(BkCreateShader("StandardPixel", "../../../shaders/pixel.glsl")))
 		return FALSE;
 
-	BkReleaseShader(&lPixelShader);
-	BkReleaseShader(&lVertexShader);
+	BkReleaseShader("StandardVertex");
+	BkReleaseShader("StandardPixel");
 
 	glfwSetKeyCallback(lWindow, key_callback);
 	glfwSwapInterval(1);

@@ -1,45 +1,59 @@
 #include "core\BkShader.h"
 #include "pil\BkFileSystem.h"
 #include "core\BkLogger.h"
+#include "core\BkString.h"
+
+// ~~~~~ Dcl(PRIVATE) ~~~~~
+
+static BkResult	LoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath);
+
+// ~~~~~ Def(PRIVATE) ~~~~~
+
+static BkShader*	__shader = NULL;
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	BkCreateShader(BkShader** ppShader, char const* pPath)
+BkResult	BkCreateShader(char const* pShaderName, char const* pPath)
+{
+	BkStringBuf	lContentBuf;
+
+	BkCreateStringBuf(&lContentBuf);
+
+	if (BK_FAILED(LoadShaderFromFlux(&lContentBuf, pPath)))
+		return BkError(BK_ERROR_LOCATION "Failed to load shader from flux [ $%s$ ]");
+
+	__shader = malloc(sizeof(BkShader));
+	if (__shader == NULL)
+	{
+		BkReleaseStringBuf(&lContentBuf);
+		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory");
+	}
+
+	return BK_SUCCESS;
+}
+
+static BkResult	LoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath)
 {
 	BkFlux*		lFlux = NULL; // 4 bytes
-	uint32		lBufferSize = 0; // 4 bytes
 
 	if (BK_FAILED(BkOpenFlux(&lFlux, pPath, "r")))
 		return BkError(BK_ERROR_LOCATION "Failed to open flux [ $%s$ ]", pPath);
 
-	*ppShader = malloc(sizeof(BkShader));
-	if (*ppShader == NULL)
+	if (BK_FAILED(BkReadFromFlux(lFlux, &(pContentBuf->buf), &(pContentBuf->bufSize))))
 	{
 		BkCloseFlux(&lFlux);
-		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory");
-	}
-
-	if (BK_FAILED(BkReadFromFlux(lFlux, &(*ppShader)->shader, &lBufferSize)))
-	{
-		BkError(BK_ERROR_LOCATION "Failed to read from flux [ $%s$ ]", pPath);
-		goto cleanup;
+		return BkError(BK_ERROR_LOCATION "Failed to read from flux [ $%s$ ]", pPath);
 	}
 
 	BkCloseFlux(&lFlux);
 
 	return BK_SUCCESS;
-
-cleanup:
-	free(*ppShader);
-	*ppShader = NULL;
-	BkCloseFlux(&lFlux);
-	return BK_FAILURE;
 }
 
-void	BkReleaseShader(BkShader** ppShader)
+void	BkReleaseShader(char const* pShaderName)
 {
-	if (ppShader == NULL || *ppShader == NULL)
+	if (__shader == NULL)
 		return;
-	free(*ppShader);
-	*ppShader = NULL;
+	free(__shader);
+	__shader = NULL;
 }

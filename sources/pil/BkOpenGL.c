@@ -1,4 +1,4 @@
-#include "pil\BkGraphicWrapper.h"
+#include "pil\BkRenderer.h"
 #include "pil\BkOpenGL.h"
 #include "core\BkLogger.h"
 

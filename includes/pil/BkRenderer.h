@@ -1,5 +1,5 @@
-#ifndef __BK_GW_H__
-#define __BK_GW_H__
+#ifndef __BK_RENDERER_H__
+#define __BK_RENDERER_H__
 
 #include "BkAtomicDataType.h"
 #include "core\BkError.h"

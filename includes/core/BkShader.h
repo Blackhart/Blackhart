@@ -7,9 +7,16 @@
 #include "BkError.h"
 #include "pil\BkOpenGL.h"
 
+struct sShader
+{
+	int8 lol;
+};
+
+typedef struct sShader	BkShader;
+
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BkResult	BkCreateShader(BkShader** ppShader, char const* pPath);
-extern void		BkReleaseShader(BkShader** ppShader);
+extern BkResult	BkCreateShader(char const* pShaderName, char const* pPath);
+extern void		BkReleaseShader(char const* pShaderName);
 
 #endif
