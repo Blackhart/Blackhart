@@ -1,27 +1,30 @@
 #include "Blackhart.h"
 
-// ~~~~~ Dcl(PROTECTED) ~~~~~
+// ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern BkResult	GwInitialize();
-extern void		GwUninitialize(void);
-extern BkResult	LgInitialize(void);
-extern BkResult	LgUninitialize(void);
+extern void		_BkLoadGraphicsAPI(void);
+extern BkResult	(*_BkInitializeGraphicsAPI)(void);
+extern void		(*_BkUninitializeGraphicsAPI)(void);
+extern BkResult	_BkInitializeLogger(void);
+extern BkResult	_BkUninitializeLogger(void);
 
 // ~~~~~ Def(ALL) ~~~~~
 
 BkResult	BkInitialize()
 {
-	if (BK_FAILED(LgInitialize()))
+	if (BK_FAILED(_BkInitializeLogger()))
 		return BK_FAILURE;
 
-	if (BK_FAILED(GwInitialize()))
-		return BkError(BK_ERROR_LOCATION "Failed to initialize the graphics wrapper!");
+	_BkLoadGraphicsAPI();
+
+	if (BK_FAILED(_BkInitializeGraphicsAPI()))
+		return BkError(BK_ERROR_LOCATION "Failed to initialize the graphics API!");
 	
 	return BK_SUCCESS;
 }
 
 void	BkUninitialize(void)
 {
-	LgUninitialize();
-	GwUninitialize();
+	_BkUninitializeLogger();
+	_BkUninitializeGraphicsAPI();
 }

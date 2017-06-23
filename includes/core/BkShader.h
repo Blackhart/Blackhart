@@ -9,7 +9,7 @@
 
 struct sShader
 {
-	int8 lol;
+	BkOpenGLShader	openGLShader;
 };
 
 typedef struct sShader	BkShader;

@@ -3,14 +3,13 @@
 #include <string.h>
 #include <assert.h>
 
-#include "pil\BkGraphicWrapper.h"
+#include "pil\BkGraphicsWrapper.h"
 #include "pil\BkVulkan.h"
-#include "core\debug\BkLogger.h"
 
 // ~~~~~ Dcl(PROTECTED) ~~~~~
 
-extern int8	GwInitialize(BkGraphicsInfo const* const);
-extern void	GwUninitialize();
+extern BkResult	_BkInitializeVulkan(void);
+extern void		_BkUninitializeVulkan(void);
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
 
@@ -21,22 +20,20 @@ static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const, VkIn
 
 // ~~~~~ Def(ALL) ~~~~~
 
-int8	GwInitialize(BkGraphicsInfo const* const pGraphicsInfo)
+BkResult	_BkInitializeVulkan()
 {
 	VkApplicationInfo		lAppInfo; // 28 bytes
 	VkResult				lResult; // 4 bytes
 	VkInstanceCreateInfo	lInstInfo; // 32 bytes
 
 	Initialize_VkApplicationInfo(&lAppInfo);
-	Initialize_VkInstanceCreateInfo(&lAppInfo, &lInstInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
+//	Initialize_VkInstanceCreateInfo(&lAppInfo, &lInstInfo, pGraphicsInfo->extensions, pGraphicsInfo->extensionCount);
 
 	lResult = vkCreateInstance(&lInstInfo, NULL, &__vkInstance);
 	if (lResult != VK_SUCCESS)
-	{
-		BkLog("GwInitialize() : FAILED TO INITIALIZE VULKAN!\n");
-		return -1;
-	}
-	return 0;
+		return BkError(BK_ERROR_LOCATION "Failed to initialize vulkan!\n");
+	
+	return BK_SUCCESS;
 }
 
 static void	Initialize_VkApplicationInfo(VkApplicationInfo* const pAppInfo)
@@ -61,7 +58,7 @@ static void	Initialize_VkInstanceCreateInfo(VkApplicationInfo const* const pAppI
 	pInstInfo->ppEnabledLayerNames = NULL;
 }
 
-void	GwUninitialize(void)
+void	_BkUninitializeVulkan(void)
 {
 	vkDestroyInstance(__vkInstance, NULL);
 }

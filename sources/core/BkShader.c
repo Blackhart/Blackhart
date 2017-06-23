@@ -3,11 +3,11 @@
 #include "core\BkLogger.h"
 #include "core\BkString.h"
 
-// ~~~~~ Dcl(PRIVATE) ~~~~~
+// ~~~~~ Dcl(INTERNAL) ~~~~~
 
-static BkResult	LoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath);
+static BkResult	__BkLoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath);
 
-// ~~~~~ Def(PRIVATE) ~~~~~
+// ~~~~~ Def(INTERNAL) ~~~~~
 
 static BkShader*	__shader = NULL;
 
@@ -19,7 +19,7 @@ BkResult	BkCreateShader(char const* pShaderName, char const* pPath)
 
 	BkCreateStringBuf(&lContentBuf);
 
-	if (BK_FAILED(LoadShaderFromFlux(&lContentBuf, pPath)))
+	if (BK_FAILED(__BkLoadShaderFromFlux(&lContentBuf, pPath)))
 		return BkError(BK_ERROR_LOCATION "Failed to load shader from flux [ $%s$ ]");
 
 	__shader = malloc(sizeof(BkShader));
@@ -32,7 +32,7 @@ BkResult	BkCreateShader(char const* pShaderName, char const* pPath)
 	return BK_SUCCESS;
 }
 
-static BkResult	LoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath)
+static BkResult	__BkLoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath)
 {
 	BkFlux*		lFlux = NULL; // 4 bytes
 

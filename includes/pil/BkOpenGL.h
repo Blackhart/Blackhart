@@ -3,13 +3,13 @@
 
 #include <GL\glew.h>
 
+#include "core\BkError.h"
+
 struct sOpenGLShader
 {
 	GLuint	shader;
 };
 
 typedef struct sOpenGLShader	BkOpenGLShader;
-
-// ~~~~~ Dcl(PUBLIC) ~~~~~
 
 #endif

@@ -4,6 +4,7 @@
 #include "BkMath.h"
 #include "BkLogger.h"
 #include "BkShader.h"
+#include "BkRenderer.h"
 #include "BkError.h"
 
 #endif

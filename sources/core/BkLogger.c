@@ -4,23 +4,21 @@
 #include "pil\BkFileSystem.h"
 #include "core\BkError.h"
 
-// ~~~~~ Dcl(PROTECTED) ~~~~~
+// ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern BkResult	LgInitialize(void);
-extern BkResult	LgUninitialize(void);
-
-// ~~~~~ Dcl(PRIVATE) ~~~~~
+extern BkResult	_BkInitializeLogger(void);
+extern BkResult	_BkUninitializeLogger(void);
 
 static BkFlux*	__BkGlobalLogFile = NULL;
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	LgInitialize(void)
+BkResult	_BkInitializeLogger(void)
 {
 	return BkOpenFlux(&__BkGlobalLogFile, "Log.txt", "w");
 }
 
-BkResult	LgUninitialize(void)
+BkResult	_BkUninitializeLogger(void)
 {
 	return BkCloseFlux(&__BkGlobalLogFile);
 }

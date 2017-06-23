@@ -1,8 +1,8 @@
 #ifndef __BK_RENDERER_H__
 #define __BK_RENDERER_H__
 
-#include "BkAtomicDataType.h"
-#include "core\BkError.h"
+#include "pil\BkAtomicDataType.h"
+#include "BkError.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 

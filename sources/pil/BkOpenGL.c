@@ -1,15 +1,14 @@
-#include "pil\BkRenderer.h"
 #include "pil\BkOpenGL.h"
-#include "core\BkLogger.h"
 
-// ~~~~~ Dcl(PROTECTED) ~~~~~
+// ~~~~~ Dcl(INTERNAL) ~~~~~
 
-BkResult	GwInitialize();
-void		GwUninitialize();
+extern BkResult	_BkInitializeOpenGL(void);
+extern void		_BkUninitializeOpenGL(void);
+extern void		_BkRenderOpenGL(void);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	GwInitialize()
+BkResult	_BkInitializeOpenGL(void)
 {
 	GLenum	lResult = GLEW_OK; // 4 bytes
 
@@ -20,12 +19,12 @@ BkResult	GwInitialize()
 	return BK_SUCCESS;
 }
 
-void	GwUninitialize()
+void	_BkUninitializeOpenGL(void)
 {
 
 }
 
-void	BkRender()
+void	_BkRenderOpenGL(void)
 {
 	static real const	lClearColor[4] = { 0.0f, 1.0f, 0.0f, 1.0f }; // Float precision: 16 bytes | Double precision: 32 bytes
 	
