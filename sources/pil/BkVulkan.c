@@ -10,6 +10,8 @@
 
 extern BkResult	_BkInitializeVulkan(void);
 extern void		_BkUninitializeVulkan(void);
+extern void		_BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions);
+extern void		_BkGetSupportedExtensionCount(uint32* const pExtensionCount);
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
 
@@ -63,12 +65,12 @@ void	_BkUninitializeVulkan(void)
 	vkDestroyInstance(__vkInstance, NULL);
 }
 
-void	BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
+void	_BkGetSupportedExtensions(uint32* const pExtensionCount, char*** pppExtensions)
 {
 	VkExtensionProperties* lpExtensionsProp = NULL; // 4 bytes
 
 	// Get supported extensions count
-	BkGetSupportedExtensionCount(pExtensionCount);
+	_BkGetSupportedExtensionCount(pExtensionCount);
 
 	// Allocate memory block for the extension properties
 	lpExtensionsProp = malloc(*pExtensionCount * sizeof(VkExtensionProperties));
@@ -114,7 +116,7 @@ error:
 	return;
 }
 
-void	BkGetSupportedExtensionCount(uint32* const pExtensionCount)
+void	_BkGetSupportedExtensionCount(uint32* const pExtensionCount)
 {
 	vkEnumerateInstanceExtensionProperties(NULL, pExtensionCount, NULL);
 }
