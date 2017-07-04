@@ -9,6 +9,8 @@
 extern BkResult	_BkInitializeLogger(void);
 extern BkResult	_BkUninitializeLogger(void);
 
+// ~~~~~ Def(INTERNAL) ~~~~~
+
 static BkFlux*	__BkGlobalLogFile = NULL;
 
 // ~~~~~ Def(ALL) ~~~~~

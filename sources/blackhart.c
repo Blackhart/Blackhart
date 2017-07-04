@@ -12,12 +12,12 @@ extern BkResult	_BkUninitializeLogger(void);
 
 BkResult	BkInitialize()
 {
-	if (BK_FAILED(_BkInitializeLogger()))
+	if (BK_ERROR(_BkInitializeLogger()))
 		return BK_FAILURE;
 
 	_BkLoadGraphicsAPI();
 
-	if (BK_FAILED(_BkInitializeGraphicsAPI()))
+	if (BK_ERROR(_BkInitializeGraphicsAPI()))
 		return BkError(BK_ERROR_LOCATION "Failed to initialize the graphics API!");
 	
 	return BK_SUCCESS;

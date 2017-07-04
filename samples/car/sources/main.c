@@ -34,12 +34,12 @@ int	main()
 	}
 	glfwMakeContextCurrent(lWindow);
 
-	if (BK_FAILED(BkInitialize()))
+	if (BK_ERROR(BkInitialize()))
 		return FALSE;
 
-	if (BK_FAILED(BkCreateShader("StandardVertex", "../../../shaders/vertex.glsl")))
+	if (BK_ERROR(BkCreateShader("StandardVertex", "../../../shaders/vertex.glsl", _BK_VERTEX_SHADER_)))
 		return FALSE;
-	if (BK_FAILED(BkCreateShader("StandardPixel", "../../../shaders/pixel.glsl")))
+	if (BK_ERROR(BkCreateShader("StandardPixel", "../../../shaders/pixel.glsl", _BK_PIXEL_SHADER_)))
 		return FALSE;
 
 	BkReleaseShader("StandardVertex");

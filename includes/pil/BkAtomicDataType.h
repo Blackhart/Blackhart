@@ -19,6 +19,8 @@ typedef uint64_t    uint64;
     typedef float   real;
 #endif
 
+typedef int8	BkBool;
+
 #ifndef TRUE
 	#define TRUE	1
 #endif

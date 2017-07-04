@@ -7,7 +7,7 @@
 
 struct sOpenGLShader
 {
-	GLuint	shader;
+	GLuint	shaderID;
 };
 
 typedef struct sOpenGLShader	BkOpenGLShader;

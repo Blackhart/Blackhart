@@ -2,11 +2,11 @@
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern void	(*_BkRender)(void);
+extern void	(*_BkGraphicsAPIRender)(void);
 
 // ~~~~~ Def(ALL) ~~~~~
 
 void	BkRender()
 {
-	_BkRender();
+	_BkGraphicsAPIRender();
 }

@@ -7,5 +7,6 @@
 #include "BkRenderer.h"
 #include "BkError.h"
 #include "BkString.h"
+#include "BkList.h"
 
 #endif
