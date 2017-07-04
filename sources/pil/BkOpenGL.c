@@ -2,6 +2,7 @@
 #include "core\BkString.h"
 #include "core\BkShader.h"
 #include "core\BkList.h"
+#include "core\BkMaterial.h"
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
@@ -10,6 +11,7 @@ extern void		_BkUninitializeOpenGL(void);
 extern void		_BkRenderOpenGL(void);
 extern void		_BkCreateOpenGLShader(void** ppShader, BkShaderType const Type, BkStringBuf* pShaderContent);
 extern void		_BkReleaseOpenGLShader(void** ppShader);
+extern void		_BkCompileOpenGLShader(BkMaterial** ppMaterial);
 
 // ~~~~~ Def(ALL) ~~~~~
 
@@ -63,6 +65,27 @@ extern void		_BkReleaseOpenGLShader(void** ppShader)
 {
 	assert(!BK_ISNULL(ppShader));
 
+	glDeleteShader(((BkOpenGLShader*)ppShader)->shaderID);
+
 	free(*ppShader);
 	*ppShader = NULL;
+}
+
+void	_BkCompileOpenGLShader(BkMaterial** ppMaterial)
+{
+	assert(!BK_ISNULL(ppMaterial));
+
+	BkOpenGLShader*	lPixelShader = (*ppMaterial)->pixelShader->api;
+	BkOpenGLShader*	lVertexShader = (*ppMaterial)->vertexShader->api;
+
+	BkOpenGLProgram* lpProgram = malloc(sizeof(BkOpenGLProgram));
+	if (BK_ISNULL(lpProgram))
+		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block");
+
+	lpProgram->programID = glCreateProgram();
+	glAttachShader(lpProgram->programID, lVertexShader->shaderID);
+	glAttachShader(lpProgram->programID, lPixelShader->shaderID);
+	glLinkProgram(lpProgram->programID);
+
+	(*ppMaterial)->api = lpProgram;
 }

@@ -8,5 +8,6 @@
 #include "BkError.h"
 #include "BkString.h"
 #include "BkList.h"
+#include "BkMaterial.h"
 
 #endif

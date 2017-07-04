@@ -37,13 +37,15 @@ int	main()
 	if (BK_ERROR(BkInitialize()))
 		return FALSE;
 
-	if (BK_ERROR(BkCreateShader("StandardVertex", "../../../shaders/vertex.glsl", _BK_VERTEX_SHADER_)))
+	if (BK_ERROR(BkShader_Create("StandardVertex", "../../../shaders/vertex.glsl", _BK_VERTEX_SHADER_)))
 		return FALSE;
-	if (BK_ERROR(BkCreateShader("StandardPixel", "../../../shaders/pixel.glsl", _BK_PIXEL_SHADER_)))
+	if (BK_ERROR(BkShader_Create("StandardPixel", "../../../shaders/pixel.glsl", _BK_PIXEL_SHADER_)))
 		return FALSE;
 
-	BkReleaseShader("StandardVertex");
-	BkReleaseShader("StandardPixel");
+	BkMaterial*	lpMaterial = BkMaterial_Create();
+	BkMaterial_AttachShader(&lpMaterial, "StandardVertex");
+	BkMaterial_AttachShader(&lpMaterial, "StandardPixel");
+	BkMaterial_CompileShader(&lpMaterial);
 
 	glfwSetKeyCallback(lWindow, key_callback);
 	glfwSwapInterval(1);
@@ -59,7 +61,13 @@ int	main()
 		BkRender();
 	}
 
+	BkMaterial_Release(&lpMaterial);
+
+	BkShader_Release("StandardVertex");
+	BkShader_Release("StandardPixel");
+
 	BkUninitialize();
+
 	glfwDestroyWindow(lWindow);
 	glfwTerminate();
 	return TRUE;
