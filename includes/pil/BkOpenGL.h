@@ -15,7 +15,13 @@ struct sOpenGLProgram
 	GLuint	programID;
 };
 
+struct sOpenGLBuffer
+{
+	GLuint	bufferID;
+};
+
 typedef struct sOpenGLShader	BkOpenGLShader;
 typedef struct sOpenGLProgram	BkOpenGLProgram;
+typedef struct sOpenGLBuffer	BkOpenGLBuffer;
 
 #endif

@@ -1,6 +1,6 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-#include <blackhart.h>
+#include <Blackhart.h>
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -71,6 +71,14 @@ int	main()
 	// Compile the vertex and fragment shader attached to the material
 	BkMaterial_CompileShader(lpMaterial);
 
+	// Create GPU Buffer containing triangle's vertices
+	real	lVertices[12] = { 0.25f, -0.25f, 0.5f, 1.0f,
+							  -0.25f, -0.25f, 0.5f, 1.0f,
+							  0.25f, 0.25f, 0.5f, 1.0f };
+	BkBuffer*	lpBuffer = BkBuffer_Create(sizeof(lVertices), lVertices);
+	if (BK_ISNULL(lpBuffer))
+		goto BLACKHART_RELEASE_MATERIAL;
+
 
 	// ~~~~~ RENDER LOOP ~~~~~
 
@@ -80,13 +88,18 @@ int	main()
 	{
 		glfwGetFramebufferSize(lWindow, &lWidth, &lHeight);
 		glViewport(0, 0, lWidth, lHeight);
+
+		BkRender(lpBuffer, lpMaterial);
+
 		glfwSwapBuffers(lWindow);
 		glfwPollEvents();
-		BkRender();
 	}
 
 
 	// ~~~~~ BLACKHART UNINITIALIZATION ~~~~~
+
+BLACKHART_RELEASE_BUFFER:
+	BkBuffer_Release(&lpBuffer);
 
 BLACKHART_RELEASE_MATERIAL:
 	BkMaterial_Release(&lpMaterial);
@@ -110,5 +123,5 @@ GLFW_TERMINATE:
 	glfwTerminate();
 
 EXIT:
-	return TRUE;
+	return EXIT_SUCCESS;
 }

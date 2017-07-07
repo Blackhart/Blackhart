@@ -24,13 +24,14 @@ BkMaterial*	BkMaterial_Create(void)
 void	BkMaterial_Release(BkMaterial** ppMaterial)
 {
 	if (BK_ISNULL(ppMaterial))
-		return (void)BkWarning(BK_ERROR_LOCATION "ppMaterial is null");
+		return (void)BkError(BK_ERROR_LOCATION "ppMaterial is null");
+	if (BK_ISNULL(*ppMaterial))
+		return (void)BkWarning(BK_ERROR_LOCATION "*ppMaterial is null");
 
 	(*ppMaterial)->pixelShader = NULL;
 	(*ppMaterial)->vertexShader = NULL;
 
 	_BkGraphicsAPI_ReleaseShaderProgram(&(*ppMaterial)->api);
-	(*ppMaterial)->api = NULL;
 
 	free(*ppMaterial);
 	*ppMaterial = NULL;

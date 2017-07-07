@@ -66,10 +66,11 @@ static BkResult	__BkShader_LoadFromFlux(BkStringBuf* pContentBuf, char const* pP
 void	BkShader_Release(BkShader** ppShader)
 {
 	if (BK_ISNULL(ppShader))
-		return (void)BkWarning(BK_ERROR_LOCATION "ppShader is null");
+		return (void)BkError(BK_ERROR_LOCATION "ppShader is null");
+	if (BK_ISNULL(*ppShader))
+		return (void)BkWarning(BK_ERROR_LOCATION "*ppShader is null");
 
 	_BkGraphicsAPI_ReleaseShader(&(*ppShader)->api);
-	(*ppShader)->api = NULL;
 
 	free(*ppShader);
 	(*ppShader) = NULL;
