@@ -14,8 +14,8 @@ typedef struct sStringBuf	BkStringBuf;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void		BkReleaseStringBuf(BkStringBuf* pString);
-extern void		BkSetStringBuf(BkStringBuf* pString, char const* pStr);
-extern BkBool	BkCompareStringBuf(BkStringBuf const* pString1, BkStringBuf const* pString2);
+extern void		BkStringBuf_Release(BkStringBuf* pString);
+extern void		BkStringBuf_Set(BkStringBuf* pString, char const* pStr);
+extern BkBool	BkStringBuf_Compare(BkStringBuf const* pString1, BkStringBuf const* pString2);
 
 #endif

@@ -6,7 +6,7 @@
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
+BkResult	BkFileSystem_OpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
 {
 	*ppFlux = fopen(pFilename, pMode);
 	if (*ppFlux == NULL)
@@ -14,7 +14,7 @@ BkResult	BkOpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
 	return BK_SUCCESS;
 }
 
-BkResult	BkCloseFlux(BkFlux** ppFlux)
+BkResult	BkFileSystem_CloseFlux(BkFlux** ppFlux)
 {
 	if (ppFlux == NULL || *ppFlux == NULL)
 		return FALSE;
@@ -27,7 +27,7 @@ BkResult	BkCloseFlux(BkFlux** ppFlux)
 	return BK_SUCCESS;
 }
 
-void	BkWriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...)
+void	BkFileSystem_WriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...)
 {
 	va_list		lArgList; // 4 bytes
 	BkResult	lResult = BK_SUCCESS; // 1 byte
@@ -43,7 +43,7 @@ void	BkWriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...)
 	va_end(lArgList);
 }
 
-void	BkWriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgList)
+void	BkFileSystem_WriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgList)
 {
 	if (vfprintf(pFlux, pFormat, ArgList) < 0 || ferror(pFlux) != 0)
 	{
@@ -52,7 +52,7 @@ void	BkWriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgL
 	}
 }
 
-BkResult	BkReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
+BkResult	BkFileSystem_ReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
 {
 	if (fseek(pFlux, 0, SEEK_END) != 0 || ferror(pFlux) != 0)
 	{
@@ -91,7 +91,7 @@ BkResult	BkReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
 	return BK_SUCCESS;
 }
 
-void	BkCombinePath(char* pDest, char const* pStr1, char const* pStr2)
+void	BkFileSystem_CombinePath(char* pDest, char const* pStr1, char const* pStr2)
 {
 	if (pStr1 == NULL && pStr2 == NULL)
 		pDest[0] = '\0';

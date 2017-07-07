@@ -17,7 +17,6 @@ typedef enum eShaderType	BkShaderType;
 
 struct sShader
 {
-	BkStringBuf		name; // 8 bytes
 	BkShaderType	type; // 4 bytes
 	void*			api; // 4 bytes
 };
@@ -26,7 +25,7 @@ typedef struct sShader	BkShader;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BkResult	BkShader_Create(char const* pName, char const* pPath, BkShaderType const Type);
-extern void		BkShader_Release(char const* pName);
+extern BkShader*	BkShader_Create(char const* pPath, BkShaderType const Type);
+extern void			BkShader_Release(BkShader** ppShader);
 
 #endif

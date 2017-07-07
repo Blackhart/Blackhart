@@ -7,99 +7,70 @@
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern void	(*_BkCreateGraphicsAPIShader)(void** ppShader, BkShaderType const Type, BkStringBuf* pShaderContent);
-extern void	(*_BkReleaseGraphicsAPIShader)(void** ppShader);
-extern void	_BkGetShader(BkShader** ppShader, char const* pName);
+extern void	(*_BkGraphicsAPI_CreateShader)(void** ppShader, BkShaderType const Type, char const* pShaderContent);
+extern void	(*_BkGraphicsAPI_ReleaseShader)(void** ppShader);
 
-static BkResult		__BkLoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath);
-
-static BkSimpleLinkedList*	__shaders = NULL;
+static BkResult	__BkShader_LoadFromFlux(BkStringBuf* pContentBuf, char const* pPath);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	BkShader_Create(char const* pName, char const* pPath, BkShaderType const Type)
+BkShader*	BkShader_Create(char const* pPath, BkShaderType const Type)
 {
 	BkStringBuf	lContentBuf; // 8 bytes
 	BkShader*	lpShader = NULL; // 4 bytes
 
-	BkSetStringBuf(&lContentBuf, NULL);
+	BkStringBuf_Set(&lContentBuf, NULL);
 
-	if (BK_ERROR(__BkLoadShaderFromFlux(&lContentBuf, pPath)))
-		return BkError(BK_ERROR_LOCATION "Failed to load shader from flux [ $%s$ ]");
+	if (BK_ERROR(__BkShader_LoadFromFlux(&lContentBuf, pPath)))
+	{
+		BkError(BK_ERROR_LOCATION "Failed to load shader from flux [ $%s$ ]");
+		return NULL;
+	}
 
 	lpShader = malloc(sizeof(BkShader));
 	if (BK_ISNULL(lpShader))
 	{
-		BkReleaseStringBuf(&lContentBuf);
+		BkStringBuf_Release(&lContentBuf);
 		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block!");
 	}
 	lpShader->type = Type;
 
-	_BkCreateGraphicsAPIShader(&lpShader->api, Type, &lContentBuf);
+	_BkGraphicsAPI_CreateShader(&lpShader->api, Type, lContentBuf.buf);
 
-	BkReleaseStringBuf(&lContentBuf);
-
-	BkSetStringBuf(&lpShader->name, pName);
+	BkStringBuf_Release(&lContentBuf);
 	
-	BkSimpleLinkedList_PushBack(&__shaders, lpShader);
-
-	return BK_SUCCESS;
+	return lpShader;
 }
 
-static BkResult	__BkLoadShaderFromFlux(BkStringBuf* pContentBuf, char const* pPath)
+static BkResult	__BkShader_LoadFromFlux(BkStringBuf* pContentBuf, char const* pPath)
 {
 	assert(!BK_ISNULL(pContentBuf));
 	assert(!BK_ISNULL(pPath));
 
 	BkFlux*		lFlux = NULL; // 4 bytes
 
-	if (BK_ERROR(BkOpenFlux(&lFlux, pPath, "r")))
+	if (BK_ERROR(BkFileSystem_OpenFlux(&lFlux, pPath, "r")))
 		return BkError(BK_ERROR_LOCATION "Failed to open flux [ $%s$ ]", pPath);
 
-	if (BK_ERROR(BkReadFromFlux(lFlux, &(pContentBuf->buf), &(pContentBuf->bufSize))))
+	if (BK_ERROR(BkFileSystem_ReadFromFlux(lFlux, &(pContentBuf->buf), &(pContentBuf->bufSize))))
 	{
-		BkCloseFlux(&lFlux);
+		BkFileSystem_CloseFlux(&lFlux);
 		return BkError(BK_ERROR_LOCATION "Failed to read from flux [ $%s$ ]", pPath);
 	}
 
-	BkCloseFlux(&lFlux);
+	BkFileSystem_CloseFlux(&lFlux);
 
 	return BK_SUCCESS;
 }
 
-void	BkShader_Release(char const* pName)
+void	BkShader_Release(BkShader** ppShader)
 {
-	BkShader* lpShader = NULL;
-	_BkGetShader(&lpShader, pName); // 4 bytes
-	if (BK_ISNULL(lpShader))
-		return;
+	if (BK_ISNULL(ppShader))
+		return (void)BkWarning(BK_ERROR_LOCATION "ppShader is null");
 
-	BkReleaseStringBuf(&lpShader->name);
-	_BkReleaseGraphicsAPIShader(&lpShader->api);
-	BkSimpleLinkedList_RemoveElem(&__shaders, &lpShader);
-	lpShader = NULL;
-}
+	_BkGraphicsAPI_ReleaseShader(&(*ppShader)->api);
+	(*ppShader)->api = NULL;
 
-void	_BkGetShader(BkShader** ppShader, char const* pName)
-{
-	assert(!BK_ISNULL(ppShader));
-	assert(!BK_ISNULL(pName));
-
-	BkSimpleLinkedList*	lpCurrent = __shaders; // 4 bytes
-
-	while (lpCurrent != NULL)
-	{
-		assert(!BK_ISNULL((BkShader*)lpCurrent->elem));
-		assert(!BK_ISNULL(((BkShader*)lpCurrent->elem)->name.buf));
-
-		if (strcmp(((BkShader*)lpCurrent->elem)->name.buf, pName) == 0)
-		{
-			*ppShader = lpCurrent->elem;
-			return;
-		}
-
-		lpCurrent = lpCurrent->next;
-	}
-
-	*ppShader = NULL;
+	free(*ppShader);
+	(*ppShader) = NULL;
 }

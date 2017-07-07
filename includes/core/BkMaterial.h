@@ -7,9 +7,9 @@
 
 struct sMaterial
 {
-	BkShader*	vertexShader;
-	BkShader*	pixelShader;
-	void*		api;
+	BkShader const*	vertexShader;
+	BkShader const*	pixelShader;
+	void*			api;
 };
 
 typedef struct sMaterial	BkMaterial;
@@ -18,7 +18,7 @@ typedef struct sMaterial	BkMaterial;
 
 extern BkMaterial*	BkMaterial_Create(void);
 extern void			BkMaterial_Release(BkMaterial** ppMaterial);
-extern BkResult		BkMaterial_AttachShader(BkMaterial** ppMaterial, char const* pShaderName);
-extern BkResult		BkMaterial_CompileShader(BkMaterial** ppMaterial);
+extern BkResult		BkMaterial_AttachShader(BkMaterial* pMaterial, BkShader const* pShader);
+extern BkResult		BkMaterial_CompileShader(BkMaterial* pMaterial);
 
 #endif

@@ -5,7 +5,7 @@
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	BkSetStringBuf(BkStringBuf* pString, char const* pStr)
+void	BkStringBuf_Set(BkStringBuf* pString, char const* pStr)
 {
 	pString->bufSize = pStr == NULL ? 0 : strlen(pStr);
 
@@ -23,7 +23,7 @@ void	BkSetStringBuf(BkStringBuf* pString, char const* pStr)
 		pString->buf = NULL;
 }
 
-void	BkReleaseStringBuf(BkStringBuf* pString)
+void	BkStringBuf_Release(BkStringBuf* pString)
 {
 	if (pString->buf != NULL)
 		free(pString->buf);
@@ -31,7 +31,7 @@ void	BkReleaseStringBuf(BkStringBuf* pString)
 	pString->bufSize = 0;
 }
 
-BkBool	BkCompareStringBuf(BkStringBuf const* pString1, BkStringBuf const* pString2)
+BkBool	BkStringBuf_Compare(BkStringBuf const* pString1, BkStringBuf const* pString2)
 {
 	if (pString1->bufSize != pString2->bufSize)
 		return FALSE;

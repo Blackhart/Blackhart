@@ -6,23 +6,23 @@
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern BkResult	_BkInitializeLogger(void);
-extern BkResult	_BkUninitializeLogger(void);
+extern BkResult	_BkLogger_Initialize(void);
+extern BkResult	_BkLogger_Uninitialize(void);
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-static BkFlux*	__BkGlobalLogFile = NULL;
+static BkFlux*	__BkLogger_LogFile = NULL;
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	_BkInitializeLogger(void)
+BkResult	_BkLogger_Initialize(void)
 {
-	return BkOpenFlux(&__BkGlobalLogFile, "Log.txt", "w");
+	return BkFileSystem_OpenFlux(&__BkLogger_LogFile, "Log.txt", "w");
 }
 
-BkResult	_BkUninitializeLogger(void)
+BkResult	_BkLogger_Uninitialize(void)
 {
-	return BkCloseFlux(&__BkGlobalLogFile);
+	return BkFileSystem_CloseFlux(&__BkLogger_LogFile);
 }
 
 void	BkLog_arglist(char const* pFormat, ...)
@@ -31,12 +31,12 @@ void	BkLog_arglist(char const* pFormat, ...)
 
 	va_start(lArgList, pFormat);
 
-	BkWriteToFlux_valist(__BkGlobalLogFile, pFormat, lArgList);
+	BkFileSystem_WriteToFlux_valist(__BkLogger_LogFile, pFormat, lArgList);
 
 	va_end(lArgList);
 }
 
 void	BkLog_valist(char const* pFormat, va_list const ArgList)
 {
-	BkWriteToFlux_valist(__BkGlobalLogFile, pFormat, ArgList);
+	BkFileSystem_WriteToFlux_valist(__BkLogger_LogFile, pFormat, ArgList);
 }

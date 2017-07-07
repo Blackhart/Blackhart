@@ -3,8 +3,8 @@
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern void	_BkGetShader(BkShader** ppShader, char const* pName);
-extern void	(*_BkCompileGraphicsAPIShader)(BkMaterial** ppMaterial);
+extern void	(*_BkGraphicsAPI_CreateShaderProgram)(void** ppShaderProgram, void* pVertexShader, void* pPixelShader);
+extern void	(*_BkGraphicsAPI_ReleaseShaderProgram)(void** ppShaderProgram);
 
 // ~~~~~ Def(ALL) ~~~~~
 
@@ -16,6 +16,7 @@ BkMaterial*	BkMaterial_Create(void)
 
 	lpMaterial->pixelShader = NULL;
 	lpMaterial->vertexShader = NULL;
+	lpMaterial->api = NULL;
 
 	return lpMaterial;
 }
@@ -28,29 +29,27 @@ void	BkMaterial_Release(BkMaterial** ppMaterial)
 	(*ppMaterial)->pixelShader = NULL;
 	(*ppMaterial)->vertexShader = NULL;
 
+	_BkGraphicsAPI_ReleaseShaderProgram(&(*ppMaterial)->api);
+	(*ppMaterial)->api = NULL;
+
 	free(*ppMaterial);
 	*ppMaterial = NULL;
 }
 
-BkResult	BkMaterial_AttachShader(BkMaterial** ppMaterial, char const* pShaderName)
+BkResult	BkMaterial_AttachShader(BkMaterial* pMaterial, BkShader const* pShader)
 {
-	if (BK_ISNULL(ppMaterial))
-		BkDie(BK_ERROR_LOCATION "ppMaterial is null");
-	if (BK_ISNULL(pShaderName))
-		BkDie(BK_ERROR_LOCATION "pShaderName is null");
+	if (BK_ISNULL(pMaterial))
+		return BkError(BK_ERROR_LOCATION "pMaterial is null");
+	if (BK_ISNULL(pShader))
+		return BkError(BK_ERROR_LOCATION "pShader is null");
 
-	BkShader*	lpShader = NULL; // 4 bytes
-	_BkGetShader(&lpShader, pShaderName);
-	if (BK_ISNULL(lpShader))
-		return BkError(BK_ERROR_LOCATION "Invalid shader name");
-
-	switch (lpShader->type)
+	switch (pShader->type)
 	{
 	case _BK_VERTEX_SHADER_:
-		(*ppMaterial)->vertexShader = lpShader;
+		pMaterial->vertexShader = pShader;
 		break;
 	case _BK_PIXEL_SHADER_:
-		(*ppMaterial)->pixelShader = lpShader;
+		pMaterial->pixelShader = pShader;
 		break;
 	default:
 		return BkError(BK_ERROR_LOCATION "Invalid shader type");
@@ -59,15 +58,15 @@ BkResult	BkMaterial_AttachShader(BkMaterial** ppMaterial, char const* pShaderNam
 	return BK_SUCCESS;
 }
 
-BkResult	BkMaterial_CompileShader(BkMaterial** ppMaterial)
+BkResult	BkMaterial_CompileShader(BkMaterial* pMaterial)
 {
-	if (BK_ISNULL(ppMaterial))
-		BkDie(BK_ERROR_LOCATION "ppMaterial is null");
+	if (BK_ISNULL(pMaterial))
+		return BkError(BK_ERROR_LOCATION "pMaterial is null");
 
-	if (BK_ISNULL((*ppMaterial)->pixelShader) || BK_ISNULL((*ppMaterial)->vertexShader))
+	if (BK_ISNULL(pMaterial->pixelShader) || BK_ISNULL(pMaterial->vertexShader))
 		return BkError(BK_ERROR_LOCATION "Invalid pixel or vertex shader");
 
-	_BkCompileGraphicsAPIShader(ppMaterial);
+	_BkGraphicsAPI_CreateShaderProgram(&(pMaterial->api), pMaterial->vertexShader->api, pMaterial->pixelShader->api);
 
 	return BK_SUCCESS;
 }

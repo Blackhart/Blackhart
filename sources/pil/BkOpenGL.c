@@ -1,21 +1,19 @@
 #include "pil\BkOpenGL.h"
-#include "core\BkString.h"
 #include "core\BkShader.h"
-#include "core\BkList.h"
-#include "core\BkMaterial.h"
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern BkResult	_BkInitializeOpenGL(void);
-extern void		_BkUninitializeOpenGL(void);
-extern void		_BkRenderOpenGL(void);
-extern void		_BkCreateOpenGLShader(void** ppShader, BkShaderType const Type, BkStringBuf* pShaderContent);
-extern void		_BkReleaseOpenGLShader(void** ppShader);
-extern void		_BkCompileOpenGLShader(BkMaterial** ppMaterial);
+extern BkResult	_BkOpenGL_Initialize(void);
+extern void		_BkOpenGL_Uninitialize(void);
+extern void		_BkOpenGL_Render(void);
+extern void		_BkOpenGL_CreateShader(void** ppShader, BkShaderType const Type, char const* pShaderContent);
+extern void		_BkOpenGL_ReleaseShader(void** ppShader);
+extern void		_BkOpenGL_CreateShaderProgram(void** ppShaderProgram, void* pVertexShader, void* pPixelShader);
+extern void		_BkOpenGL_ReleaseShaderProgram(void** ppShaderProgram);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	_BkInitializeOpenGL(void)
+BkResult	_BkOpenGL_Initialize(void)
 {
 	GLenum	lResult = GLEW_OK; // 4 bytes
 
@@ -26,59 +24,61 @@ BkResult	_BkInitializeOpenGL(void)
 	return BK_SUCCESS;
 }
 
-void	_BkUninitializeOpenGL(void)
+void	_BkOpenGL_Uninitialize(void)
 {
 }
 
-void	_BkRenderOpenGL(void)
+void	_BkOpenGL_Render(void)
 {
 	static real const	lClearColor[4] = { 0.0f, 1.0f, 0.0f, 1.0f }; // Float precision: 16 bytes | Double precision: 32 bytes
 	
 	glClearBufferfv(GL_COLOR, 0, lClearColor);
 }
 
-extern void		_BkCreateOpenGLShader(void** ppShader, BkShaderType const Type, BkStringBuf* pShaderContent)
+void	_BkOpenGL_CreateShader(void** ppShader, BkShaderType const Type, char const* pShaderContent)
 {
 	assert(!BK_ISNULL(ppShader));
 	assert(!BK_ISNULL(pShaderContent));
 	assert(Type == _BK_PIXEL_SHADER_ || Type == _BK_VERTEX_SHADER_);
 
-	BkOpenGLShader*	lpShader = malloc(sizeof(BkOpenGLShader));
+	BkOpenGLShader*	lpShader = malloc(sizeof(BkOpenGLShader)); // 4 bytes
 	if (lpShader == NULL)
-	{
-		BkReleaseStringBuf(pShaderContent);
 		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory");
-	}
 
 	if (Type == _BK_VERTEX_SHADER_)
 		lpShader->shaderID = glCreateShader(GL_VERTEX_SHADER);
 	else if (Type == _BK_PIXEL_SHADER_)
 		lpShader->shaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(lpShader->shaderID, 1, &(pShaderContent->buf), NULL);
+	glShaderSource(lpShader->shaderID, 1, &pShaderContent, NULL);
 	glCompileShader(lpShader->shaderID);
 
 	*ppShader = lpShader;
 }
 
-extern void		_BkReleaseOpenGLShader(void** ppShader)
+void	_BkOpenGL_ReleaseShader(void** ppShader)
 {
 	assert(!BK_ISNULL(ppShader));
+	assert(!BK_ISNULL(*ppShader));
 
-	glDeleteShader(((BkOpenGLShader*)ppShader)->shaderID);
+	BkOpenGLShader*	lpShader = *ppShader; // 4 bytes
+
+	glDeleteShader(lpShader->shaderID);
 
 	free(*ppShader);
 	*ppShader = NULL;
 }
 
-void	_BkCompileOpenGLShader(BkMaterial** ppMaterial)
+void	_BkOpenGL_CreateShaderProgram(void** ppShaderProgram, void* pVertexShader, void* pPixelShader)
 {
-	assert(!BK_ISNULL(ppMaterial));
+	assert(!BK_ISNULL(ppShaderProgram));
+	assert(!BK_ISNULL(pVertexShader));
+	assert(!BK_ISNULL(pPixelShader));
 
-	BkOpenGLShader*	lPixelShader = (*ppMaterial)->pixelShader->api;
-	BkOpenGLShader*	lVertexShader = (*ppMaterial)->vertexShader->api;
+	BkOpenGLShader*		lPixelShader = pPixelShader; // 4 bytes
+	BkOpenGLShader*		lVertexShader = pVertexShader; // 4 bytes
 
-	BkOpenGLProgram* lpProgram = malloc(sizeof(BkOpenGLProgram));
+	BkOpenGLProgram*	lpProgram = malloc(sizeof(BkOpenGLProgram)); // 4 bytes
 	if (BK_ISNULL(lpProgram))
 		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block");
 
@@ -87,5 +87,18 @@ void	_BkCompileOpenGLShader(BkMaterial** ppMaterial)
 	glAttachShader(lpProgram->programID, lPixelShader->shaderID);
 	glLinkProgram(lpProgram->programID);
 
-	(*ppMaterial)->api = lpProgram;
+	*ppShaderProgram = lpProgram;
+}
+
+void	_BkOpenGL_ReleaseShaderProgram(void** ppShaderProgram)
+{
+	assert(!BK_ISNULL(ppShaderProgram));
+	assert(!BK_ISNULL(*ppShaderProgram));
+
+	BkOpenGLProgram*	lProgram = *ppShaderProgram; // 4 bytes
+
+	glDeleteProgram(lProgram->programID);
+
+	free(*ppShaderProgram);
+	*ppShaderProgram = NULL;
 }
