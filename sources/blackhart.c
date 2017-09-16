@@ -1,12 +1,7 @@
 #include "Blackhart.h"
 
-// ~~~~~ Dcl(INTERNAL) ~~~~~
-
-extern void		_BkGraphicsAPI_Load(void);
-extern BkResult	(*_BkGraphicsAPI_Initialize)(void);
-extern void		(*_BkGraphicsAPI_Uninitialize)(void);
-extern BkResult	_BkLogger_Initialize(void);
-extern BkResult	_BkLogger_Uninitialize(void);
+#include "pil\__BkGraphicsAPI.h"
+#include "core\__BkLogger.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 

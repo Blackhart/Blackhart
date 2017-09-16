@@ -1,9 +1,9 @@
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include <Blackhart.h>
-
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <GLFW\glfw3.h>
+
+#include "../export/cpp/Blackhart.hpp"
 
 static void	key_callback(GLFWwindow* pWindow, int pKey, int pScancode, int pAction, int pMods)
 {
@@ -86,7 +86,7 @@ int	main()
 	uint32	lHeight = 0;
 	while (!glfwWindowShouldClose(lWindow))
 	{
-		glfwGetFramebufferSize(lWindow, &lWidth, &lHeight);
+		glfwGetFramebufferSize(lWindow, (int*)&lWidth, (int*)&lHeight);
 		glViewport(0, 0, lWidth, lHeight);
 
 		BkRender(lpBuffer, lpMaterial);

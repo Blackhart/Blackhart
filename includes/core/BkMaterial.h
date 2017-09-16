@@ -5,6 +5,8 @@
 #include "BkError.h"
 #include "BkShader.h"
 
+#include "pil\__BkExport.h"
+
 struct sMaterial
 {
 	BkShader const*	vertexShader;
@@ -16,9 +18,9 @@ typedef struct sMaterial	BkMaterial;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BkMaterial*	BkMaterial_Create(void);
-extern void			BkMaterial_Release(BkMaterial** ppMaterial);
-extern BkResult		BkMaterial_AttachShader(BkMaterial* pMaterial, BkShader const* pShader);
-extern BkResult		BkMaterial_CompileShader(BkMaterial* pMaterial);
+extern BK_API BkMaterial*	BkMaterial_Create(void);
+extern BK_API void			BkMaterial_Release(BkMaterial** ppMaterial);
+extern BK_API BkResult		BkMaterial_AttachShader(BkMaterial* pMaterial, BkShader const* pShader);
+extern BK_API BkResult		BkMaterial_CompileShader(BkMaterial* pMaterial);
 
 #endif

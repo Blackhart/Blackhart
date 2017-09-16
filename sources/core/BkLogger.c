@@ -1,13 +1,7 @@
-#include <stdio.h>
-
 #include "core\BkLogger.h"
 #include "pil\BkFileSystem.h"
-#include "core\BkError.h"
 
-// ~~~~~ Dcl(INTERNAL) ~~~~~
-
-extern BkResult	_BkLogger_Initialize(void);
-extern BkResult	_BkLogger_Uninitialize(void);
+#include "core\__BkLogger.h"
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 

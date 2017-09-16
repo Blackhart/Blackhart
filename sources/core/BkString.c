@@ -1,7 +1,7 @@
-#include "core\BkString.h"
-
 #include <string.h>
 #include <stdlib.h>
+
+#include "core\BkString.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 

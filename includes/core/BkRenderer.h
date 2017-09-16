@@ -6,8 +6,10 @@
 #include "BkMaterial.h"
 #include "BkBuffer.h"
 
+#include "pil\__BkExport.h"
+
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	BkRender(BkBuffer const* pObject, BkMaterial const* pMaterial);
+extern BK_API void	BkRender(BkBuffer const* pObject, BkMaterial const* pMaterial);
 
 #endif

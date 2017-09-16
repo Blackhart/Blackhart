@@ -1,10 +1,7 @@
 #include "core\BkMaterial.h"
 #include "core\BkList.h"
 
-// ~~~~~ Dcl(INTERNAL) ~~~~~
-
-extern void	(*_BkGraphicsAPI_CreateShaderProgram)(void** ppShaderProgram, void* pVertexShader, void* pPixelShader);
-extern void	(*_BkGraphicsAPI_ReleaseShaderProgram)(void** ppShaderProgram);
+#include "pil\__BkGraphicsAPI.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 

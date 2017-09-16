@@ -3,6 +3,8 @@
 
 #include "pil\BkAtomicDataType.h"
 
+#include "pil\__BkExport.h"
+
 struct sBuffer
 {
 	void*	api;
@@ -12,7 +14,7 @@ typedef struct sBuffer	BkBuffer;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BkBuffer*	BkBuffer_Create(uint32 const Size, void const* pData);
-extern void			BkBuffer_Release(BkBuffer** ppBuffer);
+extern BK_API BkBuffer*	BkBuffer_Create(uint32 const Size, void const* pData);
+extern BK_API void		BkBuffer_Release(BkBuffer** ppBuffer);
 
 #endif

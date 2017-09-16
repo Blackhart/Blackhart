@@ -1,14 +1,13 @@
+#include <string.h>
+
 #include "core\BkShader.h"
 #include "pil\BkFileSystem.h"
 #include "core\BkLogger.h"
 #include "core\BkList.h"
 
-#include <string.h>
+#include "pil\__BkGraphicsAPI.h"
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
-
-extern void	(*_BkGraphicsAPI_CreateShader)(void** ppShader, BkShaderType const Type, char const* pShaderContent);
-extern void	(*_BkGraphicsAPI_ReleaseShader)(void** ppShader);
 
 static BkResult	__BkShader_LoadFromFlux(BkStringBuf* pContentBuf, char const* pPath);
 

@@ -3,9 +3,11 @@
 
 #include <stdarg.h>
 
+#include "pil\__BkExport.h"
+
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void	BkLog_arglist(char const* pFormat, ...);
-extern void	BkLog_valist(char const* pFormat, va_list const ArgList);
+extern BK_API void	BkLog_arglist(char const* pFormat, ...);
+extern BK_API void	BkLog_valist(char const* pFormat, va_list const ArgList);
 
 #endif

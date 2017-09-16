@@ -3,6 +3,6 @@
 
 #include "BkAtomicDataType.h"
 #include "BkFileSystem.h"
-#include "BkGraphicsWrapper.h"
+#include "BkGraphicsAPI.h"
 
 #endif

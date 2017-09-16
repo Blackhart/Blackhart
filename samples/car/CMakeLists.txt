@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 
 set(CAR_PROJECT_NAME "Car")
 
-project(${CAR_PROJECT_NAME} C)
+project(${CAR_PROJECT_NAME} CXX)
 
 message("")
 message("${CAR_PROJECT_NAME}: BUILD ENABLE")
@@ -11,30 +11,17 @@ message("~~~ ${CAR_PROJECT_NAME} ~~~")
 
 # Car
 
-file(GLOB_RECURSE CFiles sources/*.c)
-file(GLOB_RECURSE HFiles includes/*.h)
+file(GLOB_RECURSE CPPFiles sources/*.cpp)
+file(GLOB_RECURSE HPPFiles includes/*.hpp)
 
-add_executable(${CAR_PROJECT_NAME} ${CFiles} ${HFiles})
-
+add_executable(${CAR_PROJECT_NAME} ${CPPFiles} ${HPPFiles})
 target_include_directories(${CAR_PROJECT_NAME} PUBLIC "${${CAR_PROJECT_NAME}_SOURCE_DIR}/includes")
 
 
 # Blackhart
 
 target_include_directories(${CAR_PROJECT_NAME} PUBLIC "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}/includes")
-if (NOT BUILD_BLACKHART_AS_SHARED_LIBS)
-	target_link_libraries(${CAR_PROJECT_NAME} Blackhart)
-	target_include_directories(${CAR_PROJECT_NAME} PUBLIC "${VULKAN_INCLUDE_PATH}")
-	target_include_directories(${CAR_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH}")
-	if (VULKAN_LIBRARY)
-		target_link_libraries(${CAR_PROJECT_NAME} "${VULKAN_LIBRARY}")
-	endif ()
-	if (GLEW_AUTO_COMPILE)
-		target_link_libraries(${CAR_PROJECT_NAME} glew)
-	else ()
-		target_link_libraries(${CAR_PROJECT_NAME} debug "${GLEW_DEBUG_LIBRARY}" optimized "${GLEW_RELEASE_LIBRARY}")
-	endif()
-endif()
+target_link_libraries(${CAR_PROJECT_NAME} Blackhart)
 
 
 # extlibs

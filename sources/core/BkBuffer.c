@@ -1,10 +1,7 @@
 #include "core\BkBuffer.h"
 #include "core\BkError.h"
 
-// ~~~~~ Dcl(INTERNAL) ~~~~~
-
-extern void	(*_BkGraphicsAPI_CreateBuffer)(void** ppBufferAPI, uint32 const Size, void const* pData);
-extern void	(*_BkGraphicsAPI_ReleaseBuffer)(void** ppBufferAPI);
+#include "pil\__BkGraphicsAPI.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 

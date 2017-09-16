@@ -1,11 +1,13 @@
 #ifndef __BK_ERROR_H__
 #define __BK_ERROR_H__
 
-#include <assert.h>
 #include <stdarg.h>
+#include <assert.h>
 #include <stdlib.h>
 
 #include "pil\BkAtomicDataType.h"
+
+#include "pil\__BkExport.h"
 
 #define BK_SUCCESS	EXIT_SUCCESS
 #define BK_FAILURE	EXIT_FAILURE
@@ -23,8 +25,8 @@ typedef int8	BkResult;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void		BkDie(char const* pMsg, ...);
-extern BkResult	BkError(char const* pMsg, ...);
-extern void		BkWarning(char const* pMsg, ...);
+extern BK_API void		BkDie(char const* pMsg, ...);
+extern BK_API BkResult	BkError(char const* pMsg, ...);
+extern BK_API void		BkWarning(char const* pMsg, ...);
 
 #endif

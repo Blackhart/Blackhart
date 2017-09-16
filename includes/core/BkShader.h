@@ -7,6 +7,8 @@
 #include "BkError.h"
 #include "BkString.h"
 
+#include "pil\__BkExport.h"
+
 enum eShaderType
 {
 	_BK_VERTEX_SHADER_,
@@ -25,7 +27,7 @@ typedef struct sShader	BkShader;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BkShader*	BkShader_Create(char const* pPath, BkShaderType const Type);
-extern void			BkShader_Release(BkShader** ppShader);
+extern BK_API BkShader*	BkShader_Create(char const* pPath, BkShaderType const Type);
+extern BK_API void			BkShader_Release(BkShader** ppShader);
 
 #endif

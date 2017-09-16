@@ -4,6 +4,8 @@
 #include "pil\BkAtomicDataType.h"
 #include "BkError.h"
 
+#include "pil\__BkExport.h"
+
 struct sStringBuf
 {
 	char*	buf; // 4 bytes
@@ -14,8 +16,8 @@ typedef struct sStringBuf	BkStringBuf;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void		BkStringBuf_Release(BkStringBuf* pString);
-extern void		BkStringBuf_Set(BkStringBuf* pString, char const* pStr);
-extern BkBool	BkStringBuf_Compare(BkStringBuf const* pString1, BkStringBuf const* pString2);
+extern BK_API void		BkStringBuf_Release(BkStringBuf* pString);
+extern BK_API void		BkStringBuf_Set(BkStringBuf* pString, char const* pStr);
+extern BK_API BkBool	BkStringBuf_Compare(BkStringBuf const* pString1, BkStringBuf const* pString2);
 
 #endif

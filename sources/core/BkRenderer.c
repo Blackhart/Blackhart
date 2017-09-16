@@ -1,8 +1,6 @@
 #include "core\BkRenderer.h"
 
-// ~~~~~ Dcl(INTERNAL) ~~~~~
-
-extern void	(*_BkGraphicsAPI_Render)(void* pShaderProgram);
+#include "pil\__BkGraphicsAPI.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 
