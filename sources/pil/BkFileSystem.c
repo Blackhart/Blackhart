@@ -2,22 +2,31 @@
 #include <string.h>
 
 #include "pil\BkFileSystem.h"
+
 #include "core\BkLogger.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 
 BkResult	BkFileSystem_OpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
 {
+	if (BK_ISNULL(ppFlux))
+		return BkError(BK_ERROR_LOCATION "ppFlux == NULL");
+	if (BK_ISNULL(pFilename))
+		return BkError(BK_ERROR_LOCATION "pFilename == NULL");
+	if (BK_ISNULL(pMode))
+		return BkError(BK_ERROR_LOCATION "pMode == NULL");
+
 	*ppFlux = fopen(pFilename, pMode);
-	if (*ppFlux == NULL)
+	if (BK_ISNULL(*ppFlux))
 		return BkError(BK_ERROR_LOCATION "File system has failed to open the flux [ $%s$ ]", pFilename);
+
 	return BK_SUCCESS;
 }
 
 BkResult	BkFileSystem_CloseFlux(BkFlux** ppFlux)
 {
-	if (ppFlux == NULL || *ppFlux == NULL)
-		return FALSE;
+	if (BK_ISNULL(ppFlux) || BK_ISNULL(*ppFlux))
+		return BkError(BK_ERROR_LOCATION "ppFlux == NULL");
 
 	if (fclose(*ppFlux) == EOF)
 		return BkError(BK_ERROR_LOCATION "File system has failed to close the flux");
@@ -52,8 +61,40 @@ void	BkFileSystem_WriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list
 	}
 }
 
+BkResult	BkFileSystem_ReadFromPath(char const* pPath, char** ppBuffer, uint32* pBufferSize)
+{
+	if (BK_ISNULL(pPath))
+		return BkError(BK_ERROR_LOCATION "pPath == NULL");
+	if (BK_ISNULL(ppBuffer))
+		return BkError(BK_ERROR_LOCATION "ppBuffer == NULL");
+	if (BK_ISNULL(pBufferSize))
+		return BkError(BK_ERROR_LOCATION "pBufferSize == NULL");
+
+	BkFlux*		lFlux = NULL; // 4 bytes
+
+	if (BK_ERROR(BkFileSystem_OpenFlux(&lFlux, pPath, "r")))
+		return BkError(BK_ERROR_LOCATION "Failed to open flux [ $%s$ ]", pPath);
+
+	if (BK_ERROR(BkFileSystem_ReadFromFlux(lFlux, ppBuffer, pBufferSize)))
+	{
+		BkFileSystem_CloseFlux(&lFlux);
+		return BkError(BK_ERROR_LOCATION "Failed to read from flux [ $%s$ ]", pPath);
+	}
+
+	BkFileSystem_CloseFlux(&lFlux);
+
+	return BK_SUCCESS;
+}
+
 BkResult	BkFileSystem_ReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
 {
+	if (BK_ISNULL(pFlux))
+		return BkError(BK_ERROR_LOCATION "pFlux == NULL");
+	if (BK_ISNULL(ppBuffer))
+		return BkError(BK_ERROR_LOCATION "ppBuffer == NULL");
+	if (BK_ISNULL(pBufferSize))
+		return BkError(BK_ERROR_LOCATION "pBufferSize == NULL");
+
 	if (fseek(pFlux, 0, SEEK_END) != 0 || ferror(pFlux) != 0)
 	{
 		clearerr(pFlux);

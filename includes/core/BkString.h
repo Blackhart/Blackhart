@@ -2,8 +2,6 @@
 #define __BK_STRING_H__
 
 #include "pil\BkAtomicDataType.h"
-#include "BkError.h"
-
 #include "pil\__BkExport.h"
 
 struct sStringBuf

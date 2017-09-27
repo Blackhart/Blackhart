@@ -1,5 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <new>
 
 #include <GLFW\glfw3.h>
 
@@ -49,35 +48,29 @@ int	main()
 	if (BK_ERROR(BkInitialize()))
 		goto GLFW_DESTROY_WINDOW;
 
-	// Create vertex shader
-	BkShader* lVertexShader = BkShader_Create("../../../shaders/vertex.glsl", _BK_VERTEX_SHADER_);
-	if (BK_ISNULL(lVertexShader))
-		goto BLACKHART_UNINITIALIZE;
-
-	// Create fragment shader
-	BkShader* lPixelShader = BkShader_Create("../../../shaders/pixel.glsl", _BK_PIXEL_SHADER_);
-	if (BK_ISNULL(lPixelShader))
-		goto BLACKHART_RELEASE_VERTEX_SHADER;
-
-	// Create material
-	BkMaterial*	lpMaterial = BkMaterial_Create();
-	if (BK_ISNULL(lpMaterial))
-		goto BLACKHART_RELEASE_PIXEL_SHADER;
-
-	// Attach vertex and fragment shader to the material
-	BkMaterial_AttachShader(lpMaterial, lVertexShader);
-	BkMaterial_AttachShader(lpMaterial, lPixelShader);
-
-	// Compile the vertex and fragment shader attached to the material
-	BkMaterial_CompileShader(lpMaterial);
-
 	// Create GPU Buffer containing triangle's vertices
 	real	lVertices[12] = { 0.25f, -0.25f, 0.5f, 1.0f,
 							  -0.25f, -0.25f, 0.5f, 1.0f,
 							  0.25f, 0.25f, 0.5f, 1.0f };
-	BkBuffer*	lpBuffer = BkBuffer_Create(sizeof(lVertices), lVertices);
-	if (BK_ISNULL(lpBuffer))
-		goto BLACKHART_RELEASE_MATERIAL;
+
+	uint32 lSize = sizeof(lVertices);
+
+	// Create geometry to store data about the primitive
+	BkGeometry* lGeometry = new (std::nothrow) BkGeometry;
+	if (lGeometry == NULL)
+		goto BLACKHART_UNINITIALIZE;
+
+	lGeometry->vertices = lVertices;
+
+	// Create entity to store the geometry
+	BkEntity* lEntity = new (std::nothrow) BkEntity;
+	if (lEntity == NULL)
+		goto BLACKHART_DESTROY_GEOMETRY;
+
+	lEntity->geometry = lGeometry;
+
+	// Add the entity to the scene
+	BkScene_AddEntity(lEntity);
 
 
 	// ~~~~~ RENDER LOOP ~~~~~
@@ -89,7 +82,7 @@ int	main()
 		glfwGetFramebufferSize(lWindow, (int*)&lWidth, (int*)&lHeight);
 		glViewport(0, 0, lWidth, lHeight);
 
-		BkRender(lpBuffer, lpMaterial);
+		BkRender();
 
 		glfwSwapBuffers(lWindow);
 		glfwPollEvents();
@@ -98,17 +91,11 @@ int	main()
 
 	// ~~~~~ BLACKHART UNINITIALIZATION ~~~~~
 
-BLACKHART_RELEASE_BUFFER:
-	BkBuffer_Release(&lpBuffer);
+BLACKHART_DESTROY_ENTITY:
+	delete lEntity;
 
-BLACKHART_RELEASE_MATERIAL:
-	BkMaterial_Release(&lpMaterial);
-
-BLACKHART_RELEASE_PIXEL_SHADER:
-	BkShader_Release(&lPixelShader);
-
-BLACKHART_RELEASE_VERTEX_SHADER:
-	BkShader_Release(&lVertexShader);
+BLACKHART_DESTROY_GEOMETRY:
+	delete lGeometry;
 
 BLACKHART_UNINITIALIZE:
 	BkUninitialize();

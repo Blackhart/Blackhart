@@ -2,14 +2,12 @@
 #define __BK_RENDERER_H__
 
 #include "pil\BkAtomicDataType.h"
-#include "BkError.h"
-#include "BkMaterial.h"
-#include "BkBuffer.h"
-
 #include "pil\__BkExport.h"
+
+#include "core\BkError.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BK_API void	BkRender(BkBuffer const* pObject, BkMaterial const* pMaterial);
+extern BK_API void	BkRender(void);
 
 #endif

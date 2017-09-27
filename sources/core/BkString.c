@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "core\BkString.h"
+#include "core\BkError.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 

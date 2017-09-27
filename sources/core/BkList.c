@@ -57,22 +57,19 @@ void	BkSimpleLinkedList_RemoveAll(BkSimpleLinkedList** ppList)
 	*ppList = NULL;
 }
 
-void	BkSimpleLinkedList_RemoveElem(BkSimpleLinkedList** ppList, void** ppElement)
+void	BkSimpleLinkedList_RemoveElem(BkSimpleLinkedList** ppList, void* ppElement)
 {
 	if (BK_ISNULL(ppList))
 		BkDie(BK_ERROR_LOCATION "ppList == NULL");
 	if (BK_ISNULL(ppElement))
 		BkDie(BK_ERROR_LOCATION "ppElement == NULL");
 
-	if (BK_ISNULL(*ppElement))
-		return;
-
 	BkSimpleLinkedList*	lpPrev = NULL; // 4 bytes
 	BkSimpleLinkedList*	lpCur = *ppList; // 4 bytes
 
 	while (!BK_ISNULL(lpCur))
 	{
-		if (lpCur->elem == *ppElement)
+		if (lpCur->elem == ppElement)
 		{
 			if (BK_ISNULL(lpPrev))
 				*ppList = lpCur->next;

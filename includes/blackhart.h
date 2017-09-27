@@ -2,9 +2,9 @@
 #define __BK_BLACKHART_H__
 
 #include "pil\BkPlatformIndependanceLayer.h"
-#include "core\BkCore.h"
-
 #include "pil\__BkExport.h"
+
+#include "core\BkCore.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 

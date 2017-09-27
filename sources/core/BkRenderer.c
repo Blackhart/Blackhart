@@ -1,10 +1,10 @@
-#include "core\BkRenderer.h"
-
 #include "pil\__BkGraphicsAPI.h"
+
+#include "core\BkRenderer.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	BkRender(BkBuffer const* pBuffer, BkMaterial const* pMaterial)
+void	BkRender(void)
 {
-	_BkGraphicsAPI_Render(pBuffer->api, pMaterial->api);
+	_BkGraphicsAPI_Render();
 }

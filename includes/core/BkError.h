@@ -6,7 +6,6 @@
 #include <stdlib.h>
 
 #include "pil\BkAtomicDataType.h"
-
 #include "pil\__BkExport.h"
 
 #define BK_SUCCESS	EXIT_SUCCESS

@@ -14,7 +14,6 @@ struct  sVector4
     real    w;
 };
 
-typedef struct sVector4     Vector4;
 typedef struct sVector4     vec4;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

@@ -1,13 +1,14 @@
 #ifndef __BK_CORE_H__
 #define __BK_CORE_H__
 
-#include "BkMath.h"
-#include "BkLogger.h"
-#include "BkShader.h"
-#include "BkRenderer.h"
-#include "BkError.h"
-#include "BkString.h"
-#include "BkList.h"
-#include "BkMaterial.h"
+#include "core\BkMath.h"
+#include "core\BkLogger.h"
+#include "core\BkRenderer.h"
+#include "core\BkError.h"
+#include "core\BkString.h"
+#include "core\BkList.h"
+#include "core\BkScene.h"
+#include "core\BkEntity.h"
+#include "core\BkGeometry.h"
 
 #endif
