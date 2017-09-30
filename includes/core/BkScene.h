@@ -8,8 +8,8 @@
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BK_API void						BkScene_AddEntity(BkEntity* pEntity);
-extern BK_API void						BkScene_RemoveEntity(BkEntity* pEntity);
-extern BK_API BkSimpleLinkedList const*	BkScene_GetEntities(void);
+extern BK_API void			BkScene_AddEntity(BkEntity* pEntity);
+extern BK_API void			BkScene_RemoveEntity(BkEntity* pEntity);
+extern BK_API BkList const*	BkScene_GetEntities(void);
 
 #endif

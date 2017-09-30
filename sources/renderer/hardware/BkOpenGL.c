@@ -55,7 +55,7 @@ void	_BkOpenGL_Render(void)
 
 	glUseProgram(lpShaderProgram->programID);
 	
-	BkSimpleLinkedList const* lList = BkScene_GetEntities();
+	BkList const* lList = BkScene_GetEntities();
 	BkOpenGLBuffer* lOpenGLBuffer = NULL;
 	real* lVertices = NULL;
 

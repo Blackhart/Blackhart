@@ -67,11 +67,21 @@ target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH
 message("glew: include_path:(${GLEW_INCLUDE_PATH})")
 
 
+# Tests
+
+set(BLACKHART_TESTS_PATH "${BLACKHART_PATH}/tests")
+
+option(BUILD_BLACKHART_TESTS "Build Blackhart's tests" OFF)
+if (BUILD_BLACKHART_TESTS)
+	add_subdirectory("${BLACKHART_TESTS_PATH}")
+endif (BUILD_BLACKHART_TESTS)
+
+
 # Samples
 
 set(BLACKHART_SAMPLES_PATH "${BLACKHART_PATH}/samples")
 
-option(BUILD_BLACKHART_SAMPLES "Build the Blackhart's samples" OFF)
+option(BUILD_BLACKHART_SAMPLES "Build Blackhart's samples" OFF)
 if (BUILD_BLACKHART_SAMPLES)
 	add_subdirectory("${BLACKHART_SAMPLES_PATH}")
 endif (BUILD_BLACKHART_SAMPLES)

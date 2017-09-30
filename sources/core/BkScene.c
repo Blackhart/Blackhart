@@ -2,7 +2,7 @@
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-static BkSimpleLinkedList* __BkScene_Entities = NULL;
+static BkList* __BkScene_Entities = NULL;
 
 // ~~~~~ Def(ALL) ~~~~~
 
@@ -14,7 +14,7 @@ void	BkScene_AddEntity(BkEntity* pEntity)
 		return;
 	}
 
-	BkSimpleLinkedList_PushBack(&__BkScene_Entities, pEntity);
+	__BkScene_Entities = BkList_PushBack(__BkScene_Entities, pEntity);
 }
 
 void	BkScene_RemoveEntity(BkEntity* pEntity)
@@ -25,10 +25,10 @@ void	BkScene_RemoveEntity(BkEntity* pEntity)
 		return;
 	}
 
-	BkSimpleLinkedList_RemoveElem(&__BkScene_Entities, pEntity);
+	__BkScene_Entities = BkList_Erase(__BkScene_Entities, pEntity);
 }
 
-BkSimpleLinkedList const*	BkScene_GetEntities(void)
+BkList const*	BkScene_GetEntities(void)
 {
 	return __BkScene_Entities;
 }
