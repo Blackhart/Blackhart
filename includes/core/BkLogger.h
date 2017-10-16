@@ -7,7 +7,7 @@
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BK_API void	BkLog_arglist(char const* pFormat, ...);
-extern BK_API void	BkLog_valist(char const* pFormat, va_list const ArgList);
+extern BK_API void	BkLog_arglist(char const* format, ...);
+extern BK_API void	BkLog_valist(char const* format, va_list const arglist);
 
 #endif

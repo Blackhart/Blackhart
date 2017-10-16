@@ -13,12 +13,12 @@ typedef FILE	BkFlux;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BK_API BkResult	BkFileSystem_OpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode);
-extern BK_API BkResult	BkFileSystem_CloseFlux(BkFlux** ppFlux);
-extern BK_API void		BkFileSystem_WriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...);
-extern BK_API void		BkFileSystem_WriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgList);
-extern BK_API BkResult	BkFileSystem_ReadFromPath(char const* pPath, char** ppBuffer, uint32* pBufferSize);
-extern BK_API BkResult	BkFileSystem_ReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize);
-extern BK_API void		BkFileSystem_CombinePath(char* pDest, char const* pStr1, char const* pStr2);
+extern BK_API BkResult	BkFileSystem_OpenFlux(BkFlux** flux, char const* filename, char const* mode);
+extern BK_API BkResult	BkFileSystem_CloseFlux(BkFlux** flux);
+extern BK_API void	BkFileSystem_WriteToFlux_arglist(BkFlux* flux, char const* format, ...);
+extern BK_API void	BkFileSystem_WriteToFlux_valist(BkFlux* flux, char const* format, va_list const arglist);
+extern BK_API BkResult	BkFileSystem_ReadFromPath(char const* path, char** buffer, uint32* buffer_size);
+extern BK_API BkResult	BkFileSystem_ReadFromFlux(BkFlux* flux, char** buffer, uint32* buffer_size);
+extern BK_API void	BkFileSystem_CombinePath(char* dest, char const* str1, char const* str2);
 
 #endif

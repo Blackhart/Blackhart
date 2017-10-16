@@ -3,9 +3,9 @@
 
 #include "core\BkError.h"
 
-extern void		_BkGraphicsAPI_Load(void);
+extern void	_BkGraphicsAPI_Load(void);
 extern BkResult	(*_BkGraphicsAPI_Initialize)(void);
-extern void		(*_BkGraphicsAPI_Uninitialize)(void);
-extern void		(*_BkGraphicsAPI_Render)(void);
+extern void	(*_BkGraphicsAPI_Uninitialize)(void);
+extern void	(*_BkGraphicsAPI_Render)(void);
 
 #endif

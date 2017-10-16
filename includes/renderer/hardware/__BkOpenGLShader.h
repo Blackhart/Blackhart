@@ -3,30 +3,27 @@
 
 #include <GL\glew.h>
 
-enum eShaderType
+enum BkShaderType
 {
 	_BK_VERTEX_SHADER_,
 	_BK_PIXEL_SHADER_
 };
-typedef enum eShaderType	BkShaderType;
 
-struct sOpenGLShader
+struct BkOpenGLShader
 {
-	GLuint	shaderID;
+	GLuint	id;
 };
-typedef struct sOpenGLShader	BkOpenGLShader;
 
-struct sOpenGLShaderProgram
+struct BkOpenGLShaderProgram
 {
-	GLuint	programID;
+	GLuint	id;
 };
-typedef struct sOpenGLShaderProgram	BkOpenGLShaderProgram;
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-BkOpenGLShader*			_BkOpenGL_CreateShader(char const* pPath, BkShaderType const Type);
-void					_BkOpenGL_ReleaseShader(BkOpenGLShader** ppShader);
-BkOpenGLShaderProgram*	_BkOpenGL_CreateShaderProgram(BkOpenGLShader* pVertexShader, BkOpenGLShader* pPixelShader);
-void					_BkOpenGL_ReleaseShaderProgram(BkOpenGLShaderProgram** ppShaderProgram);
+struct BkOpenGLShader*		_BkOpenGL_CreateShader(char const* path, enum BkShaderType const shader_type);
+void				_BkOpenGL_ReleaseShader(struct BkOpenGLShader** shader);
+struct BkOpenGLShaderProgram*	_BkOpenGL_CreateShaderProgram(struct BkOpenGLShader* vertex_shader, struct BkOpenGLShader* pixel_shader);
+void				_BkOpenGL_ReleaseShaderProgram(struct BkOpenGLShaderProgram** shader_program);
 
 #endif

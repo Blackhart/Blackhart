@@ -4,28 +4,28 @@
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkOpenGLBuffer*	_BkOpenGL_CreateBuffer(uint32 const Size, void const* pData)
+struct BkOpenGLBuffer*	_BkOpenGL_CreateBuffer(uint32 const size, void const* data)
 {
-	BkOpenGLBuffer* lOpenGLBuffer = malloc(sizeof(BkOpenGLBuffer));
-	if (BK_ISNULL(lOpenGLBuffer))
+	struct BkOpenGLBuffer* opengl_buffer = malloc(sizeof(struct BkOpenGLBuffer));
+	if (BK_ISNULL(opengl_buffer))
 		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block");
 
-	glGenBuffers(1, &lOpenGLBuffer->bufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, lOpenGLBuffer->bufferID);
-	glBufferData(GL_ARRAY_BUFFER, Size, pData, GL_STATIC_DRAW);
+	glGenBuffers(1, &opengl_buffer->id);
+	glBindBuffer(GL_ARRAY_BUFFER, opengl_buffer->id);
+	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	return lOpenGLBuffer;
+	return opengl_buffer;
 }
 
-void	_BkOpenGL_ReleaseBuffer(BkOpenGLBuffer** ppOpenGLBuffer)
+void	_BkOpenGL_ReleaseBuffer(struct BkOpenGLBuffer** opengl_buffer)
 {
-	assert(!BK_ISNULL(ppOpenGLBuffer));
-	assert(!BK_ISNULL(*ppOpenGLBuffer));
+	assert(!BK_ISNULL(opengl_buffer));
+	assert(!BK_ISNULL(*opengl_buffer));
 
-	glDeleteBuffers(1, &(*ppOpenGLBuffer)->bufferID);
+	glDeleteBuffers(1, &(*opengl_buffer)->id);
 
-	free(*ppOpenGLBuffer);
-	*ppOpenGLBuffer = NULL;
+	free(*opengl_buffer);
+	*opengl_buffer = NULL;
 }

@@ -7,149 +7,155 @@
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	BkFileSystem_OpenFlux(BkFlux** ppFlux, char const* pFilename, char const* pMode)
+BkResult	BkFileSystem_OpenFlux(BkFlux** flux, char const* filename, char const* mode)
 {
-	if (BK_ISNULL(ppFlux))
+	if (BK_ISNULL(flux))
 		return BkError(BK_ERROR_LOCATION "ppFlux == NULL");
-	if (BK_ISNULL(pFilename))
+	if (BK_ISNULL(filename))
 		return BkError(BK_ERROR_LOCATION "pFilename == NULL");
-	if (BK_ISNULL(pMode))
+	if (BK_ISNULL(mode))
 		return BkError(BK_ERROR_LOCATION "pMode == NULL");
 
-	*ppFlux = fopen(pFilename, pMode);
-	if (BK_ISNULL(*ppFlux))
-		return BkError(BK_ERROR_LOCATION "File system has failed to open the flux [ $%s$ ]", pFilename);
+	*flux = fopen(filename, mode);
+	if (BK_ISNULL(*flux))
+		return BkError(BK_ERROR_LOCATION "File system has failed to open the flux [ $%s$ ]", filename);
 
 	return BK_SUCCESS;
 }
 
-BkResult	BkFileSystem_CloseFlux(BkFlux** ppFlux)
+BkResult	BkFileSystem_CloseFlux(BkFlux** flux)
 {
-	if (BK_ISNULL(ppFlux) || BK_ISNULL(*ppFlux))
+	if (BK_ISNULL(flux) || BK_ISNULL(*flux))
 		return BkError(BK_ERROR_LOCATION "ppFlux == NULL");
 
-	if (fclose(*ppFlux) == EOF)
+	if (fclose(*flux) == EOF)
 		return BkError(BK_ERROR_LOCATION "File system has failed to close the flux");
 
-	*ppFlux = NULL;
+	*flux = NULL;
 
 	return BK_SUCCESS;
 }
 
-void	BkFileSystem_WriteToFlux_arglist(BkFlux* pFlux, char const* pFormat, ...)
+void	BkFileSystem_WriteToFlux_arglist(BkFlux* flux, char const* format, ...)
 {
-	va_list		lArgList; // 4 bytes
-	BkResult	lResult = BK_SUCCESS; // 1 byte
+	if (BK_ISNULL(flux) || BK_ISNULL(format))
+		return;
 
-	va_start(lArgList, pFormat);
+	va_list		arglist;
+	BkResult	result = BK_SUCCESS;
 
-	if (vfprintf(pFlux, pFormat, lArgList) < 0 || ferror(pFlux) != 0)
+	va_start(arglist, format);
+
+	if (vfprintf(flux, format, arglist) < 0 || ferror(flux) != 0)
 	{
-		clearerr(pFlux);
+		clearerr(flux);
 		BkWarning(BK_ERROR_LOCATION "File system has failed to write in the flux");
 	}
 
-	va_end(lArgList);
+	va_end(arglist);
 }
 
-void	BkFileSystem_WriteToFlux_valist(BkFlux* pFlux, char const* pFormat, va_list const ArgList)
+void	BkFileSystem_WriteToFlux_valist(BkFlux* flux, char const* format, va_list const arglist)
 {
-	if (vfprintf(pFlux, pFormat, ArgList) < 0 || ferror(pFlux) != 0)
+	if (BK_ISNULL(flux) || BK_ISNULL(format))
+		return;
+
+	if (vfprintf(flux, format, arglist) < 0 || ferror(flux) != 0)
 	{
-		clearerr(pFlux);
+		clearerr(flux);
 		BkWarning(BK_ERROR_LOCATION "File system has failed to write in the flux");
 	}
 }
 
-BkResult	BkFileSystem_ReadFromPath(char const* pPath, char** ppBuffer, uint32* pBufferSize)
+BkResult	BkFileSystem_ReadFromPath(char const* path, char** buffer, uint32* buffer_size)
 {
-	if (BK_ISNULL(pPath))
+	if (BK_ISNULL(path))
 		return BkError(BK_ERROR_LOCATION "pPath == NULL");
-	if (BK_ISNULL(ppBuffer))
+	if (BK_ISNULL(buffer))
 		return BkError(BK_ERROR_LOCATION "ppBuffer == NULL");
-	if (BK_ISNULL(pBufferSize))
+	if (BK_ISNULL(buffer_size))
 		return BkError(BK_ERROR_LOCATION "pBufferSize == NULL");
 
-	BkFlux*		lFlux = NULL; // 4 bytes
+	BkFlux*		flux = NULL; // 4 bytes
 
-	if (BK_ERROR(BkFileSystem_OpenFlux(&lFlux, pPath, "r")))
-		return BkError(BK_ERROR_LOCATION "Failed to open flux [ $%s$ ]", pPath);
+	if (BK_ERROR(BkFileSystem_OpenFlux(&flux, path, "r")))
+		return BkError(BK_ERROR_LOCATION "Failed to open flux [ $%s$ ]", path);
 
-	if (BK_ERROR(BkFileSystem_ReadFromFlux(lFlux, ppBuffer, pBufferSize)))
+	if (BK_ERROR(BkFileSystem_ReadFromFlux(flux, buffer, buffer_size)))
 	{
-		BkFileSystem_CloseFlux(&lFlux);
-		return BkError(BK_ERROR_LOCATION "Failed to read from flux [ $%s$ ]", pPath);
+		BkFileSystem_CloseFlux(&flux);
+		return BkError(BK_ERROR_LOCATION "Failed to read from flux [ $%s$ ]", path);
 	}
 
-	BkFileSystem_CloseFlux(&lFlux);
+	BkFileSystem_CloseFlux(&flux);
 
 	return BK_SUCCESS;
 }
 
-BkResult	BkFileSystem_ReadFromFlux(BkFlux* pFlux, char** ppBuffer, uint32* pBufferSize)
+BkResult	BkFileSystem_ReadFromFlux(BkFlux* flux, char** buffer, uint32* buffer_size)
 {
-	if (BK_ISNULL(pFlux))
+	if (BK_ISNULL(flux))
 		return BkError(BK_ERROR_LOCATION "pFlux == NULL");
-	if (BK_ISNULL(ppBuffer))
+	if (BK_ISNULL(buffer))
 		return BkError(BK_ERROR_LOCATION "ppBuffer == NULL");
-	if (BK_ISNULL(pBufferSize))
+	if (BK_ISNULL(buffer_size))
 		return BkError(BK_ERROR_LOCATION "pBufferSize == NULL");
 
-	if (fseek(pFlux, 0, SEEK_END) != 0 || ferror(pFlux) != 0)
+	if (fseek(flux, 0, SEEK_END) != 0 || ferror(flux) != 0)
 	{
-		clearerr(pFlux);
+		clearerr(flux);
 		return BkError(BK_ERROR_LOCATION "File system has failed to read from the flux");
 	}
 	
-	*pBufferSize = ftell(pFlux);
-	if (*pBufferSize < 0)
+	*buffer_size = ftell(flux);
+	if (*buffer_size < 0)
 	{
-		rewind(pFlux);
+		rewind(flux);
 		return BkError(BK_ERROR_LOCATION "File system has failed to read from the flux");
 	}
 	
-	rewind(pFlux);
+	rewind(flux);
 	
-	*ppBuffer = malloc(((*pBufferSize) + 1) * sizeof(char));
-	if (*ppBuffer == NULL)
+	*buffer = malloc(((*buffer_size) + 1) * sizeof(char));
+	if (*buffer == NULL)
 	{
-		*pBufferSize = 0;
+		*buffer_size = 0;
 		BkDie(BK_ERROR_LOCATION "Memory system has failed to allocate memory");
 	}
 
-	*pBufferSize = fread(*ppBuffer, sizeof(char), *pBufferSize, pFlux);
-	if (ferror(pFlux) != 0)
+	*buffer_size = fread(*buffer, sizeof(char), *buffer_size, flux);
+	if (ferror(flux) != 0)
 	{
-		clearerr(pFlux);
-		free(*ppBuffer);
-		*ppBuffer = NULL;
-		*pBufferSize = 0;
+		clearerr(flux);
+		free(*buffer);
+		*buffer = NULL;
+		*buffer_size = 0;
 		return BkError(BK_ERROR_LOCATION "File system has failed to read from the flux");
 	}
 
-	(*ppBuffer)[*pBufferSize] = '\0';
+	(*buffer)[*buffer_size] = '\0';
 
 	return BK_SUCCESS;
 }
 
-void	BkFileSystem_CombinePath(char* pDest, char const* pStr1, char const* pStr2)
+void	BkFileSystem_CombinePath(char* dest, char const* str1, char const* str2)
 {
-	if (pStr1 == NULL && pStr2 == NULL)
-		pDest[0] = '\0';
-	else if (pStr1 == NULL || pStr1[0] == '\0')
-		strcpy(pDest, pStr2);
-	else if (pStr2 == NULL || pStr2[0] == '\0')
-		strcpy(pDest, pStr1);
+	if (str1 == NULL && str2 == NULL)
+		dest[0] = '\0';
+	else if (str1 == NULL || str1[0] == '\0')
+		strcpy(dest, str2);
+	else if (str2 == NULL || str2[0] == '\0')
+		strcpy(dest, str1);
 	else
 	{
-		uint8	lSeparatorIndex = (uint8)strlen(pStr1); // 1 byte
-		uint8	lEOLIndex = 0; // 1 byte
+		uint8	separator_index = (uint8)strlen(str1); // 1 byte
+		uint8	end_of_line_index = 0; // 1 byte
 
-		strcpy(pDest, pStr1);
-		pDest[lSeparatorIndex] = '/';
-		++lSeparatorIndex;
-		strcpy(pDest + lSeparatorIndex, pStr2);
-		lEOLIndex = lSeparatorIndex + (uint8)strlen(pStr2);
-		pDest[lEOLIndex] = '\0';
+		strcpy(dest, str1);
+		dest[separator_index] = '/';
+		++separator_index;
+		strcpy(dest + separator_index, str2);
+		end_of_line_index = separator_index + (uint8)strlen(str2);
+		dest[end_of_line_index] = '\0';
 	}
 }

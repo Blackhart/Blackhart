@@ -19,18 +19,18 @@ BkResult	_BkLogger_Uninitialize(void)
 	return BkFileSystem_CloseFlux(&__BkLogger_LogFile);
 }
 
-void	BkLog_arglist(char const* pFormat, ...)
+void	BkLog_arglist(char const* format, ...)
 {
-	va_list		lArgList; // 4 bytes
+	va_list arglist;
 
-	va_start(lArgList, pFormat);
+	va_start(arglist, format);
 
-	BkFileSystem_WriteToFlux_valist(__BkLogger_LogFile, pFormat, lArgList);
+	BkFileSystem_WriteToFlux_valist(__BkLogger_LogFile, format, arglist);
 
-	va_end(lArgList);
+	va_end(arglist);
 }
 
-void	BkLog_valist(char const* pFormat, va_list const ArgList)
+void	BkLog_valist(char const* format, va_list const arglist)
 {
-	BkFileSystem_WriteToFlux_valist(__BkLogger_LogFile, pFormat, ArgList);
+	BkFileSystem_WriteToFlux_valist(__BkLogger_LogFile, format, arglist);
 }

@@ -9,6 +9,6 @@
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 extern BK_API BkResult	BkInitialize();
-extern BK_API void		BkUninitialize(void);
+extern BK_API void	BkUninitialize(void);
 
 #endif

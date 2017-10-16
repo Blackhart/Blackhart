@@ -15,11 +15,11 @@ static GLuint	__BkOpenGL_VertexArrayObject = 0;
 
 BkResult	_BkOpenGL_Initialize(void)
 {
-	GLenum	lResult = GLEW_OK;
+	GLenum result = GLEW_OK;
 
-	lResult = glewInit();
-	if (lResult != GLEW_OK)
-		BkDie(BK_ERROR_LOCATION "Glew error : %s\nFailed to initialize OpenGL!", glewGetErrorString(lResult));
+	result = glewInit();
+	if (result != GLEW_OK)
+		BkDie(BK_ERROR_LOCATION "Glew error : %s\nFailed to initialize OpenGL!", glewGetErrorString(result));
 
 	glGenVertexArrays(1, &__BkOpenGL_VertexArrayObject);
 	glBindVertexArray(__BkOpenGL_VertexArrayObject);
@@ -34,40 +34,40 @@ void	_BkOpenGL_Uninitialize(void)
 
 void	_BkOpenGL_Render(void)
 {
-	static real const	lClearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	
-	glClearBufferfv(GL_COLOR, 0, lClearColor);
+	static real const clear_color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+	glClearBufferfv(GL_COLOR, 0, clear_color);
 
 	// Create vertex shader
-	BkOpenGLShader* lVertexShader = _BkOpenGL_CreateShader("../../../shaders/vertex.glsl", _BK_VERTEX_SHADER_);
-	if (BK_ISNULL(lVertexShader))
+	struct BkOpenGLShader* vertex_shader = _BkOpenGL_CreateShader("../../../shaders/vertex.glsl", _BK_VERTEX_SHADER_);
+	if (BK_ISNULL(vertex_shader))
 		goto EXIT;
 
 	// Create fragment shader
-	BkOpenGLShader* lPixelShader = _BkOpenGL_CreateShader("../../../shaders/pixel.glsl", _BK_PIXEL_SHADER_);
-	if (BK_ISNULL(lPixelShader))
+	struct BkOpenGLShader* pixel_shader = _BkOpenGL_CreateShader("../../../shaders/pixel.glsl", _BK_PIXEL_SHADER_);
+	if (BK_ISNULL(pixel_shader))
 		goto RENDERER_RELEASE_VERTEX_SHADER;
 
 	// Create material
-	BkOpenGLShaderProgram*	lpShaderProgram = _BkOpenGL_CreateShaderProgram(lVertexShader, lPixelShader);
-	if (BK_ISNULL(lpShaderProgram))
+	struct BkOpenGLShaderProgram* shader_program = _BkOpenGL_CreateShaderProgram(vertex_shader, pixel_shader);
+	if (BK_ISNULL(shader_program))
 		goto RENDERER_RELEASE_PIXEL_SHADER;
 
-	glUseProgram(lpShaderProgram->programID);
-	
-	BkList const* lList = BkScene_GetEntities();
-	BkOpenGLBuffer* lOpenGLBuffer = NULL;
-	real* lVertices = NULL;
+	glUseProgram(shader_program->id);
 
-	while (lList != NULL)
+	struct BkList const* list = BkScene_GetEntities();
+	struct BkOpenGLBuffer* opengl_buffer = NULL;
+	real* vertices = NULL;
+
+	while (list != NULL)
 	{
-		lVertices = ((BkGeometry*)((BkEntity*)lList->elem)->geometry)->vertices;
+		vertices = ((struct BkGeometry*)((struct BkEntity*)list->data)->geometry)->vertices;
 
-		lOpenGLBuffer = _BkOpenGL_CreateBuffer(12 * sizeof(real*), lVertices);
-		if (BK_ISNULL(lOpenGLBuffer))
+		opengl_buffer = _BkOpenGL_CreateBuffer(12 * sizeof(real*), vertices);
+		if (BK_ISNULL(opengl_buffer))
 			goto RENDERER_RELEASE_MATERIAL;
 
-		glBindBuffer(GL_ARRAY_BUFFER, lOpenGLBuffer->bufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, opengl_buffer->id);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(0);
 
@@ -76,19 +76,19 @@ void	_BkOpenGL_Render(void)
 		glDisableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		_BkOpenGL_ReleaseBuffer(&lOpenGLBuffer);
+		_BkOpenGL_ReleaseBuffer(&opengl_buffer);
 
-		lList = lList->next;
+		list = list->next;
 	}
 
 RENDERER_RELEASE_MATERIAL:
-	_BkOpenGL_ReleaseShaderProgram(&lpShaderProgram);
+	_BkOpenGL_ReleaseShaderProgram(&shader_program);
 
 RENDERER_RELEASE_PIXEL_SHADER:
-	_BkOpenGL_ReleaseShader(&lPixelShader);
+	_BkOpenGL_ReleaseShader(&pixel_shader);
 
 RENDERER_RELEASE_VERTEX_SHADER:
-	_BkOpenGL_ReleaseShader(&lVertexShader);
+	_BkOpenGL_ReleaseShader(&vertex_shader);
 
 EXIT:
 	return;

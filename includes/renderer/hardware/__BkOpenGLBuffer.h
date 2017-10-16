@@ -5,16 +5,14 @@
 
 #include "pil\BkAtomicDataType.h"
 
-struct sOpenGLBuffer
+struct BkOpenGLBuffer
 {
-	GLuint	bufferID;
+	GLuint	id;
 };
-
-typedef struct sOpenGLBuffer	BkOpenGLBuffer;
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-extern BkOpenGLBuffer*	_BkOpenGL_CreateBuffer(uint32 const Size, void const* pData);
-extern void				_BkOpenGL_ReleaseBuffer(BkOpenGLBuffer** ppBufferAPI);
+extern struct BkOpenGLBuffer*	_BkOpenGL_CreateBuffer(uint32 const size, void const* data);
+extern void			_BkOpenGL_ReleaseBuffer(struct BkOpenGLBuffer** opengl_buffer);
 
 #endif

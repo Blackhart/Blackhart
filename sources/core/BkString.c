@@ -6,39 +6,39 @@
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	BkStringBuf_Set(BkStringBuf* pString, char const* pStr)
+void	BkStringBuf_Set(struct BkStringBuf* string, char const* str)
 {
-	pString->bufSize = pStr == NULL ? 0 : strlen(pStr);
+	string->size = str == NULL ? 0 : strlen(str);
 
-	if (pString->bufSize > 0)
+	if (string->size > 0)
 	{
-		pString->buf = malloc((pString->bufSize + 1) * sizeof(char));
-		if (pString->buf == NULL)
+		string->buffer = malloc((string->size + 1) * sizeof(char));
+		if (string->buffer == NULL)
 			BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block");
 
-		memcpy(pString->buf, pStr, pString->bufSize);
+		memcpy(string->buffer, str, string->size);
 
-		pString->buf[pString->bufSize] = '\0';
+		string->buffer[string->size] = '\0';
 	}
 	else
-		pString->buf = NULL;
+		string->buffer = NULL;
 }
 
-void	BkStringBuf_Release(BkStringBuf* pString)
+void	BkStringBuf_Release(struct BkStringBuf* string)
 {
-	if (pString->buf != NULL)
-		free(pString->buf);
-	pString->buf = NULL;
-	pString->bufSize = 0;
+	if (string->buffer != NULL)
+		free(string->buffer);
+	string->buffer = NULL;
+	string->size = 0;
 }
 
-BkBool	BkStringBuf_Compare(BkStringBuf const* pString1, BkStringBuf const* pString2)
+BkBool	BkStringBuf_Compare(struct BkStringBuf const* string1, struct BkStringBuf const* string2)
 {
-	if (pString1->bufSize != pString2->bufSize)
+	if (string1->size != string2->size)
 		return FALSE;
-	for (uint32 lIndex = 0; lIndex < pString1->bufSize; lIndex++)
+	for (uint32 lIndex = 0; lIndex < string1->size; lIndex++)
 	{
-		if (pString1->buf[lIndex] != pString2->buf[lIndex])
+		if (string1->buffer[lIndex] != string2->buffer[lIndex])
 			return FALSE;
 	}
 	return TRUE;

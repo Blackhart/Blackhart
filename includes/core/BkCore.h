@@ -7,6 +7,7 @@
 #include "core\BkError.h"
 #include "core\BkString.h"
 #include "core\BkList.h"
+#include "core\BkVector.h"
 #include "core\BkScene.h"
 #include "core\BkEntity.h"
 #include "core\BkGeometry.h"

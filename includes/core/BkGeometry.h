@@ -6,14 +6,12 @@
 #include "core\BkList.h"
 #include "core\BkVector4.h"
 
-struct sGeometry
+struct BkGeometry
 {
-	real*	vertices;
-	uint32*	indices;
-	vec4*	color;
-	BkBool	visible;
+	real*			vertices;
+	uint32*			indices;
+	struct BkVector4*	color;
+	BkBool			visible;
 };
-
-typedef struct sGeometry	BkGeometry;
 
 #endif

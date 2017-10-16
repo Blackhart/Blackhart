@@ -5,220 +5,220 @@
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkList*	BkList_Front(BkList const* pList)
+struct BkList*	BkList_Front(struct BkList const* list)
 {
-	if (BK_ISNULL(pList))
+	if (BK_ISNULL(list))
 		return NULL;
 
-	while (!BK_ISNULL(BkList_Previous(pList)))
+	while (!BK_ISNULL(BkList_Previous(list)))
 	{
-		pList = BkList_Previous(pList);
+		list = BkList_Previous(list);
 	}
 
-	return pList;
+	return list;
 }
 
-BkList*	BkList_Back(BkList const* pList)
+struct BkList*	BkList_Back(struct BkList const* list)
 {
-	if (BK_ISNULL(pList))
+	if (BK_ISNULL(list))
 		return NULL;
 
-	while (!BK_ISNULL(BkList_Next(pList)))
+	while (!BK_ISNULL(BkList_Next(list)))
 	{
-		pList = BkList_Next(pList);
+		list = BkList_Next(list);
 	}
 
-	return pList;
+	return list;
 }
 
-uint32	BkList_Size(BkList const* pList)
+uint32	BkList_Size(struct BkList const* list)
 {
-	uint32 lSize = 0;
-	pList = BkList_Front(pList);
+	uint32 size = 0;
+	list = BkList_Front(list);
 
-	while (!BK_ISNULL(pList))
+	while (!BK_ISNULL(list))
 	{
-		lSize++;
-		pList = BkList_Next(pList);
+		size++;
+		list = BkList_Next(list);
 	}
 
-	return lSize;
+	return size;
 }
 
-void	BkList_Clear(BkList* pList)
+void	BkList_Clear(struct BkList* list)
 {
-	BkList* lpListP = NULL;
-	pList = BkList_Front(pList);
+	struct BkList* tmp = NULL;
+	list = BkList_Front(list);
 
-	while (!BK_ISNULL(pList))
+	while (!BK_ISNULL(list))
 	{
-		lpListP = BkList_Next(pList);
-		free(pList);
-		pList = lpListP;
+		tmp = BkList_Next(list);
+		free(list);
+		list = tmp;
 	}
 }
 
-BkList*	BkList_Get(BkList* pList, uint32 const index)
+struct BkList*	BkList_Get(struct BkList* list, uint32 const index)
 {
-	uint32 lIndex = 0;
-	pList = BkList_Front(pList);
+	uint32 i = 0;
+	list = BkList_Front(list);
 
-	while (lIndex < index)
+	while (i < index)
 	{
-		pList = BkList_Next(pList);
+		list = BkList_Next(list);
 		
-		if (BK_ISNULL(pList))
+		if (BK_ISNULL(list))
 			return NULL;
 
-		lIndex++;
+		i++;
 	}
 
-	return pList;
+	return list;
 }
 
-BkList*	BkList_Insert(BkList* pList, void const* pData, uint32 const index)
+struct BkList*	BkList_Insert(struct BkList* list, void const* data, uint32 const index)
 {
-	BkList* lpList = pList;
+	struct BkList* tmp = list;
 
-	pList = BkList_Get(pList, index);
+	list = BkList_Get(list, index);
 
-	if (BK_ISNULL(pList))
-		return BkList_PushBack(lpList, pData);
+	if (BK_ISNULL(list))
+		return BkList_PushBack(tmp, data);
 	else
 	{
-		BkList* lpPrevious = BkList_Previous(pList);
+		struct BkList* lpPrevious = BkList_Previous(list);
 
-		pList->previous = BkList_Alloc();
-		pList->previous->elem = pData;
-		pList->previous->next = pList;
-		pList->previous->previous = lpPrevious;
+		list->previous = BkList_Alloc();
+		list->previous->data = data;
+		list->previous->next = list;
+		list->previous->previous = lpPrevious;
 
 		if (!BK_ISNULL(lpPrevious))
-			lpPrevious->next = BkList_Previous(pList);
+			lpPrevious->next = BkList_Previous(list);
 
-		return BkList_Front(pList);
+		return BkList_Front(list);
 	}
 }
 
-BkList*	BkList_Erase(BkList* pList, void const* pData)
+struct BkList*	BkList_Erase(struct BkList* list, void const* data)
 {
-	pList = BkList_Front(pList);
+	list = BkList_Front(list);
 
-	while (!BK_ISNULL(pList))
+	while (!BK_ISNULL(list))
 	{
-		if (BkList_Data(pList) == pData)
+		if (BkList_Data(list) == data)
 		{
-			return BkList_EraseLink(pList);
+			return BkList_EraseLink(list);
 		}
 
-		pList = BkList_Next(pList);
+		list = BkList_Next(list);
 	}
 
-	return BkList_Front(pList);
+	return BkList_Front(list);
 }
 
-BkList*	BkList_EraseLink(BkList* pLink)
+struct BkList*	BkList_EraseLink(struct BkList* link)
 {
-	BkList* lpPrevious = BkList_Previous(pLink);
-	BkList* lpNext = BkList_Next(pLink);
+	struct BkList* previous = BkList_Previous(link);
+	struct BkList* next = BkList_Next(link);
 
-	free(pLink);
+	free(link);
 
-	if (!BK_ISNULL(lpNext))
-		lpNext->previous = lpPrevious;
+	if (!BK_ISNULL(next))
+		next->previous = previous;
 
-	if (!BK_ISNULL(lpPrevious))
-		lpPrevious->next = lpNext;
+	if (!BK_ISNULL(previous))
+		previous->next = next;
 
-	return BkList_Front(lpPrevious != NULL ? lpPrevious : lpNext);
+	return BkList_Front(previous != NULL ? previous : next);
 }
 
-BkList*	BkList_PushFront(BkList* pList, void const* pData)
+struct BkList*	BkList_PushFront(struct BkList* list, void const* data)
 {
-	pList = BkList_Front(pList);
+	list = BkList_Front(list);
 
-	if (BK_ISNULL(pList))
+	if (BK_ISNULL(list))
 	{
-		pList = BkList_Alloc();
-		pList->elem = pData;
-		return pList;
+		list = BkList_Alloc();
+		list->data = data;
+		return list;
 	}
 	else
 	{
-		pList->previous = BkList_Alloc();
-		pList->previous->elem = pData;
-		pList->previous->next = pList;
-		return BkList_Previous(pList);
+		list->previous = BkList_Alloc();
+		list->previous->data = data;
+		list->previous->next = list;
+		return BkList_Previous(list);
 	}
 }
 
-BkList*	BkList_PushBack(BkList* pList, void const* pData)
+struct BkList*	BkList_PushBack(struct BkList* list, void const* data)
 {
-	pList = BkList_Back(pList);
+	list = BkList_Back(list);
 
-	if (BK_ISNULL(pList))
+	if (BK_ISNULL(list))
 	{
-		pList = BkList_Alloc();
-		pList->elem = pData;
-		return pList;
+		list = BkList_Alloc();
+		list->data = data;
+		return list;
 	}
 	else
 	{
-		pList->next = BkList_Alloc();
-		pList->next->elem = pData;
-		pList->next->previous = pList;
-		return BkList_Front(pList);
+		list->next = BkList_Alloc();
+		list->next->data = data;
+		list->next->previous = list;
+		return BkList_Front(list);
 	}
 }
 
-BkList*	BkList_PopFront(BkList* pList)
+struct BkList*	BkList_PopFront(struct BkList* list)
 {
-	pList = BkList_Front(pList);
+	list = BkList_Front(list);
 
-	if (!BK_ISNULL(BkList_Next(pList)))
+	if (!BK_ISNULL(BkList_Next(list)))
 	{
-		pList = BkList_Next(pList);
-		free(BkList_Previous(pList));
-		pList->previous = NULL;
+		list = BkList_Next(list);
+		free(BkList_Previous(list));
+		list->previous = NULL;
 	}
 	else
 	{
-		free(pList);
-		pList = NULL;
+		free(list);
+		list = NULL;
 	}
 
-	return pList;
+	return list;
 }
 
-BkList*	BkList_PopBack(BkList* pList)
+struct BkList*	BkList_PopBack(struct BkList* list)
 {
-	pList = BkList_Back(pList);
+	list = BkList_Back(list);
 
-	if (!BK_ISNULL(BkList_Previous(pList)))
+	if (!BK_ISNULL(BkList_Previous(list)))
 	{
-		pList = BkList_Previous(pList);
-		free(BkList_Next(pList));
-		pList->next = NULL;
+		list = BkList_Previous(list);
+		free(BkList_Next(list));
+		list->next = NULL;
 	}
 	else
 	{
-		free(pList);
-		pList = NULL;
+		free(list);
+		list = NULL;
 	}
 
-	return BkList_Front(pList);
+	return BkList_Front(list);
 }
 
-BkList*	BkList_Alloc(void)
+struct BkList*	BkList_Alloc(void)
 {
-	BkList* lpList = malloc(sizeof(BkList));
+	struct BkList* list = malloc(sizeof(struct BkList));
 
-	if (BK_ISNULL(lpList))
+	if (BK_ISNULL(list))
 		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block");
 
-	lpList->elem = NULL;
-	lpList->next = NULL;
-	lpList->previous = NULL;
+	list->data = NULL;
+	list->next = NULL;
+	list->previous = NULL;
 
-	return lpList;
+	return list;
 }

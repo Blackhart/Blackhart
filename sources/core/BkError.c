@@ -3,44 +3,44 @@
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-static void __BkLogMsgError(char const* pPrefix, char const* pMsg, va_list const ArgList);
+static void __BkLogMsgError(char const* prefix, char const* msg, va_list const arglist);
 
 // ~~~~~ Def(ALL) ~~~~~
 
-void	BkDie(char const* pMsg, ...)
+void	BkDie(char const* msg, ...)
 {
-	va_list	lList; // 4 bytes
+	va_list	arglist;
 
-	va_start(lList, pMsg);
-	__BkLogMsgError("FATAL: ", pMsg, lList);
-	va_end(lList);
+	va_start(arglist, msg);
+	__BkLogMsgError("FATAL: ", msg, arglist);
+	va_end(arglist);
 
 	exit(BK_FAILURE);
 }
 
-BkResult	BkError(char const* pMsg, ...)
+BkResult	BkError(char const* msg, ...)
 {
-	va_list	lList; // 4 bytes
+	va_list	arglist;
 
-	va_start(lList, pMsg);
-	__BkLogMsgError("ERROR: ", pMsg, lList);
-	va_end(lList);
+	va_start(arglist, msg);
+	__BkLogMsgError("ERROR: ", msg, arglist);
+	va_end(arglist);
 
 	return BK_FAILURE;
 }
 
-void	BkWarning(char const* pMsg, ...)
+void	BkWarning(char const* msg, ...)
 {
-	va_list	lList; // 4 bytes
+	va_list	arglist;
 
-	va_start(lList, pMsg);
-	__BkLogMsgError("WARNING: ", pMsg, lList);
-	va_end(lList);
+	va_start(arglist, msg);
+	__BkLogMsgError("WARNING: ", msg, arglist);
+	va_end(arglist);
 }
 
-static void __BkLogMsgError(char const* pPrefix, char const* pMsg, va_list const ArgList)
+static void __BkLogMsgError(char const* prefix, char const* msg, va_list const arglist)
 {
-	BkLog_arglist(pPrefix);
-	BkLog_valist(pMsg, ArgList);
+	BkLog_arglist(prefix);
+	BkLog_valist(msg, arglist);
 	BkLog_arglist("\n");
 }

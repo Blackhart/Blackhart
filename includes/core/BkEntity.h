@@ -3,11 +3,9 @@
 
 #include "core\BkGeometry.h"
 
-struct sEntity
+struct BkEntity
 {
-	BkGeometry*	geometry;
+	struct BkGeometry*	geometry;
 };
-
-typedef struct sEntity BkEntity;
 
 #endif
