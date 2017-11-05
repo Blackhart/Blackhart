@@ -45,10 +45,10 @@ struct BkMatrix4x4	Multiply_mat4_real(struct BkMatrix4x4 const* a, real const b)
 
 void	Set_mat4(struct BkMatrix4x4* a, struct BkVector4 const* row1, struct BkVector4 const* row2, struct BkVector4 const* row3, struct BkVector4 const* row4)
 {
-	a->m11 = row1->x; a->m12 = row1->y; a->m13 = row1->z; a->m14 = row1->w;
-	a->m21 = row2->x; a->m22 = row2->y; a->m23 = row2->z; a->m24 = row2->w;
-	a->m31 = row3->x; a->m32 = row3->y; a->m33 = row3->z; a->m34 = row3->w;
-	a->m41 = row4->x; a->m42 = row4->y; a->m43 = row4->z; a->m44 = row4->w;
+	a->m11 = row1->x; a->m12 = row1->y; a->m13 = row1->z;
+	a->m21 = row2->x; a->m22 = row2->y; a->m23 = row2->z;
+	a->m31 = row3->x; a->m32 = row3->y; a->m33 = row3->z;
+	a->m41 = row4->x; a->m42 = row4->y; a->m43 = row4->z;
 }
 
 struct BkMatrix4x4	Copy_mat4(struct BkMatrix4x4 const* src)

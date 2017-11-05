@@ -50,8 +50,8 @@ int	main()
 
 	// Create GPU Buffer containing triangle's vertices
 	real	lVertices[12] = { 0.25f, -0.25f, 0.5f, 1.0f,
-							  -0.25f, -0.25f, 0.5f, 1.0f,
-							  0.25f, 0.25f, 0.5f, 1.0f };
+				  -0.25f, -0.25f, 0.5f, 1.0f,
+				  0.25f, 0.25f, 0.5f, 1.0f };
 
 	uint32 lSize = sizeof(lVertices);
 

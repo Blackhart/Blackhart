@@ -1,147 +1,156 @@
-#include "core\BkVector4.h"
-#include "core\BkMatrix4x4.h"
+#include <math.h>
 
-struct BkVector4	Lerp_vec4(struct BkVector4 const* from, struct BkVector4 const* to, real const t)
+#include "core\BkMath.h"
+
+struct BkVector4	BkVector4_Zero(void)
 {
-	struct BkVector4 sfromto = Substract_vec4_vec4(from, to);
-	struct BkVector4 msfromtot = Multiply_vec4_real(&sfromto, t);
-	return Addition_vec4_vec4(&msfromtot, from);
+	struct BkVector4 out;
+	out.x = 0.0;
+	out.y = 0.0;
+	out.z = 0.0;
+	return out;
 }
 
-struct BkVector4	Addition_vec4_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+struct BkVector4	BkVector4_Lerp(struct BkVector4 const* from, struct BkVector4 const* to, real const t)
 {
-	struct BkVector4 lOut;
-	lOut.x = a->x + b->x;
-	lOut.y = a->y + b->y;
-	lOut.z = a->z + b->z;
-	lOut.w = 1.0;
-	return lOut;
+	if (t <= 0.0)
+		return BkVector4_Copy(from);
+	else if (t >= 1.0)
+		return BkVector4_Copy(to);
+	else
+	{
+		struct BkVector4 out = BkVector4_Sub_BkVector4(to, from);
+		out = BkVector4_Mul_Real(&out, t);
+		return BkVector4_Add_BkVector4(from, &out);
+	}
 }
 
-struct BkVector4	Multiply_vec4_real(struct BkVector4 const* a, real b)
+struct BkVector4	BkVector4_Add_BkVector4(struct BkVector4 const* a, struct BkVector4 const* b)
 {
-	struct BkVector4 lOut;
-	lOut.x = a->x * b;
-	lOut.y = a->y * b;
-	lOut.z = a->z * b;
-	lOut.w = 1.0;
-	return lOut;
+	struct BkVector4 out;
+	out.x = a->x + b->x;
+	out.y = a->y + b->y;
+	out.z = a->z + b->z;
+	return out;
 }
 
-struct BkVector4	Substract_vec4_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+struct BkVector4	BkVector4_Mul_Real(struct BkVector4 const* a, real b)
 {
-	struct BkVector4 lOut;
-	lOut.x = a->x - b->x;
-	lOut.y = a->y - b->y;
-	lOut.z = a->z - b->z;
-	lOut.w = 1.0;
-	return lOut;
+	struct BkVector4 out;
+	out.x = a->x * b;
+	out.y = a->y * b;
+	out.z = a->z * b;
+	return out;
 }
 
-real	Distance_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+struct BkVector4	BkVector4_Sub_BkVector4(struct BkVector4 const* a, struct BkVector4 const* b)
 {
-	struct BkVector4 sab = Substract_vec4_vec4(a, b);
-	return Magnitude_vec4(&sab);
+	struct BkVector4 out;
+	out.x = a->x - b->x;
+	out.y = a->y - b->y;
+	out.z = a->z - b->z;
+	return out;
 }
 
-real	Magnitude_vec4(struct BkVector4 const* a)
+real	BkVector4_Distance(struct BkVector4 const* a, struct BkVector4 const* b)
+{
+	struct BkVector4 out = BkVector4_Sub_BkVector4(a, b);
+	return BkVector4_Magnitude(&out);
+}
+
+real	BkVector4_Magnitude(struct BkVector4 const* a)
 {
 	return (real)sqrt(a->x * a->x + a->y * a->y + a->z * a->z);
 }
 
-struct BkVector4	Max_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+struct BkVector4	BkVector4_Max(struct BkVector4 const* a, struct BkVector4 const* b)
 {
-	struct BkVector4 res;
-	if (Magnitude_vec4(a) > Magnitude_vec4(b))
-		Assign_vec4(&res, a);
+	struct BkVector4 out;
+	if (BkVector4_Magnitude(a) > BkVector4_Magnitude(b))
+		BkVector4_Assign(&out, a);
 	else
-		Assign_vec4(&res, b);
-	return res;
+		BkVector4_Assign(&out, b);
+	return out;
 }
 
-struct BkVector4	Min_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+struct BkVector4	BkVector4_Min(struct BkVector4 const* a, struct BkVector4 const* b)
 {
-	struct BkVector4 res;
-	if (Magnitude_vec4(a) < Magnitude_vec4(b))
-		Assign_vec4(&res, a);
+	struct BkVector4 out;
+	if (BkVector4_Magnitude(a) < BkVector4_Magnitude(b))
+		BkVector4_Assign(&out, a);
 	else
-		Assign_vec4(&res, b);
-	return res;
+		BkVector4_Assign(&out, b);
+	return out;
 }
 
-void	Assign_vec4(struct BkVector4* dst, struct BkVector4 const* src)
+void	BkVector4_Assign(struct BkVector4* dst, struct BkVector4 const* src)
 {
-	Set_vec4(dst, src->x, src->y, src->z, src->w);
+	BkVector4_Set(dst, src->x, src->y, src->z);
 }
 
-struct BkVector4	Copy_vec4(struct BkVector4 const* src)
+struct BkVector4	BkVector4_Copy(struct BkVector4 const* src)
 {
-	struct BkVector4 dst;
-	Set_vec4(&dst, src->x, src->y, src->z, src->w);
-	return dst;
+	struct BkVector4 out;
+	BkVector4_Set(&out, src->x, src->y, src->z);
+	return out;
 }
 
-void	Set_vec4(struct BkVector4* dst, real const x, real const y, real const z, real const w)
+void	BkVector4_Set(struct BkVector4* dst, real const x, real const y, real const z)
 {
 	dst->x = x;
 	dst->y = y;
 	dst->z = z;
-	dst->w = w;
 }
 
-real	Dot_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+real	BkVector4_Dot(struct BkVector4 const* a, struct BkVector4 const* b)
 {
 	return a->x * b->x + a->y * b->y + a->z * b->z;
 }
 
-real	Angle_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+real	BkVector4_Angle(struct BkVector4 const* a, struct BkVector4 const* b)
 {
-	struct BkVector4 na = Normalize_vec4(a);
-	struct BkVector4 nb = Normalize_vec4(b);
-	return (real)acos(Dot_vec4(&na, &nb));
+	struct BkVector4 na = BkVector4_Normalize(a);
+	struct BkVector4 nb = BkVector4_Normalize(b);
+	return (real)acos(BkVector4_Dot(&na, &nb)) * RAD_TO_DEG;
 }
 
-struct BkVector4	Normalize_vec4(struct BkVector4 const* a)
+struct BkVector4	BkVector4_Normalize(struct BkVector4 const* a)
 {
-	return Divide_vec4_real(a, Magnitude_vec4(a));
+	return BkVector4_Div_Real(a, BkVector4_Magnitude(a));
 }
 
-struct BkVector4	Divide_vec4_real(struct BkVector4 const* a, real b)
+struct BkVector4	BkVector4_Div_Real(struct BkVector4 const* a, real b)
 {
-	struct BkVector4 lOut;
-	lOut.x = a->x / b;
-	lOut.y = a->y / b;
-	lOut.z = a->z / b;
-	lOut.w = 1.0;
-	return lOut;
+	struct BkVector4 out;
+	out.x = a->x / b;
+	out.y = a->y / b;
+	out.z = a->z / b;
+	return out;
 }
 
-struct BkVector4	Cross_vec4(struct BkVector4 const* a, struct BkVector4 const* b)
+struct BkVector4	BkVector4_Cross(struct BkVector4 const* a, struct BkVector4 const* b)
 {
-	struct BkVector4 lOut;
-	lOut.x = a->y * b->z - a->z * b->y;
-	lOut.y = a->z * b->x - a->x * b->z;
-	lOut.z = a->x * b->y - a->y * b->x;
-	lOut.w = 1.0;
-	return lOut;
+	struct BkVector4 out;
+	out.x = a->y * b->z - a->z * b->y;
+	out.y = a->z * b->x - a->x * b->z;
+	out.z = a->x * b->y - a->y * b->x;
+	return out;
 }
 
-struct BkVector4	Multiply_vec4_mat4(struct BkVector4 const* a, struct BkMatrix4x4 const* b)
+struct BkVector4	BkVector4_Mul_BkMatrix4x4(struct BkVector4 const* a, struct BkMatrix4x4 const* b)
 {
-	struct BkVector4 res;
-	res.x = a->x * b->m11 + a->y * b->m21 + a->z * b->m31 + a->w * b->m41;
-	res.y = a->x * b->m12 + a->y * b->m22 + a->z * b->m32 + a->w * b->m42;
-	res.z = a->x * b->m13 + a->y * b->m23 + a->z * b->m33 + a->w * b->m43;
-	res.w = a->x * b->m14 + a->y * b->m24 + a->z * b->m34 + a->w * b->m44;
-	return res;
+	struct BkVector4 out;
+	out.x = a->x * b->m11 + a->y * b->m21 + a->z * b->m31;
+	out.y = a->x * b->m12 + a->y * b->m22 + a->z * b->m32;
+	out.z = a->x * b->m13 + a->y * b->m23 + a->z * b->m33;
+	return out;
 }
 
-struct BkVector4	Negate_vec4(struct BkVector4 const* a)
+struct BkVector4	BkVector4_Negate(struct BkVector4 const* a)
 {
-	struct BkVector4 lOut;
-	lOut.x = -a->x;
-	lOut.y = -a->y;
-	lOut.z = -a->z;
-	lOut.w = 1.0;
-	return lOut;
+	struct BkVector4 out;
+	out.x = -a->x;
+	out.y = -a->y;
+	out.z = -a->z;
+	return out;
 }

@@ -1,4 +1,4 @@
-#include "core\BkList.h"
+#include "core\BkVector.h"
 #include "core\BkScene.h"
 #include "core\BkEntity.h"
 #include "core\BkGeometry.h"
@@ -55,13 +55,15 @@ void	_BkOpenGL_Render(void)
 
 	glUseProgram(shader_program->id);
 
-	struct BkList const* list = BkScene_GetEntities();
+	struct BkVector const* vector = BkScene_GetEntities();
+	struct BkEntity const* entities = vector->data;
 	struct BkOpenGLBuffer* opengl_buffer = NULL;
 	real* vertices = NULL;
+	size_t i = 0;
 
-	while (list != NULL)
+	while (i < BkVector_Size((*vector)))
 	{
-		vertices = ((struct BkGeometry*)((struct BkEntity*)list->data)->geometry)->vertices;
+		vertices = entities->geometry->vertices;
 
 		opengl_buffer = _BkOpenGL_CreateBuffer(12 * sizeof(real*), vertices);
 		if (BK_ISNULL(opengl_buffer))
@@ -78,7 +80,7 @@ void	_BkOpenGL_Render(void)
 
 		_BkOpenGL_ReleaseBuffer(&opengl_buffer);
 
-		list = list->next;
+		i++;
 	}
 
 RENDERER_RELEASE_MATERIAL:
