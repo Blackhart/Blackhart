@@ -3,6 +3,7 @@
 
 #include "pil\BkAtomicDataType.h"
 
+#include "core\BkPoint.h"
 #include "core\BkVector4.h"
 #include "core\BkMatrix4x4.h"
 

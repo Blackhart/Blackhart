@@ -11,6 +11,21 @@ TEST(BkVector4, BkVector4_Zero)
 	EXPECT_FLOAT_EQ(vec4.z, 0.0);
 }
 
+TEST(BkVector4, BkVector4_From_Points)
+{
+	struct BkPoint a = BkPoint_Zero();
+	struct BkPoint b = BkPoint_Zero();
+
+	BkPoint_Set(&a, 1.0, 3.0, 2.0);
+	BkPoint_Set(&b, 1.0, 2.0, 4.0);
+
+	struct BkVector4 out = BkVector4_From_Points(&a, &b);
+
+	EXPECT_FLOAT_EQ(out.x, 0.0);
+	EXPECT_FLOAT_EQ(out.y, -1.0);
+	EXPECT_FLOAT_EQ(out.z, 2.0);
+}
+
 TEST(BkVector4, BkVector4_Set)
 {
 	struct BkVector4 vec4 = BkVector4_Zero();

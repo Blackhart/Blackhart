@@ -2,12 +2,23 @@
 
 #include "core\BkMath.h"
 
+// ~~~~~ Def(ALL) ~~~~~
+
 struct BkVector4	BkVector4_Zero(void)
 {
 	struct BkVector4 out;
 	out.x = 0.0;
 	out.y = 0.0;
 	out.z = 0.0;
+	return out;
+}
+
+struct BkVector4	BkVector4_From_Points(struct BkPoint const* a, struct BkPoint const* b)
+{
+	struct BkVector4 out;
+	out.x = b->x - a->x;
+	out.y = b->y - a->y;
+	out.z = b->z - a->z;
 	return out;
 }
 
@@ -50,12 +61,6 @@ struct BkVector4	BkVector4_Sub_BkVector4(struct BkVector4 const* a, struct BkVec
 	out.y = a->y - b->y;
 	out.z = a->z - b->z;
 	return out;
-}
-
-real	BkVector4_Distance(struct BkVector4 const* a, struct BkVector4 const* b)
-{
-	struct BkVector4 out = BkVector4_Sub_BkVector4(a, b);
-	return BkVector4_Magnitude(&out);
 }
 
 real	BkVector4_Magnitude(struct BkVector4 const* a)
