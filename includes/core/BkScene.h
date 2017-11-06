@@ -4,12 +4,12 @@
 #include "pil\__BkExport.h"
 
 #include "core\BkEntity.h"
-#include "core\BkVector.h"
+#include "core\BkArray.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 extern BK_API void			BkScene_AddEntity(struct BkEntity* entity);
 extern BK_API void			BkScene_RemoveEntity(struct BkEntity* entity);
-extern BK_API struct BkVector const*	BkScene_GetEntities(void);
+extern BK_API struct BkArray const*	BkScene_GetEntities(void);
 
 #endif

@@ -1,4 +1,4 @@
-#include "core\BkVector.h"
+#include "core\BkArray.h"
 #include "core\BkScene.h"
 #include "core\BkEntity.h"
 #include "core\BkGeometry.h"
@@ -55,13 +55,13 @@ void	_BkOpenGL_Render(void)
 
 	glUseProgram(shader_program->id);
 
-	struct BkVector const* vector = BkScene_GetEntities();
+	struct BkArray const* vector = BkScene_GetEntities();
 	struct BkEntity const* entities = vector->data;
 	struct BkOpenGLBuffer* opengl_buffer = NULL;
 	real* vertices = NULL;
 	size_t i = 0;
 
-	while (i < BkVector_Size((*vector)))
+	while (i < BkArray_Size((*vector)))
 	{
 		vertices = entities->geometry->vertices;
 

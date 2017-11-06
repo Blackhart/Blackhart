@@ -2,7 +2,7 @@
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
-static struct BkVector	__BkScene_Entities;
+static struct BkArray	__BkScene_Entities;
 
 // ~~~~~ Def(ALL) ~~~~~
 
@@ -14,7 +14,7 @@ void	BkScene_AddEntity(struct BkEntity* entity)
 		return;
 	}
 
-	BkVector_PushBack(__BkScene_Entities, entity);
+	BkArray_PushBack(__BkScene_Entities, entity);
 }
 
 void	BkScene_RemoveEntity(struct BkEntity* entity)
@@ -28,7 +28,7 @@ void	BkScene_RemoveEntity(struct BkEntity* entity)
 	//__BkScene_Entities = BkList_Erase(__BkScene_Entities, entity);
 }
 
-struct BkVector const*	BkScene_GetEntities(void)
+struct BkArray const*	BkScene_GetEntities(void)
 {
 	return &__BkScene_Entities;
 }
