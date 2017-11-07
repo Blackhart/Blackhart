@@ -48,30 +48,6 @@ int	main()
 	if (BK_ERROR(BkInitialize()))
 		goto GLFW_DESTROY_WINDOW;
 
-	// Create GPU Buffer containing triangle's vertices
-	real	lVertices[12] = { 0.25f, -0.25f, 0.5f, 1.0f,
-				  -0.25f, -0.25f, 0.5f, 1.0f,
-				  0.25f, 0.25f, 0.5f, 1.0f };
-
-	uint32 lSize = sizeof(lVertices);
-
-	// Create geometry to store data about the primitive
-	BkGeometry* lGeometry = new (std::nothrow) BkGeometry;
-	if (lGeometry == NULL)
-		goto BLACKHART_UNINITIALIZE;
-
-	lGeometry->vertices = lVertices;
-
-	// Create entity to store the geometry
-	BkEntity* lEntity = new (std::nothrow) BkEntity;
-	if (lEntity == NULL)
-		goto BLACKHART_DESTROY_GEOMETRY;
-
-	lEntity->geometry = lGeometry;
-
-	// Add the entity to the scene
-	BkScene_AddEntity(lEntity);
-
 
 	// ~~~~~ RENDER LOOP ~~~~~
 
@@ -91,13 +67,6 @@ int	main()
 
 	// ~~~~~ BLACKHART UNINITIALIZATION ~~~~~
 
-BLACKHART_DESTROY_ENTITY:
-	delete lEntity;
-
-BLACKHART_DESTROY_GEOMETRY:
-	delete lGeometry;
-
-BLACKHART_UNINITIALIZE:
 	BkUninitialize();
 
 

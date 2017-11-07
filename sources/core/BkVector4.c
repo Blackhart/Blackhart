@@ -142,15 +142,6 @@ struct BkVector4	BkVector4_Cross(struct BkVector4 const* a, struct BkVector4 con
 	return out;
 }
 
-struct BkVector4	BkVector4_Mul_BkMatrix4x4(struct BkVector4 const* a, struct BkMatrix4x4 const* b)
-{
-	struct BkVector4 out;
-	out.x = a->x * b->m11 + a->y * b->m21 + a->z * b->m31;
-	out.y = a->x * b->m12 + a->y * b->m22 + a->z * b->m32;
-	out.z = a->x * b->m13 + a->y * b->m23 + a->z * b->m33;
-	return out;
-}
-
 struct BkVector4	BkVector4_Negate(struct BkVector4 const* a)
 {
 	struct BkVector4 out;

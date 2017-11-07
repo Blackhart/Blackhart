@@ -8,8 +8,5 @@
 #include "core\BkString.h"
 #include "core\BkList.h"
 #include "core\BkArray.h"
-#include "core\BkScene.h"
-#include "core\BkEntity.h"
-#include "core\BkGeometry.h"
 
 #endif

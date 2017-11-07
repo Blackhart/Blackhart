@@ -7,6 +7,7 @@
 #include "core\BkVector4.h"
 #include "core\BkMatrix4x4.h"
 
+extern const real PI;
 extern const real DEG_TO_RAD;
 extern const real RAD_TO_DEG;
 
