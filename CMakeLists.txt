@@ -8,83 +8,81 @@ set(${BLACKHART_PROJECT_NAME}_VERSION_MAJOR 0)
 set(${BLACKHART_PROJECT_NAME}_VERSION_MINOR 1)
 set(${BLACKHART_PROJECT_NAME}_VERSION_PATCH 0)
 
+
+# ~~~~~ Blackhart ~~~~~
+
 message("")
 message("${BLACKHART_PROJECT_NAME}: BUILD ENABLE")
-message("~~~ ${BLACKHART_PROJECT_NAME} ~~~")
 
-
-# Blackhart
-
+# Sets Blackhart's sources directory
 set(BLACKHART_PATH "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}")
 
+# Sets debug postfix
+set(CMAKE_DEBUG_POSTFIX d)
+
+# Sets custom directories for both Blackhart's shared and static libraries
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Gets all the source code (both .c and .h files)
 file(GLOB_RECURSE CFiles sources/*.c)
 file(GLOB_RECURSE HFiles includes/*.h)
 
-option(BUILD_BLACKHART_AS_SHARED_LIBS "Build Blackhart as shared libs ?" OFF)
-if (BUILD_BLACKHART_AS_SHARED_LIBS)
-	message("${BLACKHART_PROJECT_NAME}: Library:(SHARED)")
-	add_library(${BLACKHART_PROJECT_NAME} SHARED ${CFiles} ${HFiles})
-	add_definitions(-DBK_EXPORT)
-else (BUILD_BLACKHART_AS_SHARED_LIBS)
-	message("${BLACKHART_PROJECT_NAME}: Library:(STATIC)")
-	add_library(${BLACKHART_PROJECT_NAME} STATIC ${CFiles} ${HFiles})
-endif (BUILD_BLACKHART_AS_SHARED_LIBS)
+message("${BLACKHART_PROJECT_NAME}: Library:(SHARED)")
 
+# Compiles Blackhart as shared library
+add_definitions(-DBK_EXPORT)
+add_library(${BLACKHART_PROJECT_NAME} SHARED ${CFiles} ${HFiles})
+
+# Renames Blackhart shared library to as 'blackhart32'
+set_target_properties(${BLACKHART_PROJECT_NAME} PROPERTIES OUTPUT_NAME "blackhart32")
+
+# Links Blackhart's include directory
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/includes")
 
 
-# extlibs
-
-set(BLACKHART_EXTLIBS_PATH "${BLACKHART_PATH}/extlibs")
-
-
-# Glew
+# ~~~~~ Glew ~~~~~
 
 message("")
-set(GLEW_PATH "${BLACKHART_EXTLIBS_PATH}/glew")
 
-option(GLEW_AUTO_COMPILE "Will glew must be compile with ${BLACKHART_PROJECT_NAME}?!" OFF)
-if (GLEW_AUTO_COMPILE)
-	message("glew: AUTO COMPILE")
-	add_subdirectory("${GLEW_PATH}/build/cmake")
-	target_link_libraries(${BLACKHART_PROJECT_NAME} glew)
+# Sets glew's library directory
+set(GLEW_LIBRARY_PATH "" CACHE PATH "glew's library directory")
+
+# Finds glew library
+find_library(GLEW_DEBUG_LIBRARY NAMES glew32d PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
+find_library(GLEW_RELEASE_LIBRARY NAMES glew32 PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
+
+find_package(OpenGL REQUIRED)
+
+if (NOT GLEW_DEBUG_LIBRARY OR NOT GLEW_RELEASE_LIBRARY)
+	message("glew: Library not found!")
 else ()
-	message("glew: !(AUTO COMPILE)")
-	set(GLEW_LIBRARY_PATH "${GLEW_PATH}/lib" CACHE PATH "Library directory of the glew library")
-	find_library(GLEW_DEBUG_LIBRARY NAMES glew32d PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-	find_library(GLEW_RELEASE_LIBRARY NAMES glew32 PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
-	if (NOT GLEW_DEBUG_LIBRARY OR NOT GLEW_RELEASE_LIBRARY)
-		message("glew: Library not found!")
-	else ()
-		message("glew: Library found!")
-		target_link_libraries(${BLACKHART_PROJECT_NAME} debug "${GLEW_DEBUG_LIBRARY}" optimized "${GLEW_RELEASE_LIBRARY}")
-	endif ()
+	message("glew: Library found!")
 	message("glew: Debug/library_path:(${GLEW_DEBUG_LIBRARY}) | Release/library_path:(${GLEW_RELEASE_LIBRARY})")
-endif()
+	# Links glew library to Blackhart
+	target_link_libraries(${BLACKHART_PROJECT_NAME} debug "${GLEW_DEBUG_LIBRARY}" optimized "${GLEW_RELEASE_LIBRARY}")
+	# Links opengl libraries to Blackhart
+	target_link_libraries(${BLACKHART_PROJECT_NAME} "${OPENGL_LIBRARIES}")
+endif ()
 
-set(GLEW_INCLUDE_PATH "${GLEW_PATH}/include" CACHE PATH "Include directory of the glew library")
+# Sets glew's include directory
+set(GLEW_INCLUDE_PATH "" CACHE PATH "glew's include directory")
+
+# Links glew's include directory
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH}")
+
 message("glew: include_path:(${GLEW_INCLUDE_PATH})")
 
 
-# Tests
+# ~~~~~ Tests ~~~~~
 
+message("")
+
+# Sets Blackhart-Tests directory
 set(BLACKHART_TESTS_PATH "${BLACKHART_PATH}/tests")
 
 option(BUILD_BLACKHART_TESTS "Build Blackhart's tests" OFF)
 if (BUILD_BLACKHART_TESTS)
 	add_subdirectory("${BLACKHART_TESTS_PATH}")
 endif (BUILD_BLACKHART_TESTS)
-
-
-# Samples
-
-set(BLACKHART_SAMPLES_PATH "${BLACKHART_PATH}/samples")
-
-option(BUILD_BLACKHART_SAMPLES "Build Blackhart's samples" OFF)
-if (BUILD_BLACKHART_SAMPLES)
-	add_subdirectory("${BLACKHART_SAMPLES_PATH}")
-endif (BUILD_BLACKHART_SAMPLES)
-
-
-message("")

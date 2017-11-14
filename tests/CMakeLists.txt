@@ -1,57 +1,60 @@
 cmake_minimum_required(VERSION 3.7)
 
-set(BLACKHART_TEST_PROJECT_NAME "Blackhart-test")
+set(BLACKHART_TEST_PROJECT_NAME "Blackhart-Test")
 
 project(${BLACKHART_TEST_PROJECT_NAME} CXX)
 
+
+# ~~~~~ Blackhart tests ~~~~~
+
 message("")
 message("${BLACKHART_TEST_PROJECT_NAME}: BUILD ENABLE")
-message("~~~ ${BLACKHART_TEST_PROJECT_NAME} ~~~")
 
+if (MSVC)
+	# Sets runtime library to MT
+	set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+	set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+endif (MSVC)
 
-# Blackhart tests
-
+# Gets all the source code (both .c and .h files)
 file(GLOB_RECURSE CppFiles sources/*.cpp)
 
+# Compiles Blackhart-test
 add_executable(${BLACKHART_TEST_PROJECT_NAME} ${CppFiles})
 
-
-# Blackhart
-
+# Links Blackhart's include directory
 target_include_directories(${BLACKHART_TEST_PROJECT_NAME} PUBLIC "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}/includes")
+
+# Links Blackhart library
 target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} Blackhart)
 
 
-# extlibs
+# ~~~~~ gtest ~~~~~
 
-set(BLACKHART_TEST_EXTLIBS_PATH "${${BLACKHART_TEST_PROJECT_NAME}_SOURCE_DIR}/extlibs")
+message("")
 
+# Sets googletest's library directory
+set(GTEST_LIBRARY_PATH "" CACHE PATH "googletest's library directory")
 
-# gtest
+# Finds googletest library
+find_library(GTEST_DEBUG_LIBRARY NAMES gtest PATHS "${GTEST_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
+find_library(GTEST_RELEASE_LIBRARY NAMES gtest PATHS "${GTEST_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
 
-set(GOOGLETEST_PATH "${BLACKHART_TEST_EXTLIBS_PATH}/googletest")
-
-option(GTEST_AUTO_COMPILE "Will gtest must be compile with ${BLACKHART_TEST_PROJECT_NAME}?!" OFF)
-if (GTEST_AUTO_COMPILE)
-	message("gtest: AUTO COMPILE")
-	add_subdirectory("${GOOGLETEST_PATH}")
-	target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} gtest)
+if (NOT GTEST_DEBUG_LIBRARY OR NOT GTEST_RELEASE_LIBRARY)
+	message("gtest: Library not found!")
 else ()
-	message("gtest: !(AUTO COMPILE)")
-	set(GTEST_LIBRARY_PATH "${GOOGLETEST_PATH}/build/googletest/" CACHE PATH "")
-	find_library(GTEST_DEBUG_LIBRARY NAMES gtest PATHS "${GTEST_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-	find_library(GTEST_RELEASE_LIBRARY NAMES gtest PATHS "${GTEST_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
-	if (NOT GTEST_DEBUG_LIBRARY OR NOT GTEST_RELEASE_LIBRARY)
-		message("gtest: Library not found!")
-	else ()
-		message("gtest: Library found!")
-		target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} debug "${GTEST_DEBUG_LIBRARY}" optimized "${GTEST_RELEASE_LIBRARY}")
-	endif ()
+	message("gtest: Library found!")
 	message("gtest: Debug/library_path:(${GTEST_DEBUG_LIBRARY}) | Release/library_path:(${GTEST_RELEASE_LIBRARY})")
+	# Links googletest library to Blackhart-test
+	target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} debug "${GTEST_DEBUG_LIBRARY}" optimized "${GTEST_RELEASE_LIBRARY}")
 endif ()
 
-set(GTEST_INCLUDE_PATH "${GOOGLETEST_PATH}/googletest/include" CACHE PATH "Include directory of the googletest library")
+# Sets googletest's include directory
+set(GTEST_INCLUDE_PATH "" CACHE PATH "googletest's include directory")
+
+# Links googletest's include directory
 target_include_directories(${BLACKHART_TEST_PROJECT_NAME} PUBLIC "${GTEST_INCLUDE_PATH}")
+
 message("gtest: include_path:(${GTEST_INCLUDE_PATH})")
 
 message("")
