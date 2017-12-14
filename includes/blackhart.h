@@ -1,14 +1,19 @@
 #ifndef __BK_BLACKHART_H__
 #define __BK_BLACKHART_H__
 
-#include "pil\BkPlatformIndependanceLayer.h"
-#include "pil\__BkExport.h"
+// Blackhart.foundation headers.
+#include "foundation\__BkExport.h"
+#include "foundation\BkFoundation.h"
 
-#include "core\BkCore.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BK_API BkResult	BkInitialize();
+/*! \brief Initializes Blackhart.
+ */
+extern BK_API void	BkInitialize();
+
+/*! \brief Uninitializes Blackhart.
+ */
 extern BK_API void	BkUninitialize(void);
 
 #endif

@@ -112,9 +112,9 @@ TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkMatrix4x4)
 	EXPECT_FLOAT_EQ(m.m41, 0.0); EXPECT_FLOAT_EQ(m.m42, 0.0); EXPECT_FLOAT_EQ(m.m43, 0.0); EXPECT_FLOAT_EQ(m.m44, 1.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkVector4)
+TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkVector3)
 {
-	struct BkVector4 v = BkVector4_Zero();
+	struct BkVector3 v = BkVector3_Zero();
 
 	v.x = 1.0; v.y = 2.0; v.z = 4.0;
 
@@ -125,14 +125,14 @@ TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkVector4)
 	m.m31 = 9.0; m.m32 = 10.0; m.m33 = 11.0; m.m34 = 12.0;
 	m.m41 = 13.0; m.m42 = 14.0; m.m43 = 15.0; m.m44 = 16.0;
 
-	v = BkMatrix4x4_Mul_BkVector4(&m, &v);
+	v = BkMatrix4x4_Mul_BkVector3(&m, &v);
 
 	EXPECT_FLOAT_EQ(v.x, 17.0); EXPECT_FLOAT_EQ(v.y, 45.0); EXPECT_FLOAT_EQ(v.z, 73.0);
 }
 
 TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkPoint)
 {
-	struct BkPoint p = BkPoint_Zero();
+	struct BkPoint3 p = BkPoint3_Zero();
 
 	p.x = 1.0; p.y = 2.0; p.z = 4.0;
 
@@ -148,48 +148,60 @@ TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkPoint)
 	EXPECT_FLOAT_EQ(p.x, 21.0); EXPECT_FLOAT_EQ(p.y, 53.0); EXPECT_FLOAT_EQ(p.z, 85.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Rotate_x)
+TEST(BkMatrix4x4, BkMatrix4x4_Rotation_x)
 {
 	struct BkMatrix4x4 m = BkMatrix4x4_Identity();
-	struct BkMatrix4x4 mr = BkMatrix4x4_Rotate_x(90.0);
+	struct BkMatrix4x4 mr = BkMatrix4x4_Rotation_x(90.0);
 
 	m = BkMatrix4x4_Mul_BkMatrix4x4(&m, &mr);
+
+	real const r = 0.017453292519943295769236907684886127134428718885417254560 * 90.0;
+	real const cr = cos(r);
+	real const sr = sin(r);
 
 	EXPECT_FLOAT_EQ(m.m11, 1.0); EXPECT_FLOAT_EQ(m.m12, 0.0); EXPECT_FLOAT_EQ(m.m13, 0.0); EXPECT_FLOAT_EQ(m.m14, 0.0);
-	EXPECT_FLOAT_EQ(m.m21, 0.0); EXPECT_FLOAT_EQ(m.m22, 0.0); EXPECT_FLOAT_EQ(m.m23, -1.0); EXPECT_FLOAT_EQ(m.m24, 0.0);
-	EXPECT_FLOAT_EQ(m.m31, 0.0); EXPECT_FLOAT_EQ(m.m32, 1.0); EXPECT_FLOAT_EQ(m.m33, 0.0); EXPECT_FLOAT_EQ(m.m34, 0.0);
+	EXPECT_FLOAT_EQ(m.m21, 0.0); EXPECT_FLOAT_EQ(m.m22, cr); EXPECT_FLOAT_EQ(m.m23, -sr); EXPECT_FLOAT_EQ(m.m24, 0.0);
+	EXPECT_FLOAT_EQ(m.m31, 0.0); EXPECT_FLOAT_EQ(m.m32, sr); EXPECT_FLOAT_EQ(m.m33, cr); EXPECT_FLOAT_EQ(m.m34, 0.0);
 	EXPECT_FLOAT_EQ(m.m41, 0.0); EXPECT_FLOAT_EQ(m.m42, 0.0); EXPECT_FLOAT_EQ(m.m43, 0.0); EXPECT_FLOAT_EQ(m.m44, 1.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Rotate_y)
+TEST(BkMatrix4x4, BkMatrix4x4_Rotation_y)
 {
 	struct BkMatrix4x4 m = BkMatrix4x4_Identity();
-	struct BkMatrix4x4 mr = BkMatrix4x4_Rotate_y(90.0);
+	struct BkMatrix4x4 mr = BkMatrix4x4_Rotation_y(90.0);
 
 	m = BkMatrix4x4_Mul_BkMatrix4x4(&m, &mr);
 
-	EXPECT_FLOAT_EQ(m.m11, 0.0); EXPECT_FLOAT_EQ(m.m12, 0.0); EXPECT_FLOAT_EQ(m.m13, 1.0); EXPECT_FLOAT_EQ(m.m14, 0.0);
+	real const r = 0.017453292519943295769236907684886127134428718885417254560 * 90.0;
+	real const cr = cos(r);
+	real const sr = sin(r);
+
+	EXPECT_FLOAT_EQ(m.m11, cr); EXPECT_FLOAT_EQ(m.m12, 0.0); EXPECT_FLOAT_EQ(m.m13, sr); EXPECT_FLOAT_EQ(m.m14, 0.0);
 	EXPECT_FLOAT_EQ(m.m21, 0.0); EXPECT_FLOAT_EQ(m.m22, 1.0); EXPECT_FLOAT_EQ(m.m23, 0.0); EXPECT_FLOAT_EQ(m.m24, 0.0);
-	EXPECT_FLOAT_EQ(m.m31, -1.0); EXPECT_FLOAT_EQ(m.m32, 0.0); EXPECT_FLOAT_EQ(m.m33, 0.0); EXPECT_FLOAT_EQ(m.m34, 0.0);
+	EXPECT_FLOAT_EQ(m.m31, -sr); EXPECT_FLOAT_EQ(m.m32, 0.0); EXPECT_FLOAT_EQ(m.m33, cr); EXPECT_FLOAT_EQ(m.m34, 0.0);
 	EXPECT_FLOAT_EQ(m.m41, 0.0); EXPECT_FLOAT_EQ(m.m42, 0.0); EXPECT_FLOAT_EQ(m.m43, 0.0); EXPECT_FLOAT_EQ(m.m44, 1.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Rotate_z)
+TEST(BkMatrix4x4, BkMatrix4x4_Rotation_z)
 {
 	struct BkMatrix4x4 m = BkMatrix4x4_Identity();
-	struct BkMatrix4x4 mr = BkMatrix4x4_Rotate_z(90.0);
+	struct BkMatrix4x4 mr = BkMatrix4x4_Rotation_z(90.0);
 
 	m = BkMatrix4x4_Mul_BkMatrix4x4(&m, &mr);
 
-	EXPECT_FLOAT_EQ(m.m11, 0.0); EXPECT_FLOAT_EQ(m.m12, -1.0); EXPECT_FLOAT_EQ(m.m13, 0.0); EXPECT_FLOAT_EQ(m.m14, 0.0);
-	EXPECT_FLOAT_EQ(m.m21, 1.0); EXPECT_FLOAT_EQ(m.m22, 0.0); EXPECT_FLOAT_EQ(m.m23, 0.0); EXPECT_FLOAT_EQ(m.m24, 0.0);
+	real const r = 0.017453292519943295769236907684886127134428718885417254560 * 90.0;
+	real const cr = cos(r);
+	real const sr = sin(r);
+
+	EXPECT_FLOAT_EQ(m.m11, cr); EXPECT_FLOAT_EQ(m.m12, -sr); EXPECT_FLOAT_EQ(m.m13, 0.0); EXPECT_FLOAT_EQ(m.m14, 0.0);
+	EXPECT_FLOAT_EQ(m.m21, sr); EXPECT_FLOAT_EQ(m.m22, cr); EXPECT_FLOAT_EQ(m.m23, 0.0); EXPECT_FLOAT_EQ(m.m24, 0.0);
 	EXPECT_FLOAT_EQ(m.m31, 0.0); EXPECT_FLOAT_EQ(m.m32, 0.0); EXPECT_FLOAT_EQ(m.m33, 1.0); EXPECT_FLOAT_EQ(m.m34, 0.0);
 	EXPECT_FLOAT_EQ(m.m41, 0.0); EXPECT_FLOAT_EQ(m.m42, 0.0); EXPECT_FLOAT_EQ(m.m43, 0.0); EXPECT_FLOAT_EQ(m.m44, 1.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Scale_Uniform)
+TEST(BkMatrix4x4, BkMatrix4x4_Scaling_Uniform)
 {
-	struct BkMatrix4x4 ms = BkMatrix4x4_Scale_Uniform(2.0);
+	struct BkMatrix4x4 ms = BkMatrix4x4_Scaling_Uniform(2.0);
 
 	EXPECT_FLOAT_EQ(ms.m11, 2.0); EXPECT_FLOAT_EQ(ms.m12, 0.0); EXPECT_FLOAT_EQ(ms.m13, 0.0); EXPECT_FLOAT_EQ(ms.m14, 0.0);
 	EXPECT_FLOAT_EQ(ms.m21, 0.0); EXPECT_FLOAT_EQ(ms.m22, 2.0); EXPECT_FLOAT_EQ(ms.m23, 0.0); EXPECT_FLOAT_EQ(ms.m24, 0.0);
@@ -197,9 +209,9 @@ TEST(BkMatrix4x4, BkMatrix4x4_Scale_Uniform)
 	EXPECT_FLOAT_EQ(ms.m41, 0.0); EXPECT_FLOAT_EQ(ms.m42, 0.0); EXPECT_FLOAT_EQ(ms.m43, 0.0); EXPECT_FLOAT_EQ(ms.m44, 1.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Scale_Nonuniform)
+TEST(BkMatrix4x4, BkMatrix4x4_Scaling_Nonuniform)
 {
-	struct BkMatrix4x4 ms = BkMatrix4x4_Scale_Nonuniform(2.0, 4.0, 6.0);
+	struct BkMatrix4x4 ms = BkMatrix4x4_Scaling_Nonuniform(2.0, 4.0, 6.0);
 
 	EXPECT_FLOAT_EQ(ms.m11, 2.0); EXPECT_FLOAT_EQ(ms.m12, 0.0); EXPECT_FLOAT_EQ(ms.m13, 0.0); EXPECT_FLOAT_EQ(ms.m14, 0.0);
 	EXPECT_FLOAT_EQ(ms.m21, 0.0); EXPECT_FLOAT_EQ(ms.m22, 4.0); EXPECT_FLOAT_EQ(ms.m23, 0.0); EXPECT_FLOAT_EQ(ms.m24, 0.0);
@@ -207,9 +219,9 @@ TEST(BkMatrix4x4, BkMatrix4x4_Scale_Nonuniform)
 	EXPECT_FLOAT_EQ(ms.m41, 0.0); EXPECT_FLOAT_EQ(ms.m42, 0.0); EXPECT_FLOAT_EQ(ms.m43, 0.0); EXPECT_FLOAT_EQ(ms.m44, 1.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Translate)
+TEST(BkMatrix4x4, BkMatrix4x4_Translation)
 {
-	struct BkMatrix4x4 mt = BkMatrix4x4_Translate(2.0, 4.0, 8.0);
+	struct BkMatrix4x4 mt = BkMatrix4x4_Translation(2.0, 4.0, 8.0);
 
 	EXPECT_FLOAT_EQ(mt.m11, 1.0); EXPECT_FLOAT_EQ(mt.m12, 0.0); EXPECT_FLOAT_EQ(mt.m13, 0.0); EXPECT_FLOAT_EQ(mt.m14, 2.0);
 	EXPECT_FLOAT_EQ(mt.m21, 0.0); EXPECT_FLOAT_EQ(mt.m22, 1.0); EXPECT_FLOAT_EQ(mt.m23, 0.0); EXPECT_FLOAT_EQ(mt.m24, 4.0);

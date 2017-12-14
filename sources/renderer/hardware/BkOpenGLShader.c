@@ -1,46 +1,38 @@
-#include "pil\BkFileSystem.h"
+// Blackhart.foundation headers.
+#include "foundation\BkFileSystem.h"
 
-#include "core\BkString.h"
-
+// Blackhart.renderer headers.
 #include "renderer\hardware\__BkOpenGLShader.h"
+
 
 // ~~~~~ Def(ALL) ~~~~~
 
 struct BkOpenGLShader*	_BkOpenGL_CreateShader(char const* path, enum BkShaderType const shader_type)
 {
-	assert(!BK_ISNULL(path));
+	BK_ASSERT(BK_ISNULL(path));
 
-	struct BkStringBuf string;
+	char* str = NULL;
+	size_t size = 0;
 
-	BkStringBuf_Set(&string, NULL);
-
-	if (BK_ERROR(BkFileSystem_ReadFromPath(path, &(string.buffer), &(string.size))))
-	{
-		BkError(BK_ERROR_LOCATION "Failed to load shader from flux [ $%s$ ]");
-		return NULL;
-	}
+	BkFileSystem_ReadFromPath(path, &str, &size);
 
 	struct BkOpenGLShader* shader = malloc(sizeof(struct BkOpenGLShader));
-	if (shader == NULL)
-		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory");
+	BK_ERROR(BK_ISNULL(shader), "Memory system failed to allocate memory");
 
 	if (shader_type == _BK_VERTEX_SHADER_)
 		shader->id = glCreateShader(GL_VERTEX_SHADER);
 	else if (shader_type == _BK_PIXEL_SHADER_)
 		shader->id = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(shader->id, 1, &(string.buffer), NULL);
+	glShaderSource(shader->id, 1, &str, NULL);
 	glCompileShader(shader->id);
-
-	BkStringBuf_Release(&string);
 
 	return shader;
 }
 
 void	_BkOpenGL_ReleaseShader(struct BkOpenGLShader** shader)
 {
-	assert(!BK_ISNULL(shader));
-	assert(!BK_ISNULL(*shader));
+	BK_ASSERT(BK_ISNULL(shader) || BK_ISNULL(*shader));
 
 	glDeleteShader((*shader)->id);
 
@@ -50,12 +42,11 @@ void	_BkOpenGL_ReleaseShader(struct BkOpenGLShader** shader)
 
 struct BkOpenGLShaderProgram*	_BkOpenGL_CreateShaderProgram(struct BkOpenGLShader* pVertexShader, struct BkOpenGLShader* pPixelShader)
 {
-	assert(!BK_ISNULL(pVertexShader));
-	assert(!BK_ISNULL(pPixelShader));
+	BK_ASSERT(BK_ISNULL(pVertexShader));
+	BK_ASSERT(BK_ISNULL(pPixelShader));
 
-	struct BkOpenGLShaderProgram*	lpProgram = malloc(sizeof(struct BkOpenGLShaderProgram)); // 4 bytes
-	if (BK_ISNULL(lpProgram))
-		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block");
+	struct BkOpenGLShaderProgram* lpProgram = malloc(sizeof(struct BkOpenGLShaderProgram));
+	BK_ERROR(BK_ISNULL(lpProgram), "Memory system failed to allocate memory block");
 
 	lpProgram->id = glCreateProgram();
 	glAttachShader(lpProgram->id, pVertexShader->id);
@@ -67,8 +58,7 @@ struct BkOpenGLShaderProgram*	_BkOpenGL_CreateShaderProgram(struct BkOpenGLShade
 
 void	_BkOpenGL_ReleaseShaderProgram(struct BkOpenGLShaderProgram** ppShaderProgram)
 {
-	assert(!BK_ISNULL(ppShaderProgram));
-	assert(!BK_ISNULL(*ppShaderProgram));
+	BK_ASSERT(BK_ISNULL(ppShaderProgram) || BK_ISNULL(*ppShaderProgram));
 
 	glDeleteProgram((*ppShaderProgram)->id);
 

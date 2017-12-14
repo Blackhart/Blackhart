@@ -208,13 +208,6 @@ TEST(BkArray, BkArray_Insert)
 	EXPECT_EQ(BkArray_Size(array), 2);
 	EXPECT_EQ(BkArray_Capacity(array), 4);
 
-	BkArray_Insert(array, 10, b);
-
-	EXPECT_EQ(BkArray_At(array, uint32, 0), b);
-	EXPECT_EQ(BkArray_At(array, uint32, 1), a);
-	EXPECT_EQ(BkArray_Size(array), 2);
-	EXPECT_EQ(BkArray_Capacity(array), 4);
-
 	BkArray_Insert(array, 2, c);
 
 	EXPECT_EQ(BkArray_At(array, uint32, 0), b);

@@ -1,30 +1,25 @@
+// Blackhart headers.
 #include "Blackhart.h"
 
-#include "pil\__BkGraphicsAPI.h"
+// Blackhart.foundation headers.
+#include "foundation\__BkGraphicsAPI.h"
+#include "foundation\__BkLogger.h"
+#include "foundation\__BkError.h"
 
-#include "core\__BkLogger.h"
 
 // ~~~~~ Def(ALL) ~~~~~
 
-BkResult	BkInitialize()
+void	BkInitialize()
 {
-	if (BK_ERROR(_BkLogger_Initialize()))
-		return BK_FAILURE;
-
+	_BkError_Initialize();
+	_BkLogger_Initialize();
 	_BkGraphicsAPI_Load();
-
-	if (BK_ERROR(_BkGraphicsAPI_Initialize()))
-	{
-		BkError(BK_ERROR_LOCATION "Failed to initialize the graphics API!");
-		_BkLogger_Uninitialize();
-		return BK_FAILURE;
-	}
-	
-	return BK_SUCCESS;
+	_BkGraphicsAPI_Initialize();
 }
 
 void	BkUninitialize(void)
 {
-	_BkLogger_Uninitialize();
 	_BkGraphicsAPI_Uninitialize();
+	_BkLogger_Uninitialize();
+	_BkError_Uninitialize();
 }

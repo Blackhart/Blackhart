@@ -1,14 +1,16 @@
-#include "core\BkError.h"
+// Blackhart.foundation headers.
+#include "foundation\BkError.h"
 
+// Blackhart.renderer headers.
 #include "renderer\hardware\__BkOpenGLBuffer.h"
+
 
 // ~~~~~ Def(ALL) ~~~~~
 
 struct BkOpenGLBuffer*	_BkOpenGL_CreateBuffer(uint32 const size, void const* data)
 {
 	struct BkOpenGLBuffer* opengl_buffer = malloc(sizeof(struct BkOpenGLBuffer));
-	if (BK_ISNULL(opengl_buffer))
-		BkDie(BK_ERROR_LOCATION "Memory system failed to allocate memory block");
+	BK_ERROR(BK_ISNULL(opengl_buffer), "Memory system failed to allocate memory block");
 
 	glGenBuffers(1, &opengl_buffer->id);
 	glBindBuffer(GL_ARRAY_BUFFER, opengl_buffer->id);
@@ -21,8 +23,8 @@ struct BkOpenGLBuffer*	_BkOpenGL_CreateBuffer(uint32 const size, void const* dat
 
 void	_BkOpenGL_ReleaseBuffer(struct BkOpenGLBuffer** opengl_buffer)
 {
-	assert(!BK_ISNULL(opengl_buffer));
-	assert(!BK_ISNULL(*opengl_buffer));
+	BK_ASSERT(BK_ISNULL(opengl_buffer));
+	BK_ASSERT(BK_ISNULL(*opengl_buffer));
 
 	glDeleteBuffers(1, &(*opengl_buffer)->id);
 

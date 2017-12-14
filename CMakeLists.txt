@@ -20,6 +20,11 @@ set(BLACKHART_PATH "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}")
 # Sets debug postfix
 set(CMAKE_DEBUG_POSTFIX d)
 
+# MSVC definitions
+if (MSVC)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif (MSVC)
+
 # Sets custom directories for both Blackhart's shared and static libraries
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
