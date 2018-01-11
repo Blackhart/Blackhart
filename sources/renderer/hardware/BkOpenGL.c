@@ -2,6 +2,7 @@
 #include "foundation\BkArray.h"
 #include "foundation\BkError.h"
 #include "foundation\BkString.h"
+#include "foundation\BkFileSystem.h"
 
 // Blackhart.renderer headers.
 #include "renderer\hardware\__BkOpenGL.h"
@@ -33,11 +34,16 @@ void	_BkOpenGL_Initialize(void)
 	glGenVertexArrays(1, &__BkOpenGL_VertexArrayObject);
 	glBindVertexArray(__BkOpenGL_VertexArrayObject);
 
+	char* path = malloc((strlen(BK_DEFAULT_SHADER_PATH) + 15) * sizeof(char));
+	BK_ERROR(BK_ISNULL(path), "Memory system has failed to allocate memory block");
+
 	// Create vertex shader
-	__BkOpenGL_VertexShader = _BkOpenGL_CreateShader("../../../shaders/vertex.glsl", _BK_VERTEX_SHADER_);
+	BkFileSystem_CombinePath(path, BK_DEFAULT_SHADER_PATH, "vertex.glsl");
+	__BkOpenGL_VertexShader = _BkOpenGL_CreateShader(path, _BK_VERTEX_SHADER_);
 
 	// Create fragment shader
-	__BkOpenGL_PixelShader = _BkOpenGL_CreateShader("../../../shaders/pixel.glsl", _BK_PIXEL_SHADER_);
+	BkFileSystem_CombinePath(path, BK_DEFAULT_SHADER_PATH, "pixel.glsl");
+	__BkOpenGL_PixelShader = _BkOpenGL_CreateShader(path, _BK_PIXEL_SHADER_);
 
 	// Create material
 	__BkOpenGL_ShaderProgram = _BkOpenGL_CreateShaderProgram(__BkOpenGL_VertexShader, __BkOpenGL_PixelShader);

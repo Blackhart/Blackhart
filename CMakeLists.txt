@@ -13,6 +13,7 @@ set(${BLACKHART_PROJECT_NAME}_VERSION_PATCH 0)
 
 message("")
 message("${BLACKHART_PROJECT_NAME}: BUILD ENABLE")
+message("${BLACKHART_PROJECT_NAME}: Library:(SHARED)")
 
 # Sets Blackhart's sources directory
 set(BLACKHART_PATH "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}")
@@ -34,7 +35,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 file(GLOB_RECURSE CFiles sources/*.c)
 file(GLOB_RECURSE HFiles includes/*.h)
 
-message("${BLACKHART_PROJECT_NAME}: Library:(SHARED)")
+# Sets default shader path
+add_definitions(-DBK_DEFAULT_SHADER_PATH="${BLACKHART_PATH}/shaders")
 
 # Compiles Blackhart as shared library
 add_definitions(-DBK_EXPORT)

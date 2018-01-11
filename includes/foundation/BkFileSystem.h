@@ -60,10 +60,10 @@ extern BK_API void	BkFileSystem_ReadFromFlux(BkFlux* flux, char** buffer, size_t
 
 /*! \brief Combines two paths.
  *
- * \param dest The destination buffer. Must be allocate with the correct size!
+ * \param dst The buffer that will contains the combined path. Must be allocated before calling this function.
  * \param str1 The first path.
  * \param str2 The second path.
  */
-extern BK_API void	BkFileSystem_CombinePath(char* dest, char const* str1, char const* str2);
+extern BK_API void	BkFileSystem_CombinePath(char* dst, char const* str1, char const* str2);
 
 #endif

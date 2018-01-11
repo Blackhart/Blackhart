@@ -88,7 +88,7 @@ void	BkFileSystem_ReadFromFlux(BkFlux* flux, char** buffer, size_t* buffer_size)
 	rewind(flux);
 	
 	*buffer = malloc(((*buffer_size) + 1) * sizeof(char));
-	BK_ERROR(BK_ISNULL(*buffer), "Memory system has failed to allocate memory");
+	BK_ERROR(BK_ISNULL(*buffer), "Memory system has failed to allocate memory block");
 
 	*buffer_size = fread(*buffer, sizeof(char), *buffer_size, flux);
 	BK_ERROR(ferror(flux) != 0, "File system has failed to read from the flux");
@@ -96,46 +96,45 @@ void	BkFileSystem_ReadFromFlux(BkFlux* flux, char** buffer, size_t* buffer_size)
 	(*buffer)[*buffer_size] = '\0';
 }
 
-void	BkFileSystem_CombinePath(char* dest, char const* str1, char const* str2)
+void	BkFileSystem_CombinePath(char* dst, char const* str1, char const* str2)
 {
+	size_t str1_s = 0;
+	size_t str2_s = 0;
+
+	if (str1 != NULL)
+		str1_s = strlen(str1);
+
+	if (str2 != NULL)
+		str2_s = strlen(str2);
+
+	size_t dst_s = str1_s + str2_s + 1;
+
 #ifdef __STDC_LIB_EXT1__
 	set_constraint_handler_s(abort_handler_s);
-	if (str1 == NULL && str2 == NULL)
-		dest[0] = '\0';
-	else if (str1 == NULL || str1[0] == '\0')
-		strcpy_s(dest, RSIZE_MAX, str2);
-	else if (str2 == NULL || str2[0] == '\0')
-		strcpy_s(dest, RSIZE_MAX, str1);
-	else
+	if (str1_s > 0 && str2_s == 0)
+		strcpy_s(dst, str1_s, str1);
+	else if (str2_s > 0 && str1_s == 0)
+		strcpy_s(dst, str2_s, str2);
+	else if (str1_s > 0 && str2_s > 0)
 	{
-		uint8	separator_index = (uint8)strlen(str1);
-		uint8	end_of_line_index = 0;
-
-		strcpy_s(dest, RSIZE_MAX, str1);
-		dest[separator_index] = '/';
-		++separator_index;
-		strcpy_s(dest + separator_index, RSIZE_MAX, str2);
-		end_of_line_index = separator_index + (uint8)strlen(str2);
-		dest[end_of_line_index] = '\0';
+		dst_s += 1;
+		strcpy_s(dst, str1_s, str1);
+		dst[str1_s] = '/';
+		strcpy_s(dst + str1_s + 1, str2_s, str2);
 	}
 #else
-	if (str1 == NULL && str2 == NULL)
-		dest[0] = '\0';
-	else if (str1 == NULL || str1[0] == '\0')
-		strcpy(dest, str2);
-	else if (str2 == NULL || str2[0] == '\0')
-		strcpy(dest, str1);
-	else
+	if (str1_s > 0 && str2_s == 0)
+		strcpy(dst, str1);
+	else if (str2_s > 0 && str1_s == 0)
+		strcpy(dst, str2);
+	else if (str1_s > 0 && str2_s > 0)
 	{
-		uint8	separator_index = (uint8)strlen(str1);
-		uint8	end_of_line_index = 0;
-
-		strcpy(dest, str1);
-		dest[separator_index] = '/';
-		++separator_index;
-		strcpy(dest + separator_index, str2);
-		end_of_line_index = separator_index + (uint8)strlen(str2);
-		dest[end_of_line_index] = '\0';
+		dst_s += 1;
+		strcpy(dst, str1);
+		dst[str1_s] = '/';
+		strcpy(dst + str1_s + 1, str2);
 	}
 #endif
+
+	dst[dst_s - 1] = '\0';
 }
