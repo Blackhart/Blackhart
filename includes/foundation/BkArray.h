@@ -1,13 +1,9 @@
 #ifndef __BK_ARRAY_H__
 #define __BK_ARRAY_H__
 
-// Standard headers.
-#include <string.h>
-
 // Blackhart.foundation headers.
 #include "foundation\BkAtomicDataType.h"
 #include "foundation\__BkExport.h"
-
 
 /*! \brief Checks if the BkArray has no elements
 *

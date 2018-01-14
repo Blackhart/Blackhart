@@ -1,3 +1,6 @@
+// Standard headers.
+#include <stdlib.h>
+
 // Blackhart.foundation headers.
 #include "foundation\__BkError.h"
 #include "foundation\BkError.h"
@@ -5,12 +8,9 @@
 #include "foundation\BkQueue.h"
 #include "foundation\BkString.h"
 
-
 // ~~~~~ Def(INTERNAL) ~~~~~
 
 static struct BkQueue	__Bk_Error_Context;
-
-// ~~~~~ Def(ALL) ~~~~~
 
 void	_BkError_Initialize(void)
 {
@@ -21,6 +21,8 @@ void	_BkError_Uninitialize(void)
 {
 	BkQueue_Clear(&__Bk_Error_Context);
 }
+
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 void	BkError_PushContext(char* msg)
 {

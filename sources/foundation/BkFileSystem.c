@@ -5,12 +5,12 @@
 #include <string.h>
 
 // Blackhart.foundation headers.
+#include "foundation\BkError.h"
 #include "foundation\BkFileSystem.h"
 #include "foundation\BkLogger.h"
 #include "foundation\BkString.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 bool	BkFileSystem_FluxExists(char const* filename)
 {

@@ -4,8 +4,6 @@
 // Blackhart.foundation headers.
 #include "foundation\__BkExport.h"
 #include "foundation\BkAtomicDataType.h"
-#include "foundation\BkError.h"
-
 
 /*! \brief Checks if the BkList has no elements
 *

@@ -7,7 +7,6 @@
 #include "foundation\BkVector3.h"
 #include "foundation\BkMatrix4x4.h"
 
-
 extern real const PI;
 extern real const DEG_TO_RAD;
 extern real const RAD_TO_DEG;

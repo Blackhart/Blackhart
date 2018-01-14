@@ -130,7 +130,7 @@ TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkVector3)
 	EXPECT_FLOAT_EQ(v.x, 17.0); EXPECT_FLOAT_EQ(v.y, 45.0); EXPECT_FLOAT_EQ(v.z, 73.0);
 }
 
-TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkPoint)
+TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkPoint3)
 {
 	struct BkPoint3 p = BkPoint3_Zero();
 
@@ -143,9 +143,27 @@ TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkPoint)
 	m.m31 = 9.0; m.m32 = 10.0; m.m33 = 11.0; m.m34 = 12.0;
 	m.m41 = 13.0; m.m42 = 14.0; m.m43 = 15.0; m.m44 = 16.0;
 
-	p = BkMatrix4x4_Mul_BkPoint(&m, &p);
+	p = BkMatrix4x4_Mul_BkPoint3(&m, &p);
 
 	EXPECT_FLOAT_EQ(p.x, 21.0); EXPECT_FLOAT_EQ(p.y, 53.0); EXPECT_FLOAT_EQ(p.z, 85.0);
+}
+
+TEST(BkMatrix4x4, BkMatrix4x4_Mul_BkPoint4)
+{
+	struct BkPoint3 p = BkPoint3_Zero();
+
+	p.x = 1.0; p.y = 2.0; p.z = 4.0;
+
+	struct BkMatrix4x4 m = BkMatrix4x4_Identity();
+
+	m.m11 = 1.0; m.m12 = 2.0; m.m13 = 3.0; m.m14 = 4.0;
+	m.m21 = 5.0; m.m22 = 6.0; m.m23 = 7.0; m.m24 = 8.0;
+	m.m31 = 9.0; m.m32 = 10.0; m.m33 = 11.0; m.m34 = 12.0;
+	m.m41 = 2.0; m.m42 = 4.0; m.m43 = 8.0; m.m44 = 2.0;
+
+	p = BkMatrix4x4_Mul_BkPoint4(&m, &p);
+
+	EXPECT_FLOAT_EQ(p.x, 21.0 / 44.0); EXPECT_FLOAT_EQ(p.y, 53.0 / 44.0); EXPECT_FLOAT_EQ(p.z, 85.0 / 44.0);
 }
 
 TEST(BkMatrix4x4, BkMatrix4x4_Rotation_x)

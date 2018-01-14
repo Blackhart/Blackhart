@@ -1,27 +1,29 @@
 // Blackhart.foundation headers.
 #include "foundation\BkCamera.h"
+#include "foundation\BkError.h"
+#include "foundation\BkProjection.h"
+#include "foundation\BkPoint3.h"
+#include "foundation\BkVector3.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 void	BkCamera_Initialize(struct BkCamera* camera)
 {
+	BK_ERROR(BK_ISNULL(camera), "Camera pointer must not be NULL.");
+
 	camera->transform.cam_to_world = BkMatrix4x4_Identity();
 	camera->transform.world_to_cam = BkMatrix4x4_Identity();
-	camera->mode = AUTOMATIC;
-	camera->sensor.sensor_width = BK_REAL(36.0);
-	camera->sensor.sensor_height = BK_REAL(24.0);
-	camera->sensor.resolution_width = 1920;
-	camera->sensor.resolution_height = 1080;
-	camera->sensor.iso = 100;
-	camera->motor.shutter_speed = BK_REAL(1.0 / 1000.0);
-	camera->lens.aperture = BK_REAL(8.0);
-	camera->lens.focal_length = 50;
+	camera->projection = BkMatrix4x4_Identity();
 }
 
 void	BkCamera_LookAt(struct BkCamera* camera, struct BkPoint3 const* from, struct BkPoint3 const* to, struct BkVector3 const* up)
 {
-	struct BkVector3 f = BkPoint3_Sub_BkPoint3(to, from);
+	BK_ERROR(BK_ISNULL(camera), "Camera pointer must not be NULL.");
+	BK_ERROR(BK_ISNULL(from), "From location pointer must not be NULL.");
+	BK_ERROR(BK_ISNULL(to), "To location pointer must not be NULL.");
+	BK_ERROR(BK_ISNULL(up), "Up vector pointer must not be NULL.");
+
+	struct BkVector3 f = BkPoint3_Sub_BkPoint3(from, to);
 	f = BkVector3_Normalize(&f);
 
 	struct BkVector3 r = BkVector3_Cross(up, &f);
@@ -36,4 +38,9 @@ void	BkCamera_LookAt(struct BkCamera* camera, struct BkPoint3 const* from, struc
 	m->m41 = BK_REAL(0.0);   m->m42 = BK_REAL(0.0);   m->m43 = BK_REAL(0.0);   m->m44 = BK_REAL(1.0);
 	
 	camera->transform.world_to_cam = BkMatrix4x4_Inverse(m);
+}
+
+void	BkCamera_SetProjection(struct BkCamera* camera, struct BkMatrix4x4 const* projection)
+{
+	BkMatrix4x4_Assign(&(camera->projection), projection);
 }

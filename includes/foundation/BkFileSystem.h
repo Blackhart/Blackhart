@@ -7,8 +7,6 @@
 // Blackhart.foundation headers.
 #include "foundation\__BkExport.h"
 #include "foundation\BkAtomicDataType.h"
-#include "foundation\BkError.h"
-
 
 typedef FILE	BkFlux;
 

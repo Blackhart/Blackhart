@@ -1,24 +1,28 @@
+// Standard headers.
+#include <stdlib.h>
+#include <string.h>
+
+// Glew headers.
+#include <GL\glew.h>
+
 // Blackhart.foundation headers.
-#include "foundation\BkArray.h"
 #include "foundation\BkError.h"
 #include "foundation\BkString.h"
 #include "foundation\BkFileSystem.h"
+#include "foundation\BkCamera.h"
 
 // Blackhart.renderer headers.
 #include "renderer\hardware\__BkOpenGL.h"
 #include "renderer\hardware\__BkOpenGLBuffer.h"
 #include "renderer\hardware\__BkOpenGLShader.h"
 
-
-// ~~~~~ Dcl(INTERNAL) ~~~~~
+// ~~~~~ Def(INTERNAL) ~~~~~
 
 static GLuint				__BkOpenGL_VertexArrayObject = 0;
 static struct BkOpenGLShaderProgram*	__BkOpenGL_ShaderProgram = NULL;
 static struct BkOpenGLShader*		__BkOpenGL_VertexShader = NULL;
 static struct BkOpenGLShader*		__BkOpenGL_PixelShader = NULL;
 static struct BkOpenGLBuffer*		__BkOpenGL_Buffer = NULL;
-
-// ~~~~~ Def(ALL) ~~~~~
 
 void	_BkOpenGL_Initialize(void)
 {
@@ -52,12 +56,49 @@ void	_BkOpenGL_Initialize(void)
 	_BkOpenGL_ReleaseShader(&__BkOpenGL_PixelShader);
 
 	// Create vertex buffer containing a simple triangle
-	real const vertices[12] = { 0.25f, -0.25f, 0.5f, 1.0f, -0.25f, -0.25f, 0.5f, 1.0f, 0.25f, 0.25f, 0.5f, 1.0f };
+	real const vertices[108] = { 
+		-1.0f,-1.0f,1.0f, // triangle 1 : begin
+		-1.0f,-1.0f, -1.0f,
+		-1.0f, 1.0f, -1.0f, // triangle 1 : end
+		1.0f, 1.0f,1.0f, // triangle 2 : begin
+		-1.0f,-1.0f,1.0f,
+		-1.0f, 1.0f,1.0f, // triangle 2 : end
+		1.0f,-1.0f, -1.0f,
+		-1.0f,-1.0f,1.0f,
+		1.0f,-1.0f,1.0f,
+		1.0f, 1.0f,1.0f,
+		1.0f,-1.0f,1.0f,
+		-1.0f,-1.0f,1.0f,
+		-1.0f,-1.0f,1.0f,
+		-1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f,1.0f,
+		1.0f,-1.0f, -1.0f,
+		-1.0f,-1.0f, -1.0f,
+		-1.0f,-1.0f,1.0f,
+		-1.0f, 1.0f, -1.0f,
+		-1.0f,-1.0f, -1.0f,
+		1.0f,-1.0f, -1.0f,
+		1.0f, 1.0f, -1.0f,
+		1.0f,-1.0f,1.0f,
+		1.0f, 1.0f,1.0f,
+		1.0f,-1.0f,1.0f,
+		1.0f, 1.0f, -1.0f,
+		1.0f,-1.0f, -1.0f,
+		1.0f, 1.0f, -1.0f,
+		1.0f, 1.0f,1.0f,
+		-1.0f, 1.0f,1.0f,
+		1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f,1.0f,
+		-1.0f, 1.0f, -1.0f,
+		1.0f, 1.0f, -1.0f,
+		-1.0f, 1.0f, -1.0f,
+		1.0f,-1.0f, -1.0f
+	};
 
-	__BkOpenGL_Buffer = _BkOpenGL_CreateBuffer(12 * sizeof(real), vertices);
+	__BkOpenGL_Buffer = _BkOpenGL_CreateBuffer(108 * sizeof(real), vertices);
 
 	glBindBuffer(GL_ARRAY_BUFFER, __BkOpenGL_Buffer->id);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -76,7 +117,7 @@ void	_BkOpenGL_Uninitialize(void)
 	glDeleteVertexArrays(1, &__BkOpenGL_VertexArrayObject);
 }
 
-void	_BkOpenGL_Render(void)
+void	_BkOpenGL_Render(struct BkCamera* camera)
 {
 	static real const clear_color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
@@ -84,5 +125,9 @@ void	_BkOpenGL_Render(void)
 
 	glUseProgram(__BkOpenGL_ShaderProgram->id);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	struct BkMatrix4x4 mvp = BkMatrix4x4_Mul_BkMatrix4x4(&(camera->projection), &(camera->transform.world_to_cam));
+
+	glUniformMatrix4fv(glGetUniformLocation(__BkOpenGL_ShaderProgram->id, "uni_mvp"), 1, GL_TRUE, &(mvp.m11));
+
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }

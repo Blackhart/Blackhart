@@ -6,8 +6,7 @@
 #include "foundation\__BkLogger.h"
 #include "foundation\__BkError.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 void	BkInitialize()
 {

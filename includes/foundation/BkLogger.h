@@ -4,7 +4,6 @@
 // Blackhart.foundation headers.
 #include "foundation\__BkExport.h"
 
-
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /*! \brief Logs a message to the log file.

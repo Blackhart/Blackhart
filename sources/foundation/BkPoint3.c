@@ -2,16 +2,26 @@
 #include "foundation\BkPoint3.h"
 #include "foundation\BkError.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 struct BkPoint3	BkPoint3_Zero(void)
 {
-	struct BkPoint3 out;
-	out.x = 0.0;
-	out.y = 0.0;
-	out.z = 0.0;
-	return out;
+	return (struct BkPoint3) 
+	{
+		.x = BK_REAL(0.0),
+		.y = BK_REAL(0.0),
+		.z = BK_REAL(0.0)
+	};
+}
+
+struct BkPoint3	BkPoint3_xyz(real const x, real const y, real const z)
+{
+	return (struct BkPoint3) 
+	{
+		.x = x,
+		.y = y,
+		.z = z
+	};
 }
 
 void	BkPoint3_Set(struct BkPoint3* dst, real const x, real const y, real const z)
@@ -27,11 +37,12 @@ struct BkPoint3	BkPoint3_Copy(struct BkPoint3 const* src)
 {
 	BK_ASSERT(BK_ISNULL(src));
 
-	struct BkPoint3 out;
-	out.x = src->x;
-	out.y = src->y;
-	out.z = src->z;
-	return out;
+	return (struct BkPoint3) 
+	{
+		.x = src->x,
+		.y = src->y,
+		.z = src->z
+	};
 }
 
 void	BkPoint3_Assign(struct BkPoint3* dst, struct BkPoint3 const* src)
@@ -49,11 +60,12 @@ struct BkPoint3	BkPoint3_Add_BkVector3(struct BkPoint3 const* p, struct BkVector
 	BK_ASSERT(BK_ISNULL(p));
 	BK_ASSERT(BK_ISNULL(v));
 
-	struct BkPoint3 out;
-	out.x = p->x + v->x;
-	out.y = p->y + v->y;
-	out.z = p->z + v->z;
-	return out;
+	return (struct BkPoint3) 
+	{
+		.x = p->x + v->x,
+		.y = p->y + v->y,
+		.z = p->z + v->z
+	};
 }
 
 struct BkPoint3	BkPoint3_Sub_BkVector3(struct BkPoint3 const* p, struct BkVector3 const* v)
@@ -61,11 +73,12 @@ struct BkPoint3	BkPoint3_Sub_BkVector3(struct BkPoint3 const* p, struct BkVector
 	BK_ASSERT(BK_ISNULL(p));
 	BK_ASSERT(BK_ISNULL(v));
 
-	struct BkPoint3 out;
-	out.x = p->x - v->x;
-	out.y = p->y - v->y;
-	out.z = p->z - v->z;
-	return out;
+	return (struct BkPoint3)
+	{
+		.x = p->x - v->x,
+		.y = p->y - v->y,
+		.z = p->z - v->z
+	};
 }
 
 real	BkPoint3_Distance(struct BkPoint3 const* a, struct BkPoint3 const* b)
@@ -99,9 +112,10 @@ struct BkVector3	BkPoint3_Sub_BkPoint3(struct BkPoint3 const* a, struct BkPoint3
 	BK_ASSERT(BK_ISNULL(a));
 	BK_ASSERT(BK_ISNULL(b));
 
-	struct BkVector3 out;
-	out.x = a->x - b->x;
-	out.y = a->y - b->y;
-	out.z = a->z - b->z;
-	return out;
+	return (struct BkVector3)
+	{
+		.x = a->x - b->x,
+		.y = a->y - b->y,
+		.z = a->z - b->z
+	};
 }

@@ -40,13 +40,13 @@ TEST(BkCamera, BkCamera_LookAt)
 
 	BkCamera_LookAt(&cam, &from, &to, &up);
 
-	EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m11, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m12, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m13, 1.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m14, -2.0);
+	EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m11, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m12, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m13, -1.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m14, -2.0);
 	EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m21, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m22, 1.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m23, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m24, 0.0);
-	EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m31, -1.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m32, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m33, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m34, 2.0);
+	EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m31, 1.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m32, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m33, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m34, 2.0);
 	EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m41, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m42, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m43, 0.0); EXPECT_FLOAT_EQ(cam.transform.cam_to_world.m44, 1.0);
 
-	EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m11, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m12, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m13, -1.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m14, 2.0);
+	EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m11, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m12, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m13, 1.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m14, -2.0);
 	EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m21, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m22, 1.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m23, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m24, 0.0);
-	EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m31, 1.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m32, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m33, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m34, 2.0);
+	EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m31, -1.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m32, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m33, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m34, -2.0);
 	EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m41, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m42, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m43, 0.0); EXPECT_FLOAT_EQ(cam.transform.world_to_cam.m44, 1.0);
 }

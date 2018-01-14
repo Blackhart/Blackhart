@@ -5,7 +5,6 @@
 #include "foundation\__BkExport.h"
 #include "foundation\BkFoundation.h"
 
-
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /*! \brief Initializes Blackhart.

@@ -1,13 +1,13 @@
 // Standard headers.
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 // Blackhart.foundation headers.
 #include "foundation\BkString.h"
 #include "foundation\BkError.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 char const*	BkString_CreateFormatted(char const* format, ...)
 {

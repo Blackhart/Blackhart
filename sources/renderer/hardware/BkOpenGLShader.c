@@ -1,11 +1,17 @@
+// Standard headers.
+#include <stdlib.h>
+
+// Glew headers.
+#include <GL\glew.h>
+
 // Blackhart.foundation headers.
+#include "foundation\BkError.h"
 #include "foundation\BkFileSystem.h"
 
 // Blackhart.renderer headers.
 #include "renderer\hardware\__BkOpenGLShader.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(INTERNAL) ~~~~~
 
 struct BkOpenGLShader*	_BkOpenGL_CreateShader(char const* path, enum BkShaderType const shader_type)
 {

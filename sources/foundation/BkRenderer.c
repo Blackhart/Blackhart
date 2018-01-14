@@ -1,13 +1,13 @@
 // Blackhart.foundation headers.
 #include "foundation\__BkGraphicsAPI.h"
+#include "foundation\BkCamera.h"
 
 // Blackhart.renderer headers.
 #include "foundation\BkRenderer.h"
 
+// ~~~~~ Def(PUBLIC) ~~~~~
 
-// ~~~~~ Def(ALL) ~~~~~
-
-void	BkRender(void)
+void	BkRender(struct BkCamera* camera)
 {
-	_BkGraphicsAPI_Render();
+	_BkGraphicsAPI_Render(camera);
 }

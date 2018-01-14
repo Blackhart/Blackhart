@@ -5,6 +5,7 @@
 #include "foundation\BkMath.h"
 #include "foundation\BkError.h"
 
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 struct BkMatrix4x4	BkMatrix4x4_Identity()
 {
@@ -53,7 +54,7 @@ struct BkVector3	BkMatrix4x4_Mul_BkVector3(struct BkMatrix4x4 const* m, struct B
 	};
 }
 
-struct BkPoint3	BkMatrix4x4_Mul_BkPoint(struct BkMatrix4x4 const* m, struct BkPoint3 const* p)
+struct BkPoint3	BkMatrix4x4_Mul_BkPoint3(struct BkMatrix4x4 const* m, struct BkPoint3 const* p)
 {
 	BK_ASSERT(BK_ISNULL(m));
 	BK_ASSERT(BK_ISNULL(p));
@@ -62,6 +63,20 @@ struct BkPoint3	BkMatrix4x4_Mul_BkPoint(struct BkMatrix4x4 const* m, struct BkPo
 		.x = p->x * m->m11 + p->y * m->m12 + p->z * m->m13 + m->m14,
 		.y = p->x * m->m21 + p->y * m->m22 + p->z * m->m23 + m->m24,
 		.z = p->x * m->m31 + p->y * m->m32 + p->z * m->m33 + m->m34
+	};
+}
+
+struct BkPoint3	BkMatrix4x4_Mul_BkPoint4(struct BkMatrix4x4 const* m, struct BkPoint3 const* p)
+{
+	BK_ASSERT(BK_ISNULL(m));
+	BK_ASSERT(BK_ISNULL(p));
+
+	real const w = p->x * m->m41 + p->y * m->m42 + p->z * m->m43 + m->m44;
+
+	return (struct BkPoint3) {
+		.x = (p->x * m->m11 + p->y * m->m12 + p->z * m->m13 + m->m14) / w,
+		.y = (p->x * m->m21 + p->y * m->m22 + p->z * m->m23 + m->m24) / w,
+		.z = (p->x * m->m31 + p->y * m->m32 + p->z * m->m33 + m->m34) / w
 	};
 }
 

@@ -3,14 +3,14 @@
 
 // Blackhart.foundation headers.
 #include "foundation\__BkExport.h"
-#include "foundation\BkAtomicDataType.h"
-#include "foundation\BkError.h"
 
+// Forward declarations.
+struct BkCamera;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /*! \brief Renders the scene.
  */
-extern BK_API void	BkRender(void);
+extern BK_API void	BkRender(struct BkCamera*);
 
 #endif

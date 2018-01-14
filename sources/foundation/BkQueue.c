@@ -1,7 +1,7 @@
+// Blackhart.foundation headers.
 #include "foundation\BkQueue.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 void*	BkQueue_Front(struct BkQueue* queue)
 {

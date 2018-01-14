@@ -6,7 +6,7 @@
 #include "foundation\BkAtomicDataType.h"
 #include "foundation\BkVector3.h"
 
-
+// Type definitions.
 struct BkPoint3
 {
 	real	x;
@@ -17,6 +17,7 @@ struct BkPoint3
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 extern BK_API struct BkPoint3	BkPoint3_Zero(void);
+extern BK_API struct BkPoint3	BkPoint3_xyz(real const x, real const y, real const z);
 extern BK_API void		BkPoint3_Set(struct BkPoint3* dst, real const x, real const y, real const z);
 extern BK_API struct BkPoint3	BkPoint3_Copy(struct BkPoint3 const* src);
 extern BK_API void		BkPoint3_Assign(struct BkPoint3* dst, struct BkPoint3 const* src);

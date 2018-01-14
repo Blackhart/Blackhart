@@ -1,8 +1,8 @@
 // Blackhart.foundation headers.
 #include "foundation\BkTransform.h"
+#include "foundation\BkMatrix4x4.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 struct BkVector3	BkTransform_Forward(struct BkMatrix4x4 const* m)
 {

@@ -1,10 +1,12 @@
 // Standard headers.
 #include <stdlib.h>
+#include <string.h>
 
 // Blackhart.foundation headers.
 #include "foundation\BkArray.h"
 #include "foundation\BkError.h"
 
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 void	BkArray_Initialize(struct BkArray* array, uint8 const data_size)
 {

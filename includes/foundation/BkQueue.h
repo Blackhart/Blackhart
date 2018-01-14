@@ -3,8 +3,8 @@
 
 // Blackhart.foundation headers.
 #include "foundation\__BkExport.h"
+#include "foundation\BkError.h"
 #include "foundation\BkList.h"
-
 
 struct BkQueue
 {

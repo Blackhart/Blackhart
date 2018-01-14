@@ -1,13 +1,10 @@
 #ifndef __BK_OPENGL_BUFFER_H__
 #define __BK_OPENGL_BUFFER_H__
 
-// Glew headers.
-#include <GL\glew.h>
-
 // Blackhart.foundation headers.
 #include "foundation\BkAtomicDataType.h"
 
-
+// Type definitions.
 struct BkOpenGLBuffer
 {
 	GLuint	id;

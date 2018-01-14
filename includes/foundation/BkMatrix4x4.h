@@ -5,10 +5,11 @@
 #include "foundation\__BkExport.h"
 #include "foundation\BkAtomicDataType.h"
 
-
+// Forward declarations.
 struct BkPoint3;
 struct BkVector3;
 
+// Type definitions.
 struct BkMatrix4x4
 {
     real m11; real m12; real m13; real m14;
@@ -55,7 +56,15 @@ extern BK_API struct BkVector3		BkMatrix4x4_Mul_BkVector3(struct BkMatrix4x4 con
  * \param p The column-order point3.
  * \return The multiplied column-order point3.
  */
-extern BK_API struct BkPoint3		BkMatrix4x4_Mul_BkPoint(struct BkMatrix4x4 const* m, struct BkPoint3 const* p);
+extern BK_API struct BkPoint3		BkMatrix4x4_Mul_BkPoint3(struct BkMatrix4x4 const* m, struct BkPoint3 const* p);
+
+/*! \brief Multiplies a 4x4 matrix with a column-order point4.
+*
+* \param m The 4x4 matrix.
+* \param p The column-order point3 with the homogeneous w component set to 1.0.
+* \return The multiplied column-order point3.
+*/
+extern BK_API struct BkPoint3		BkMatrix4x4_Mul_BkPoint4(struct BkMatrix4x4 const* m, struct BkPoint3 const* p);
 
 /*! \brief Returns a copy of a 4x4 matrix.
  *

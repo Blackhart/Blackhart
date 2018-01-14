@@ -5,16 +5,24 @@
 #include "foundation\BkMath.h"
 #include "foundation\BkError.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 struct BkVector3	BkVector3_Zero(void)
 {
-	struct BkVector3 out;
-	out.x = 0.0;
-	out.y = 0.0;
-	out.z = 0.0;
-	return out;
+	return (struct BkVector3) {
+		.x = BK_REAL(0.0),
+		.y = BK_REAL(0.0),
+		.z = BK_REAL(0.0)
+	};
+}
+
+struct BkVector3	BkVector3_xyz(real const x, real const y, real const z)
+{
+	return (struct BkVector3) {
+		.x = x,
+		.y = y,
+		.z = z
+	};
 }
 
 struct BkVector3	BkVector3_Lerp(struct BkVector3 const* from, struct BkVector3 const* to, real const t)

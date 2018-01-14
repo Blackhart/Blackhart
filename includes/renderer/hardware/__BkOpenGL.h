@@ -1,9 +1,8 @@
 #ifndef __INTERNAL_BK_OPENGL_H__
 #define __INTERNAL_BK_OPENGL_H__
 
-// Glew headers.
-#include <GL\glew.h>
-
+// Forward declarations.
+struct BkCamera;
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
@@ -17,6 +16,6 @@ extern void	_BkOpenGL_Uninitialize(void);
 
 /*! \brief Renders the scene with OpenGL API.
  */
-extern void	_BkOpenGL_Render(void);
+extern void	_BkOpenGL_Render(struct BkCamera*);
 
 #endif

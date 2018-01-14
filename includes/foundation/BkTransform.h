@@ -3,9 +3,11 @@
 
 // Blackhart.foundation headers.
 #include "foundation\__BkExport.h"
-#include "foundation\BkAtomicDataType.h"
-#include "foundation\BkMath.h"
+#include "foundation\BkVector3.h"
+#include "foundation\BkPoint3.h"
 
+// Forward declarations.
+struct BkMatrix4x4;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 

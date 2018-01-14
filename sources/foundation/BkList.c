@@ -2,11 +2,11 @@
 #include <stdlib.h>
 
 // Blackhart.foundation headers.
+#include "foundation\BkError.h"
 #include "foundation\BkList.h"
 #include "foundation\BkLogger.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 struct BkList*	BkList_Front(struct BkList* list)
 {

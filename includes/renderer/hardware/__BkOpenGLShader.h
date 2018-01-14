@@ -1,10 +1,7 @@
 #ifndef __BK_OPENGL_SHADER_H__
 #define __BK_OPENGL_SHADER_H__
 
-// Glew headers.
-#include <GL\glew.h>
-
-
+// Type definitions.
 enum BkShaderType
 {
 	_BK_VERTEX_SHADER_,

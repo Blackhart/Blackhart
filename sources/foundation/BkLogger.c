@@ -1,14 +1,12 @@
 // Blackhart.foundation headers.
 #include "foundation\__BkLogger.h"
+#include "foundation\BkError.h"
 #include "foundation\BkFileSystem.h"
 #include "foundation\BkLogger.h"
-
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
 static BkFlux*	__BkLogger_LogFile = NULL;
-
-// ~~~~~ Def(ALL) ~~~~~
 
 void	_BkLogger_Initialize(void)
 {
@@ -19,6 +17,8 @@ void	_BkLogger_Uninitialize(void)
 {
 	BkFileSystem_CloseFlux(&__BkLogger_LogFile);
 }
+
+// ~~~~~ Def(PUBLIC) ~~~~~
 
 void	BkLog(char const* str)
 {

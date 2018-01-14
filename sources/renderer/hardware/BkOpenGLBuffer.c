@@ -1,11 +1,16 @@
+// Standard headers.
+#include <stdlib.h>
+
+// Glew headers.
+#include <GL\glew.h>
+
 // Blackhart.foundation headers.
 #include "foundation\BkError.h"
 
 // Blackhart.renderer headers.
 #include "renderer\hardware\__BkOpenGLBuffer.h"
 
-
-// ~~~~~ Def(ALL) ~~~~~
+// ~~~~~ Def(INTERNAL) ~~~~~
 
 struct BkOpenGLBuffer*	_BkOpenGL_CreateBuffer(uint32 const size, void const* data)
 {

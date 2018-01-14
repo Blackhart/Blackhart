@@ -3,13 +3,10 @@
 
 // Standard headers.
 #include <assert.h>
-#include <stdlib.h>
 
 // Blackhart.foundation headers.
 #include "foundation\__BkExport.h"
 #include "foundation\BkAtomicDataType.h"
-#include "foundation\BkString.h"
-
 
 #define BK_SUCCESS	EXIT_SUCCESS
 #define BK_FAILURE	EXIT_FAILURE
