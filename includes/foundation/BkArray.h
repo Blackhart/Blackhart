@@ -2,29 +2,29 @@
 #define __BK_ARRAY_H__
 
 // Blackhart.foundation headers.
+#include "foundation\BkExport.h"
 #include "foundation\BkAtomicDataType.h"
-#include "foundation\__BkExport.h"
 
 /*! \brief Checks if the BkArray has no elements
 *
 * \param v The container
 * \return TRUE if the BkArray is empty, FALSE otherwise
 */
-#define BkArray_Empty(v)		(BkArray_Size(v) == 0)
+#define BkArray_Empty(v)	(BkArray_Size(v) == 0)
 
 /*! \brief Gets the size of a BkArray
 *
 * \param v The container
 * \return The size of the container
 */
-#define BkArray_Size(v)		(v.size)
+#define BkArray_Size(v)	(v.size)
 
 /*! \brief Gets the capacity of a BkArray
 *
 * \param v The container
 * \return The capacity of the container
 */
-#define BkArray_Capacity(v)		(v.capacity)
+#define BkArray_Capacity(v)	(v.capacity)
 
 /*! \brief Gets the data at a given position in a BkArray
 *
@@ -33,7 +33,7 @@
 * \param i The position of the data in the vector
 * \return The data at the specified position in the container
 */
-#define BkArray_At(v, t, i)		(((t*)v.data)[i])
+#define BkArray_At(v, t, i)	(((t*)v.data)[i])
 
 /*! \brief Gets the first element in a BkArray
 *
@@ -41,7 +41,7 @@
 * \param t The type of the data
 * \return The first element in the container
 */
-#define BkArray_Front(v, t)		(((t*)v.data)[0])
+#define BkArray_Front(v, t)	(((t*)v.data)[0])
 
 /*! \brief Gets the last element in a BkArray
 *
@@ -49,14 +49,14 @@
 * \param t The type of the data
 * \return The last element in the container
 */
-#define BkArray_Back(v, t)		(((t*)v.data)[(v.size - 1)])
+#define BkArray_Back(v, t)	(((t*)v.data)[(v.size - 1)])
 
 /*! \brief Prepend a new element on to the end of the container
 *
 * \param v The container
 * \param d The data to insert
 */
-#define BkArray_PushBack(v, d)		BkArray_PushBack_t(&v, (char const*)&d)
+#define BkArray_PushBack(v, d)	BkArray_PushBack_t(&v, (char const*)&d)
 
 /*! \brief Inserts a new element at a given position in a BkArray
 *

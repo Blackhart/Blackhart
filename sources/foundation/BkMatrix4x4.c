@@ -2,8 +2,12 @@
 #include <math.h>
 
 // Blackhart.foundation headers.
-#include "foundation\BkMath.h"
 #include "foundation\BkError.h"
+#include "foundation\BkMatrix4x4.h"
+#include "foundation\BkQuaternion.h"
+#include "foundation\BkAngleAxis.h"
+#include "foundation\BkEulerAngles.h"
+#include "foundation\BkMath.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -92,6 +96,69 @@ struct BkMatrix4x4	BkMatrix4x4_Mul_real(struct BkMatrix4x4 const* m, real const 
 	};
 }
 
+struct BkMatrix4x4	BkMatrix4x4_FromBkQuaternion(struct BkQuaternion const* q)
+{
+	BK_ASSERT(BK_ISNULL(q));
+
+	return (struct BkMatrix4x4)
+	{
+		.m11 = BK_REAL(1.0) - BK_REAL(2.0) * q->y * q->y - BK_REAL(2.0) * q->z * q->z,   .m12 = BK_REAL(2.0) * q->x * q->y - BK_REAL(2.0) * q->w * q->z,                  .m13 = BK_REAL(2.0) * q->x * q->z + BK_REAL(2.0) * q->w * q->y,                  .m14 = BK_REAL(0.0),
+		.m21 = BK_REAL(2.0) * q->x * q->y + BK_REAL(2.0) * q->w * q->z,                  .m22 = BK_REAL(1.0) - BK_REAL(2.0) * q->x * q->x - BK_REAL(2.0) * q->z * q->z,   .m23 = BK_REAL(2.0) * q->y * q->z - BK_REAL(2.0) * q->w * q->x,                  .m24 = BK_REAL(0.0),
+		.m31 = BK_REAL(2.0) * q->x * q->z - BK_REAL(2.0) * q->w * q->y,                  .m32 = BK_REAL(2.0) * q->y * q->z + BK_REAL(2.0) * q->w * q->x,                  .m33 = BK_REAL(1.0) - BK_REAL(2.0) * q->x * q->x - BK_REAL(2.0) * q->y * q->y,   .m34 = BK_REAL(0.0),
+		.m41 = BK_REAL(0.0),                                                             .m42 = BK_REAL(0.0),                                                             .m43 = BK_REAL(0.0),                                                             .m44 = BK_REAL(1.0)
+	};
+}
+
+struct BkMatrix4x4	BkMatrix4x4_FromAngleAxis(struct BkAngleAxis const* angle_axis)
+{
+	BK_ASSERT(BK_ISNULL(angle_axis));
+
+	struct BkMatrix4x4 out;
+
+	real const r = BkMath_DegToRad(angle_axis->angle);
+	real const cr = BK_REAL(cos(r));
+	real const omcr = BK_REAL(1.0) - cr;
+	real const omcracr = omcr + cr;
+	real const sr = BK_REAL(sin(r));
+	real const vxmsr = angle_axis->axis.x * sr;
+	real const vymsr = angle_axis->axis.y * sr;
+	real const vzmsr = angle_axis->axis.z * sr;
+	real const vxy = angle_axis->axis.x * angle_axis->axis.y;
+	real const vxz = angle_axis->axis.x * angle_axis->axis.z;
+	real const vyz = angle_axis->axis.y * angle_axis->axis.z;
+
+	out.m11 = angle_axis->axis.x * angle_axis->axis.x * omcracr;   out.m12 = vxy * omcr - vzmsr;                                  out.m13 = vxz * omcr + vymsr;                                  out.m14 = BK_REAL(0.0);
+	out.m21 = vxy * omcr + vzmsr;                                  out.m22 = angle_axis->axis.y * angle_axis->axis.y * omcracr;   out.m23 = vyz * omcr - vxmsr;                                  out.m24 = BK_REAL(0.0);
+	out.m31 = vxz * omcr - vymsr;                                  out.m32 = vyz * omcr + vxmsr;                                  out.m33 = angle_axis->axis.z * angle_axis->axis.z * omcracr;   out.m34 = BK_REAL(0.0);
+	out.m41 = BK_REAL(0.0);                                        out.m42 = BK_REAL(0.0);                                        out.m43 = BK_REAL(0.0);                                        out.m44 = BK_REAL(1.0);
+
+	return out;
+}
+
+struct BkMatrix4x4	BkMatrix4x4_FromEulerAngles(struct BkEulerAngles const* euler)
+{
+	BK_ASSERT(BK_ISNULL(euler));
+
+	struct BkMatrix4x4 out;
+
+	real rad = BkMath_DegToRad(euler->x);
+	real const cx = BK_REAL(cos(rad));
+	real const sx = BK_REAL(sin(rad));
+	rad = BkMath_DegToRad(euler->y);
+	real const cy = BK_REAL(cos(rad));
+	real const sy = BK_REAL(sin(rad));
+	rad = BkMath_DegToRad(euler->z);
+	real const cz = BK_REAL(cos(rad));
+	real const sz = BK_REAL(sin(rad));
+
+	out.m11 = cy * cz + sy * sx * sz;    out.m12 = -cy * sz + sy * sx * cz;   out.m13 = sy * cx;        out.m14 = BK_REAL(0.0);
+	out.m21 = sz * cx;                   out.m22 = cz * cx;                   out.m23 = -sx;            out.m24 = BK_REAL(0.0);
+	out.m31 = -sy * cz + cy * sx * sz;   out.m32 = sz * sy + cy * sx * cz;    out.m33 = cy * cx;        out.m34 = BK_REAL(0.0);
+	out.m41 = BK_REAL(0.0);              out.m42 = BK_REAL(0.0);              out.m43 = BK_REAL(0.0);   out.m44 = BK_REAL(1.0);
+
+	return out;
+}
+
 struct BkMatrix4x4	BkMatrix4x4_Copy(struct BkMatrix4x4 const* src)
 {
 	BK_ASSERT(BK_ISNULL(src));
@@ -127,102 +194,6 @@ struct BkMatrix4x4	BkMatrix4x4_Transpose(struct BkMatrix4x4 const* m)
 	return out;
 }
 
-struct BkMatrix4x4	BkMatrix4x4_Rotation_x(real const deg)
-{
-	struct BkMatrix4x4 out;
-
-	real const r = DEG_TO_RAD * deg;
-	real const cr = BK_REAL(cos(r));
-	real const sr = BK_REAL(sin(r));
-
-	out.m11 = BK_REAL(1.0);   out.m12 = BK_REAL(0.0);   out.m13 = BK_REAL(0.0);   out.m14 = BK_REAL(0.0);
-	out.m21 = BK_REAL(0.0);   out.m22 = cr;             out.m23 = -sr;            out.m24 = BK_REAL(0.0);
-	out.m31 = BK_REAL(0.0);   out.m32 = sr;             out.m33 = cr;             out.m34 = BK_REAL(0.0);
-	out.m41 = BK_REAL(0.0);   out.m42 = BK_REAL(0.0);   out.m43 = BK_REAL(0.0);   out.m44 = BK_REAL(1.0);
-
-	return out;
-}
-
-struct BkMatrix4x4	BkMatrix4x4_Rotation_y(real const deg)
-{
-	struct BkMatrix4x4 out;
-
-	real const r = DEG_TO_RAD * deg;
-	real const cr = BK_REAL(cos(r));
-	real const sr = BK_REAL(sin(r));
-
-	out.m11 = cr;             out.m12 = BK_REAL(0.0);   out.m13 = sr;             out.m14 = BK_REAL(0.0);
-	out.m21 = BK_REAL(0.0);   out.m22 = BK_REAL(1.0);   out.m23 = BK_REAL(0.0);   out.m24 = BK_REAL(0.0);
-	out.m31 = -sr;            out.m32 = BK_REAL(0.0);   out.m33 = cr;             out.m34 = BK_REAL(0.0);
-	out.m41 = BK_REAL(0.0);   out.m42 = BK_REAL(0.0);   out.m43 = BK_REAL(0.0);   out.m44 = BK_REAL(1.0);
-
-	return out;
-}
-
-struct BkMatrix4x4	BkMatrix4x4_Rotation_z(real const deg)
-{
-	struct BkMatrix4x4 out;
-
-	real const r = DEG_TO_RAD * deg;
-	real const cr = BK_REAL(cos(r));
-	real const sr = BK_REAL(sin(r));
-
-	out.m11 = cr;             out.m12 = -sr;            out.m13 = BK_REAL(0.0);   out.m14 = BK_REAL(0.0);
-	out.m21 = sr;             out.m22 = cr;             out.m23 = BK_REAL(0.0);   out.m24 = BK_REAL(0.0);
-	out.m31 = BK_REAL(0.0);   out.m32 = BK_REAL(0.0);   out.m33 = BK_REAL(1.0);   out.m34 = BK_REAL(0.0);
-	out.m41 = BK_REAL(0.0);   out.m42 = BK_REAL(0.0);   out.m43 = BK_REAL(0.0);   out.m44 = BK_REAL(1.0);
-
-	return out;
-}
-
-struct BkMatrix4x4	BkMatrix4x4_Rotation_xyz(real const x_deg, real const y_deg, real const z_deg)
-{
-	struct BkMatrix4x4 out;
-
-	real rad = DEG_TO_RAD * x_deg;
-	real const cx = BK_REAL(cos(rad));
-	real const sx = BK_REAL(sin(rad));
-	rad = DEG_TO_RAD * y_deg;
-	real const cy = BK_REAL(cos(rad));
-	real const sy = BK_REAL(sin(rad));
-	rad = DEG_TO_RAD * z_deg;
-	real const cz = BK_REAL(cos(rad));
-	real const sz = BK_REAL(sin(rad));
-
-	out.m11 = cy * cz;        out.m12 = cx * sz + sx * sy * cz;   out.m13 = sx * sz - cx * sy * cz;   out.m14 = BK_REAL(0.0);
-	out.m21 = -cy * sz;       out.m22 = cx * cz - sx * sy * sz;   out.m23 = sx * cz + cx * sy * sz;   out.m24 = BK_REAL(0.0);
-	out.m31 = sy;             out.m32 = -sx * cy;                 out.m33 = cx * cy;                  out.m34 = BK_REAL(0.0);
-	out.m41 = BK_REAL(0.0);   out.m42 = BK_REAL(0.0);             out.m43 = BK_REAL(0.0);             out.m44 = BK_REAL(1.0);
-
-	return out;
-}
-
-struct BkMatrix4x4	BkMatrix4x4_Rotation_axis(struct BkVector3 const* v, real const deg)
-{
-	BK_ASSERT(BK_ISNULL(v));
-
-	struct BkMatrix4x4 out;
-
-	real const r = DEG_TO_RAD * deg;
-	real const cr = BK_REAL(cos(r));
-	real const omcr = BK_REAL(1.0) - cr;
-	real const omcracr = omcr + cr;
-	real const sr = BK_REAL(sin(r));
-	real const vxmsr = v->x * sr;
-	real const vymsr = v->y * sr;
-	real const vzmsr = v->z * sr;
-	real const vxy = v->x * v->y;
-	real const vxz = v->x * v->z;
-	real const vyz = v->y * v->z;
-
-	out.m11 = v->x * v->x * omcracr;   out.m12 = vxy * omcr - vzmsr;      out.m13 = vxz * omcr + vymsr;      out.m14 = BK_REAL(0.0);
-	out.m21 = vxy * omcr + vzmsr;      out.m22 = v->y * v->y * omcracr;   out.m23 = vyz * omcr - vxmsr;      out.m24 = BK_REAL(0.0);
-	out.m31 = vxz * omcr - vymsr;      out.m32 = vyz * omcr + vxmsr;      out.m33 = v->z * v->z * omcracr;   out.m34 = BK_REAL(0.0);
-	out.m41 = BK_REAL(0.0);            out.m42 = BK_REAL(0.0);            out.m43 = BK_REAL(0.0);            out.m44 = BK_REAL(1.0);
-
-	return out;
-}
-
 struct BkMatrix4x4	BkMatrix4x4_Scaling_Uniform(real const k)
 {
 	return (struct BkMatrix4x4) {
@@ -250,7 +221,6 @@ struct BkMatrix4x4	BkMatrix4x4_Scaling_axis(struct BkVector3 const* v, real cons
 	struct BkMatrix4x4 out;
 
 	real const kmo = k - BK_REAL(1.0);
-	real const opkmo = BK_REAL(1.0) + kmo;
 	real const vxy = v->x * v->y;
 	real const vxz = v->x * v->z;
 	real const vyz = v->y * v->z;
@@ -258,21 +228,41 @@ struct BkMatrix4x4	BkMatrix4x4_Scaling_axis(struct BkVector3 const* v, real cons
 	real const kmomvxz = kmo * vxz;
 	real const kmomvyz = kmo * vyz;
 
-	out.m11 = opkmo * v->x * v->x;   out.m12 = kmomvxy;               out.m13 = kmomvxz;               out.m14 = BK_REAL(0.0);
-	out.m21 = kmomvxy;               out.m22 = opkmo * v->y * v->y;   out.m23 = kmomvyz;               out.m24 = BK_REAL(0.0);
-	out.m31 = kmomvxz;               out.m32 = kmomvyz;               out.m33 = opkmo * v->z * v->z;   out.m34 = BK_REAL(0.0);
-	out.m41 = BK_REAL(0.0);          out.m42 = BK_REAL(0.0);          out.m43 = BK_REAL(0.0);          out.m44 = BK_REAL(1.0);
+	out.m11 = BK_REAL(1.0) + kmo * v->x * v->x;   out.m12 = kmomvxy;                            out.m13 = kmomvxz;                            out.m14 = BK_REAL(0.0);
+	out.m21 = kmomvxy;                            out.m22 = BK_REAL(1.0) + kmo * v->y * v->y;   out.m23 = kmomvyz;                            out.m24 = BK_REAL(0.0);
+	out.m31 = kmomvxz;                            out.m32 = kmomvyz;                            out.m33 = BK_REAL(1.0) + kmo * v->z * v->z;   out.m34 = BK_REAL(0.0);
+	out.m41 = BK_REAL(0.0);                       out.m42 = BK_REAL(0.0);                       out.m43 = BK_REAL(0.0);                       out.m44 = BK_REAL(1.0);
 
 	return out;
 }
 
-struct BkMatrix4x4	BkMatrix4x4_Translation(real const x, real const y, real const z)
+struct BkMatrix4x4	BkMatrix4x4_Translation_XYZ(real const x, real const y, real const z)
 {
 	return (struct BkMatrix4x4) {
 		.m11 = BK_REAL(1.0),   .m12 = BK_REAL(0.0),   .m13 = BK_REAL(0.0),   .m14 = x,
 		.m21 = BK_REAL(0.0),   .m22 = BK_REAL(1.0),   .m23 = BK_REAL(0.0),   .m24 = y,
 		.m31 = BK_REAL(0.0),   .m32 = BK_REAL(0.0),   .m33 = BK_REAL(1.0),   .m34 = z,
 		.m41 = BK_REAL(0.0),   .m42 = BK_REAL(0.0),   .m43 = BK_REAL(0.0),   .m44 = BK_REAL(1.0)
+	};
+}
+
+struct BkMatrix4x4	BkMatrix4x4_Translation_BkVector3(struct BkVector3 const* v)
+{
+	return (struct BkMatrix4x4) {
+		.m11 = BK_REAL(1.0), .m12 = BK_REAL(0.0), .m13 = BK_REAL(0.0), .m14 = v->x,
+		.m21 = BK_REAL(0.0), .m22 = BK_REAL(1.0), .m23 = BK_REAL(0.0), .m24 = v->y,
+		.m31 = BK_REAL(0.0), .m32 = BK_REAL(0.0), .m33 = BK_REAL(1.0), .m34 = v->z,
+		.m41 = BK_REAL(0.0), .m42 = BK_REAL(0.0), .m43 = BK_REAL(0.0), .m44 = BK_REAL(1.0)
+	};
+}
+
+struct BkMatrix4x4	BkMatrix4x4_Translation_BkPoint3(struct BkPoint3 const* p)
+{
+	return (struct BkMatrix4x4) {
+		.m11 = BK_REAL(1.0), .m12 = BK_REAL(0.0), .m13 = BK_REAL(0.0), .m14 = p->x,
+		.m21 = BK_REAL(0.0), .m22 = BK_REAL(1.0), .m23 = BK_REAL(0.0), .m24 = p->y,
+		.m31 = BK_REAL(0.0), .m32 = BK_REAL(0.0), .m33 = BK_REAL(1.0), .m34 = p->z,
+		.m41 = BK_REAL(0.0), .m42 = BK_REAL(0.0), .m43 = BK_REAL(0.0), .m44 = BK_REAL(1.0)
 	};
 }
 

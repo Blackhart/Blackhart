@@ -1,6 +1,35 @@
+// Standard headers.
+#include <math.h>
+
 // Blackhart.foundation headers.
 #include "foundation\BkMath.h"
 
-real const PI = BK_REAL(3.141592653589793238462643383279502884197169399375105820974);
-real const DEG_TO_RAD = BK_REAL(0.017453292519943295769236907684886127134428718885417254560);
-real const RAD_TO_DEG = BK_REAL(57.29577951308232087679815481410517033240547246656432154916);
+// ~~~~~ Def(PUBLIC) ~~~~~
+
+real	BkMath_DegToRad(real const deg)
+{
+	return deg * BK_DEG_TO_RAD;
+}
+
+real	BkMath_RadToDeg(real const rad)
+{
+	return rad * BK_RAD_TO_DEG;
+}
+
+real	BkMath_CosFromSin(real const sin)
+{
+	return BK_REAL(sqrt(1.0 - sin * sin));
+}
+
+real	BkMath_SinFromCos(real const cos)
+{
+	return BK_REAL(sqrt(1.0 - cos * cos));
+}
+
+real	BkMath_TanFromSinCos(real const sin, real const cos)
+{
+	if (cos == BK_REAL(0))
+		return BK_REAL(0);
+	else
+		return sin / cos;
+}

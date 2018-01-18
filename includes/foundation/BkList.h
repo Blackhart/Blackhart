@@ -2,7 +2,7 @@
 #define __BK_LIST_H__
 
 // Blackhart.foundation headers.
-#include "foundation\__BkExport.h"
+#include "foundation\BkExport.h"
 #include "foundation\BkAtomicDataType.h"
 
 /*! \brief Checks if the BkList has no elements
@@ -35,7 +35,7 @@
 
 struct BkList
 {
-	void*		data;
+	void*	data;
 	struct BkList*	next;
 	struct BkList*	previous;
 };

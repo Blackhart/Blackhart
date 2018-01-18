@@ -2,14 +2,14 @@
 #define __BK_QUEUE_H__
 
 // Blackhart.foundation headers.
-#include "foundation\__BkExport.h"
+#include "foundation\BkExport.h"
 #include "foundation\BkError.h"
 #include "foundation\BkList.h"
 
 struct BkQueue
 {
 	struct BkList*	list;
-	size_t		size;
+	size_t	size;
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

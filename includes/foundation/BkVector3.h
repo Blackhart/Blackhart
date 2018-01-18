@@ -1,8 +1,8 @@
-#ifndef __BK_VECTOR4_H__
-#define __BK_VECTOR4_H__
+#ifndef __BK_VECTOR3_H__
+#define __BK_VECTOR3_H__
 
 // Blackhart.foundation headers.
-#include "foundation\__BkExport.h"
+#include "foundation\BkExport.h"
 #include "foundation\BkAtomicDataType.h"
 
 // Forward declarations.
@@ -19,7 +19,7 @@ struct BkVector3
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 extern BK_API struct BkVector3	BkVector3_Zero(void);
-extern BK_API struct BkVector3	BkVector3_xyz(real const x, real const y, real const z);
+extern BK_API struct BkVector3	BkVector3_FromXYZ(real const x, real const y, real const z);
 extern BK_API struct BkVector3	BkVector3_Add_BkVector3(struct BkVector3 const* a, struct BkVector3 const* b);
 extern BK_API struct BkVector3	BkVector3_Sub_BkVector3(struct BkVector3 const* a, struct BkVector3 const* b);
 extern BK_API struct BkVector3	BkVector3_Mul_Real(struct BkVector3 const* a, real b);

@@ -2,7 +2,7 @@
 #define __BK_LOGGER_H__
 
 // Blackhart.foundation headers.
-#include "foundation\__BkExport.h"
+#include "foundation\BkExport.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
@@ -11,5 +11,15 @@
  * \param str The message to log.
  */
 extern BK_API void	BkLog(char const* str);
+
+// ~~~~~ Dcl(INTERNAL) ~~~~~
+
+/*! \brief Initializes the logger.
+*/
+extern void	_BkLogger_Initialize(void);
+
+/*! \brief Uninitializes the logger.
+*/
+extern void	_BkLogger_Uninitialize(void);
 
 #endif

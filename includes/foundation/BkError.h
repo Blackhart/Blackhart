@@ -5,7 +5,7 @@
 #include <assert.h>
 
 // Blackhart.foundation headers.
-#include "foundation\__BkExport.h"
+#include "foundation\BkExport.h"
 #include "foundation\BkAtomicDataType.h"
 
 #define BK_SUCCESS	EXIT_SUCCESS
@@ -36,5 +36,15 @@ extern void	BkError_PopContext(void);
  * \param str Additionnal error msg.
  */
 extern void	BkError_Fatal(char const* assert, char const* file, uint16 const line, char const* str);
+
+// ~~~~~ Dcl(INTERNAL) ~~~~~
+
+/*! \brief Initializes Blackhart error context
+*/
+extern void	_BkError_Initialize(void);
+
+/*! \brief Uninitializes Blackhart error context
+*/
+extern void	_BkError_Uninitialize(void);
 
 #endif

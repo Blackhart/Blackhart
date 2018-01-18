@@ -2,7 +2,7 @@
 #define __BK_BLACKHART_H__
 
 // Blackhart.foundation headers.
-#include "foundation\__BkExport.h"
+#include "foundation\BkExport.h"
 #include "foundation\BkFoundation.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

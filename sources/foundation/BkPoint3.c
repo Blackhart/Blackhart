@@ -14,7 +14,7 @@ struct BkPoint3	BkPoint3_Zero(void)
 	};
 }
 
-struct BkPoint3	BkPoint3_xyz(real const x, real const y, real const z)
+struct BkPoint3	BkPoint3_FromXYZ(real const x, real const y, real const z)
 {
 	return (struct BkPoint3) 
 	{
@@ -24,13 +24,13 @@ struct BkPoint3	BkPoint3_xyz(real const x, real const y, real const z)
 	};
 }
 
-void	BkPoint3_Set(struct BkPoint3* dst, real const x, real const y, real const z)
+void	BkPoint3_Set(struct BkPoint3* this, real const x, real const y, real const z)
 {
-	BK_ASSERT(BK_ISNULL(dst));
+	BK_ASSERT(BK_ISNULL(this));
 
-	dst->x = x;
-	dst->y = y;
-	dst->z = z;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 
 struct BkPoint3	BkPoint3_Copy(struct BkPoint3 const* src)

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 // Blackhart.foundation headers.
-#include "foundation\__BkError.h"
 #include "foundation\BkError.h"
 #include "foundation\BkLogger.h"
 #include "foundation\BkQueue.h"

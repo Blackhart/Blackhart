@@ -5,7 +5,7 @@
 #include <stdarg.h>
 
 // Blackhart.foundation headers.
-#include "foundation\__BkExport.h"
+#include "foundation\BkExport.h"
 #include "foundation\BkAtomicDataType.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

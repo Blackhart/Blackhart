@@ -2,8 +2,9 @@
 #include <math.h>
 
 // Blackhart.foundation headers.
-#include "foundation\BkMath.h"
 #include "foundation\BkError.h"
+#include "foundation\BkVector3.h"
+#include "foundation\BkMath.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -16,7 +17,7 @@ struct BkVector3	BkVector3_Zero(void)
 	};
 }
 
-struct BkVector3	BkVector3_xyz(real const x, real const y, real const z)
+struct BkVector3	BkVector3_FromXYZ(real const x, real const y, real const z)
 {
 	return (struct BkVector3) {
 		.x = x,
@@ -159,7 +160,7 @@ real	BkVector3_Angle(struct BkVector3 const* a, struct BkVector3 const* b)
 
 	struct BkVector3 na = BkVector3_Normalize(a);
 	struct BkVector3 nb = BkVector3_Normalize(b);
-	return (real)acos(BkVector3_Dot(&na, &nb)) * RAD_TO_DEG;
+	return BkMath_RadToDeg(BK_REAL(acos(BkVector3_Dot(&na, &nb))));
 }
 
 struct BkVector3	BkVector3_Normalize(struct BkVector3 const* a)

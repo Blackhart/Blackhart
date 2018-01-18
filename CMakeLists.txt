@@ -35,9 +35,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 file(GLOB_RECURSE CFiles sources/*.c)
 file(GLOB_RECURSE HFiles includes/*.h)
 
-# Sets default shader path
-add_definitions(-DBK_DEFAULT_SHADER_PATH="${BLACKHART_PATH}/shaders")
-
 # Compiles Blackhart as shared library
 add_definitions(-DBK_EXPORT)
 add_library(${BLACKHART_PROJECT_NAME} SHARED ${CFiles} ${HFiles})
@@ -47,39 +44,6 @@ set_target_properties(${BLACKHART_PROJECT_NAME} PROPERTIES OUTPUT_NAME "blackhar
 
 # Links Blackhart's include directory
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/includes")
-
-
-# ~~~~~ Glew ~~~~~
-
-message("")
-
-# Sets glew's library directory
-set(GLEW_LIBRARY_PATH "" CACHE PATH "glew's library directory")
-
-# Finds glew library
-find_library(GLEW_DEBUG_LIBRARY NAMES glew32d PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-find_library(GLEW_RELEASE_LIBRARY NAMES glew32 PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
-
-find_package(OpenGL REQUIRED)
-
-if (NOT GLEW_DEBUG_LIBRARY OR NOT GLEW_RELEASE_LIBRARY)
-	message("glew: Library not found!")
-else ()
-	message("glew: Library found!")
-	message("glew: Debug/library_path:(${GLEW_DEBUG_LIBRARY}) | Release/library_path:(${GLEW_RELEASE_LIBRARY})")
-	# Links glew library to Blackhart
-	target_link_libraries(${BLACKHART_PROJECT_NAME} debug "${GLEW_DEBUG_LIBRARY}" optimized "${GLEW_RELEASE_LIBRARY}")
-	# Links opengl libraries to Blackhart
-	target_link_libraries(${BLACKHART_PROJECT_NAME} "${OPENGL_LIBRARIES}")
-endif ()
-
-# Sets glew's include directory
-set(GLEW_INCLUDE_PATH "" CACHE PATH "glew's include directory")
-
-# Links glew's include directory
-target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH}")
-
-message("glew: include_path:(${GLEW_INCLUDE_PATH})")
 
 
 # ~~~~~ Tests ~~~~~
