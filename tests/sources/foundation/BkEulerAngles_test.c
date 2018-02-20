@@ -45,7 +45,7 @@ void	BkEulerAngles_FromBkMatrix4x4_test(void)
 {
 	struct BkEulerAngles ea = BkEulerAngles_FromXYZ(BK_REAL(0), BK_REAL(0), BK_REAL(45));
 
-	struct BkMatrix4x4 m = BkMatrix4x4_FromEulerAngles(&ea);
+	struct BkMatrix4x4 m = BkMatrix4x4_FromBkEulerAngles(&ea);
 
 	ea = BkEulerAngles_FromBkMatrix4x4(&m);
 

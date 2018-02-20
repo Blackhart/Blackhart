@@ -49,10 +49,10 @@ extern BK_API struct BkPoint3	BkPoint3_Copy(struct BkPoint3 const* src);
 
 /*! \brief Copies a BkPoint3 object into one another.
  *
- * \param dst The BkPoint3 object into which the data will be copied.
+ * \param this The BkPoint3 object into which the data will be copied.
  * \param src The BkPoint3 object to copy.
  */
-extern BK_API void		BkPoint3_Assign(struct BkPoint3* dst, struct BkPoint3 const* src);
+extern BK_API void		BkPoint3_Assign(struct BkPoint3* this, struct BkPoint3 const* src);
 
 /*! \brief Addition a BkPoint3 and a BkVector3.
  *

@@ -325,7 +325,7 @@ void	BkMatrix4x4_FromAngleAxis_test(void)
 	BkAngleAxis_SetAngle(&aa, BK_REAL(45));
 	BkAngleAxis_SetAxis(&aa, &axis);
 
-	struct BkMatrix4x4 m = BkMatrix4x4_FromAngleAxis(&aa);
+	struct BkMatrix4x4 m = BkMatrix4x4_FromBkAngleAxis(&aa);
 
 	struct BkEulerAngles ea = BkEulerAngles_FromBkMatrix4x4(&m);
 
@@ -338,7 +338,7 @@ void	BkMatrix4x4_FromEulerAngles_test(void)
 {
 	struct BkEulerAngles ea = BkEulerAngles_FromXYZ(BK_REAL(0), BK_REAL(90), BK_REAL(0));
 
-	struct BkMatrix4x4 m = BkMatrix4x4_FromEulerAngles(&ea);
+	struct BkMatrix4x4 m = BkMatrix4x4_FromBkEulerAngles(&ea);
 
 	ea = BkEulerAngles_FromBkMatrix4x4(&m);
 

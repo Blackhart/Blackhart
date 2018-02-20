@@ -18,12 +18,14 @@ void BkVector3_RunTests(void)
 	RUN_TEST(BkVector3_Set_test);
 	RUN_TEST(BkVector3_Copy_test);
 	RUN_TEST(BkVector3_Assign_test);
+	RUN_TEST(BkVector3_Negated_test);
 	RUN_TEST(BkVector3_Negate_test);
 	RUN_TEST(BkVector3_Mul_Real_test);
 	RUN_TEST(BkVector3_Div_Real_test);
 	RUN_TEST(BkVector3_Add_BkVector3_test);
 	RUN_TEST(BkVector3_Sub_BkVector3_test);
 	RUN_TEST(BkVector3_Magnitude_test);
+	RUN_TEST(BkVector3_Normalized_test);
 	RUN_TEST(BkVector3_Normalize_test);
 	RUN_TEST(BkVector3_Dot_test);
 	RUN_TEST(BkVector3_AbsDot_test);
@@ -89,6 +91,19 @@ void BkVector3_Assign_test(void)
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)out.x, (float)1.0);
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)out.y, (float)2.0);
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)out.z, (float)4.0);
+}
+
+void BkVector3_Negated_test(void)
+{
+	struct BkVector3 v = BkVector3_Zero();
+
+	BkVector3_Set(&v, BK_REAL(2.0), BK_REAL(4.0), BK_REAL(8.0));
+
+	BkVector3_Negated(&v);
+
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)v.x, (float)-2.0);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)v.y, (float)-4.0);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)v.z, (float)-8.0);
 }
 
 void BkVector3_Negate_test(void)
@@ -177,6 +192,21 @@ void BkVector3_Magnitude_test(void)
 	real out = BkVector3_Magnitude(&v);
 
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)out, (float)sqrt(90.0));
+}
+
+void BkVector3_Normalized_test(void)
+{
+	struct BkVector3 v = BkVector3_Zero();
+
+	BkVector3_Set(&v, BK_REAL(12.0), BK_REAL(-5.0), BK_REAL(8.0));
+
+	BkVector3_Normalized(&v);
+
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)v.x, (float)12.0 / (float)sqrt(233));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)v.y, (float)-5.0 / (float)sqrt(233));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)v.z, (float)8.0 / (float)sqrt(233));
+
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)BkVector3_Magnitude(&v), (float)1.0);
 }
 
 void BkVector3_Normalize_test(void)

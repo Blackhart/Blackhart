@@ -109,13 +109,13 @@ struct BkMatrix4x4	BkMatrix4x4_FromBkQuaternion(struct BkQuaternion const* q)
 	};
 }
 
-struct BkMatrix4x4	BkMatrix4x4_FromAngleAxis(struct BkAngleAxis const* angle_axis)
+struct BkMatrix4x4	BkMatrix4x4_FromBkAngleAxis(struct BkAngleAxis const* angle_axis)
 {
 	BK_ASSERT(BK_ISNULL(angle_axis));
 
 	struct BkMatrix4x4 out;
 
-	real const r = BkMath_DegToRad(angle_axis->angle);
+	real const r = BkMath_RadFromDeg(angle_axis->angle);
 	real const cr = BK_REAL(cos(r));
 	real const omcr = BK_REAL(1.0) - cr;
 	real const omcracr = omcr + cr;
@@ -135,19 +135,19 @@ struct BkMatrix4x4	BkMatrix4x4_FromAngleAxis(struct BkAngleAxis const* angle_axi
 	return out;
 }
 
-struct BkMatrix4x4	BkMatrix4x4_FromEulerAngles(struct BkEulerAngles const* euler)
+struct BkMatrix4x4	BkMatrix4x4_FromBkEulerAngles(struct BkEulerAngles const* euler)
 {
 	BK_ASSERT(BK_ISNULL(euler));
 
 	struct BkMatrix4x4 out;
 
-	real rad = BkMath_DegToRad(euler->x);
+	real rad = BkMath_RadFromDeg(euler->x);
 	real const cx = BK_REAL(cos(rad));
 	real const sx = BK_REAL(sin(rad));
-	rad = BkMath_DegToRad(euler->y);
+	rad = BkMath_RadFromDeg(euler->y);
 	real const cy = BK_REAL(cos(rad));
 	real const sy = BK_REAL(sin(rad));
-	rad = BkMath_DegToRad(euler->z);
+	rad = BkMath_RadFromDeg(euler->z);
 	real const cz = BK_REAL(cos(rad));
 	real const sz = BK_REAL(sin(rad));
 
@@ -171,15 +171,15 @@ struct BkMatrix4x4	BkMatrix4x4_Copy(struct BkMatrix4x4 const* src)
 	};
 }
 
-void	BkMatrix4x4_Assign(struct BkMatrix4x4* dst, struct BkMatrix4x4 const* src)
+void	BkMatrix4x4_Assign(struct BkMatrix4x4* this, struct BkMatrix4x4 const* src)
 {
-	BK_ASSERT(BK_ISNULL(dst));
+	BK_ASSERT(BK_ISNULL(this));
 	BK_ASSERT(BK_ISNULL(src));
 
-	dst->m11 = src->m11;   dst->m12 = src->m12;   dst->m13 = src->m13;   dst->m14 = src->m14;
-	dst->m21 = src->m21;   dst->m22 = src->m22;   dst->m23 = src->m23;   dst->m24 = src->m24;
-	dst->m31 = src->m31;   dst->m32 = src->m32;   dst->m33 = src->m33;   dst->m34 = src->m34;
-	dst->m41 = src->m41;   dst->m42 = src->m42;   dst->m43 = src->m43;   dst->m44 = src->m44;
+	this->m11 = src->m11;   this->m12 = src->m12;   this->m13 = src->m13;   this->m14 = src->m14;
+	this->m21 = src->m21;   this->m22 = src->m22;   this->m23 = src->m23;   this->m24 = src->m24;
+	this->m31 = src->m31;   this->m32 = src->m32;   this->m33 = src->m33;   this->m34 = src->m34;
+	this->m41 = src->m41;   this->m42 = src->m42;   this->m43 = src->m43;   this->m44 = src->m44;
 }
 
 struct BkMatrix4x4	BkMatrix4x4_Transpose(struct BkMatrix4x4 const* m)

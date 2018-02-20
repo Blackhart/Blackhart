@@ -38,7 +38,7 @@ struct BkQuaternion	BkQuaternion_FromAngleAxis(struct BkAngleAxis const* angle_a
 {
 	BK_ASSERT(BK_ISNULL(angle_axis));
 
-	real const rao2 = BkMath_DegToRad(angle_axis->angle * BK_REAL(0.5));
+	real const rao2 = BkMath_RadFromDeg(angle_axis->angle * BK_REAL(0.5));
 	real const srao2 = BK_REAL(sin(rao2));
 
 	return (struct BkQuaternion)
@@ -118,7 +118,7 @@ struct BkQuaternion	BkQuaternion_FromEulerAngles(struct BkEulerAngles const* eul
 {
 	BK_ASSERT(BK_ISNULL(euler));
 
-	real const rad = BkMath_DegToRad(BK_REAL(0.5));
+	real const rad = BkMath_RadFromDeg(BK_REAL(0.5));
 
 	real const y_rad = euler->y * rad;
 	real const hw = BK_REAL(cos(y_rad));
@@ -153,28 +153,55 @@ struct BkQuaternion	BkQuaternion_Copy(struct BkQuaternion const* q)
 	return ret;
 }
 
-struct BkQuaternion	BkQuaternion_Set(real const w, real const x, real const y, real const z)
+void	BkQuaternion_Set(struct BkQuaternion* this, real const w, real const x, real const y, real const z)
 {
-	struct BkQuaternion ret;
-	ret.w = w;
-	ret.x = x;
-	ret.y = y;
-	ret.z = z;
-	return ret;
+	this->w = w;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 
-void	BkQuaternion_Normalize(struct BkQuaternion* q)
+void	BkQuaternion_Normalized(struct BkQuaternion* this)
+{
+	BK_ASSERT(BK_ISNULL(this));
+
+	real const m = BK_REAL(sqrt(this->w * this->w + this->x * this->x + this->y * this->y + this->z * this->z));
+	if (m > BK_REAL(1))
+	{
+		this->w /= m;
+		this->x /= m;
+		this->y /= m;
+		this->z /= m;
+	}
+}
+
+struct BkQuaternion	BkQuaternion_Normalize(struct BkQuaternion const* q)
 {
 	BK_ASSERT(BK_ISNULL(q));
 
 	real const m = BK_REAL(sqrt(q->w * q->w + q->x * q->x + q->y * q->y + q->z * q->z));
+
+	struct BkQuaternion out;
+
 	if (m > BK_REAL(1))
 	{
-		q->w /= m;
-		q->x /= m;
-		q->y /= m;
-		q->z /= m;
+		out.w = q->w / m;
+		out.x = q->x / m;
+		out.y = q->y / m;
+		out.z = q->z / m;
 	}
+
+	return out;
+}
+
+void	BkQuaternion_Negated(struct BkQuaternion* this)
+{
+	BK_ASSERT(BK_ISNULL(this));
+
+	this->w = -this->w;
+	this->x = -this->x;
+	this->y = -this->y;
+	this->z = -this->z;
 }
 
 struct BkQuaternion	BkQuaternion_Negate(struct BkQuaternion const* q)
@@ -196,6 +223,16 @@ real	BkQuaternion_Magnitude(struct BkQuaternion const* q)
 	return BK_REAL(sqrt(q->w * q->w + q->x * q->x + q->y * q->y + q->z * q->z));
 }
 
+void	BkQuaternion_Conjugated(struct BkQuaternion* this)
+{
+	BK_ASSERT(BK_ISNULL(this));
+
+	this->w = this->w;
+	this->x = -this->x;
+	this->y = -this->y;
+	this->z = -this->z;
+}
+
 struct BkQuaternion	BkQuaternion_Conjugate(struct BkQuaternion const* q)
 {
 	BK_ASSERT(BK_ISNULL(q));
@@ -206,6 +243,20 @@ struct BkQuaternion	BkQuaternion_Conjugate(struct BkQuaternion const* q)
 	ret.y = -q->y;
 	ret.z = -q->z;
 	return ret;
+}
+
+void	BkQuaternion_Inversed(struct BkQuaternion* this)
+{
+	BK_ASSERT(BK_ISNULL(this));
+
+	real const magn = BkQuaternion_Magnitude(this);
+
+	BkQuaternion_Conjugated(this);
+
+	this->w /= magn;
+	this->x /= magn;
+	this->y /= magn;
+	this->z /= magn;
 }
 
 struct BkQuaternion	BkQuaternion_Inverse(struct BkQuaternion const* q)

@@ -99,20 +99,17 @@ extern BK_API struct BkMatrix4x4	BkMatrix4x4_FromBkQuaternion(struct BkQuaternio
 
 /*! \brief Returns a 4x4 rotation matrix rotated along an arbitrary axis.
  *
- * \param v The axis along which to rotate.
- * \param deg The number of degrees to rotate.
+ * \param angle_axis The angle axis along which to rotate.
  * \return The 4x4 rotation matrix.
  */
-extern BK_API struct BkMatrix4x4	BkMatrix4x4_FromAngleAxis(struct BkAngleAxis const* angle_axis);
+extern BK_API struct BkMatrix4x4	BkMatrix4x4_FromBkAngleAxis(struct BkAngleAxis const* angle_axis);
 
 /*! \brief Returns a 4x4 rotation matrix.
-*
-* \param x_deg The number of degrees to rotate along the x axis.
-* \param y_deg The number of degrees to rotate along the y axis.
-* \param z_deg The number of degrees to rotate along the z axis.
-* \return The 4x4 rotation matrix.
-*/
-extern BK_API struct BkMatrix4x4	BkMatrix4x4_FromEulerAngles(struct BkEulerAngles const* euler);
+ *
+ * \param euler The number of degrees to rotate.
+ * \return The 4x4 rotation matrix.
+ */
+extern BK_API struct BkMatrix4x4	BkMatrix4x4_FromBkEulerAngles(struct BkEulerAngles const* euler);
 
 /*! \brief Returns a copy of a 4x4 matrix.
  *
@@ -123,10 +120,10 @@ extern BK_API struct BkMatrix4x4	BkMatrix4x4_Copy(struct BkMatrix4x4 const* src)
 
 /*! \brief Copies a 4x4 matrix into another.
  *
+ * \param this The 4x4 matrix into which the copy will be made. (Must be allocated)
  * \param src The 4x4 matrix to copy.
- * \param dst The 4x4 matrix into which the copy will be made. (Must be allocated)
  */
-extern BK_API void	BkMatrix4x4_Assign(struct BkMatrix4x4* dst, struct BkMatrix4x4 const* src);
+extern BK_API void	BkMatrix4x4_Assign(struct BkMatrix4x4* this, struct BkMatrix4x4 const* src);
 
 /*! \brief Transposes a 4x4 matrix.
  *

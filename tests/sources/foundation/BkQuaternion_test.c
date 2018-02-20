@@ -20,10 +20,14 @@ void	BkQuaternion_RunTests(void)
 	RUN_TEST(BkQuaternion_Mul_BkQuaternion_test);
 	RUN_TEST(BkQuaternion_Copy_test);
 	RUN_TEST(BkQuaternion_Set_test);
+	RUN_TEST(BkQuaternion_Normalized_test);
 	RUN_TEST(BkQuaternion_Normalize_test);
+	RUN_TEST(BkQuaternion_Negated_test);
 	RUN_TEST(BkQuaternion_Negate_test);
 	RUN_TEST(BkQuaternion_Magnitude_test);
+	RUN_TEST(BkQuaternion_Conjugated_test);
 	RUN_TEST(BkQuaternion_Conjugate_test);
+	RUN_TEST(BkQuaternion_Inversed_test);
 	RUN_TEST(BkQuaternion_Inverse_test);
 	RUN_TEST(BkQuaternion_Difference_test);
 	RUN_TEST(BkQuaternion_Dot_test);
@@ -75,7 +79,7 @@ void	BkQuaternion_FromBkMatrix4x4_test(void)
 	struct BkEulerAngles ea;
 	BkEulerAngles_Set(&ea, BK_REAL(180), BK_REAL(90), BK_REAL(0));
 
-	struct BkMatrix4x4 m = BkMatrix4x4_FromEulerAngles(&ea);
+	struct BkMatrix4x4 m = BkMatrix4x4_FromBkEulerAngles(&ea);
 
 	struct BkQuaternion q = BkQuaternion_FromBkMatrix4x4(&m);
 
@@ -121,7 +125,8 @@ void	BkQuaternion_Copy_test(void)
 
 void	BkQuaternion_Set_test(void)
 {
-	struct BkQuaternion q = BkQuaternion_Set(BK_REAL(1), BK_REAL(3), BK_REAL(10), BK_REAL(40));
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(3), BK_REAL(10), BK_REAL(40));
 
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)1, (float)q.w);
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)3, (float)q.x);
@@ -129,11 +134,12 @@ void	BkQuaternion_Set_test(void)
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)40, (float)q.z);
 }
 
-void	BkQuaternion_Normalize_test(void)
+void	BkQuaternion_Normalized_test(void)
 {
-	struct BkQuaternion q = BkQuaternion_Set(BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
 
-	BkQuaternion_Normalize(&q);
+	BkQuaternion_Normalized(&q);
 
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.182574183, (float)q.w);
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.365148365, (float)q.x);
@@ -141,9 +147,36 @@ void	BkQuaternion_Normalize_test(void)
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.730296731, (float)q.z);
 }
 
+void	BkQuaternion_Normalize_test(void)
+{
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+
+	q = BkQuaternion_Normalize(&q);
+
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.182574183, (float)q.w);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.365148365, (float)q.x);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.547722518, (float)q.y);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.730296731, (float)q.z);
+}
+
+void	BkQuaternion_Negated_test(void)
+{
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+
+	BkQuaternion_Negated(&q);
+
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-1, (float)q.w);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-2, (float)q.x);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-3, (float)q.y);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-4, (float)q.z);
+}
+
 void	BkQuaternion_Negate_test(void)
 {
-	struct BkQuaternion q = BkQuaternion_Set(BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
 
 	q = BkQuaternion_Negate(&q);
 
@@ -155,16 +188,31 @@ void	BkQuaternion_Negate_test(void)
 
 void	BkQuaternion_Magnitude_test(void)
 {
-	struct BkQuaternion q = BkQuaternion_Set(BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
 
 	real const magnitude = BkQuaternion_Magnitude(&q);
 
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)5.47722578, (float)magnitude);
 }
 
+void	BkQuaternion_Conjugated_test(void)
+{
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+
+	BkQuaternion_Conjugated(&q);
+
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)1, (float)q.w);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-2, (float)q.x);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-3, (float)q.y);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-4, (float)q.z);
+}
+
 void	BkQuaternion_Conjugate_test(void)
 {
-	struct BkQuaternion q = BkQuaternion_Set(BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
 
 	q = BkQuaternion_Conjugate(&q);
 
@@ -174,9 +222,23 @@ void	BkQuaternion_Conjugate_test(void)
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-4, (float)q.z);
 }
 
+void	BkQuaternion_Inversed_test(void)
+{
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+
+	BkQuaternion_Inversed(&q);
+
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)0.182574183, (float)q.w);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-0.365148365, (float)q.x);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-0.547722518, (float)q.y);
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)-0.730296731, (float)q.z);
+}
+
 void	BkQuaternion_Inverse_test(void)
 {
-	struct BkQuaternion q = BkQuaternion_Set(BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
+	struct BkQuaternion q;
+	BkQuaternion_Set(&q, BK_REAL(1), BK_REAL(2), BK_REAL(3), BK_REAL(4));
 
 	q = BkQuaternion_Inverse(&q);
 

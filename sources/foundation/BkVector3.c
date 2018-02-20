@@ -111,12 +111,12 @@ struct BkVector3	BkVector3_Min(struct BkVector3 const* a, struct BkVector3 const
 	return out;
 }
 
-void	BkVector3_Assign(struct BkVector3* dst, struct BkVector3 const* src)
+void	BkVector3_Assign(struct BkVector3* this, struct BkVector3 const* src)
 {
-	BK_ASSERT(BK_ISNULL(dst));
+	BK_ASSERT(BK_ISNULL(this));
 	BK_ASSERT(BK_ISNULL(src));
 
-	BkVector3_Set(dst, src->x, src->y, src->z);
+	BkVector3_Set(this, src->x, src->y, src->z);
 }
 
 struct BkVector3	BkVector3_Copy(struct BkVector3 const* src)
@@ -128,13 +128,13 @@ struct BkVector3	BkVector3_Copy(struct BkVector3 const* src)
 	return out;
 }
 
-void	BkVector3_Set(struct BkVector3* dst, real const x, real const y, real const z)
+void	BkVector3_Set(struct BkVector3* this, real const x, real const y, real const z)
 {
-	BK_ASSERT(BK_ISNULL(dst));
+	BK_ASSERT(BK_ISNULL(this));
 
-	dst->x = x;
-	dst->y = y;
-	dst->z = z;
+	this->x = x;
+	this->y = y;
+	this->z = z;
 }
 
 real	BkVector3_Dot(struct BkVector3 const* a, struct BkVector3 const* b)
@@ -160,7 +160,14 @@ real	BkVector3_Angle(struct BkVector3 const* a, struct BkVector3 const* b)
 
 	struct BkVector3 na = BkVector3_Normalize(a);
 	struct BkVector3 nb = BkVector3_Normalize(b);
-	return BkMath_RadToDeg(BK_REAL(acos(BkVector3_Dot(&na, &nb))));
+	return BkMath_DegFromRad(BK_REAL(acos(BkVector3_Dot(&na, &nb))));
+}
+
+void	BkVector3_Normalized(struct BkVector3* this)
+{
+	BK_ASSERT(BK_ISNULL(this));
+
+	*this = BkVector3_Div_Real(this, BkVector3_Magnitude(this));
 }
 
 struct BkVector3	BkVector3_Normalize(struct BkVector3 const* a)
@@ -191,6 +198,15 @@ struct BkVector3	BkVector3_Cross(struct BkVector3 const* a, struct BkVector3 con
 	out.y = a->z * b->x - a->x * b->z;
 	out.z = a->x * b->y - a->y * b->x;
 	return out;
+}
+
+void	BkVector3_Negated(struct BkVector3* this)
+{
+	BK_ASSERT(BK_ISNULL(this));
+
+	this->x = -this->x;
+	this->y = -this->y;
+	this->z = -this->z;
 }
 
 struct BkVector3	BkVector3_Negate(struct BkVector3 const* a)

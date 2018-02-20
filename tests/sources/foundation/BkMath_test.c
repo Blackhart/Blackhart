@@ -14,8 +14,8 @@ static float const ERROR_LIMIT = 0.00001f;
 void BkMath_RunTests(void)
 {
 	RUN_TEST(BkMath_PI_test);
-	RUN_TEST(BkMath_DegToRad_test);
-	RUN_TEST(BkMath_RadToDeg_test);
+	RUN_TEST(BkMath_RadFromDeg_test);
+	RUN_TEST(BkMath_DegFromRad_test);
 	RUN_TEST(BkMath_CosFromSin_test);
 	RUN_TEST(BkMath_SinFromCos_test);
 	RUN_TEST(BkMath_TanFromSinCos_test);
@@ -26,56 +26,56 @@ void BkMath_PI_test(void)
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)3.141592653589793238462643383279502884197169399375105820974, (float)BK_PI);
 }
 
-void BkMath_DegToRad_test(void)
+void BkMath_RadFromDeg_test(void)
 {
 	real deg;
 	real rad;
 
 	deg = BK_REAL(0);
 	rad = BK_REAL(0);
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_DegToRad(deg));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_RadFromDeg(deg));
 
 	deg = BK_REAL(90);
 	rad = BK_PI / BK_REAL(2);
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_DegToRad(deg));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_RadFromDeg(deg));
 
 	deg = BK_REAL(180);
 	rad = BK_PI;
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_DegToRad(deg));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_RadFromDeg(deg));
 
 	deg = BK_REAL(270);
 	rad = BK_REAL(3) * BK_PI / BK_REAL(2);
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_DegToRad(deg));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_RadFromDeg(deg));
 
 	deg = BK_REAL(360);
 	rad = BK_REAL(2) * BK_PI;
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_DegToRad(deg));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)rad, (float)BkMath_RadFromDeg(deg));
 }
 
-void BkMath_RadToDeg_test(void)
+void BkMath_DegFromRad_test(void)
 {
 	real deg;
 	real rad;
 
 	deg = BK_REAL(0);
 	rad = BK_REAL(0);
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_RadToDeg(rad));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_DegFromRad(rad));
 
 	deg = BK_REAL(90);
 	rad = BK_PI / BK_REAL(2);
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_RadToDeg(rad));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_DegFromRad(rad));
 
 	deg = BK_REAL(180);
 	rad = BK_PI;
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_RadToDeg(rad));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_DegFromRad(rad));
 
 	deg = BK_REAL(270);
 	rad = BK_REAL(3) * BK_PI / BK_REAL(2);
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_RadToDeg(rad));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_DegFromRad(rad));
 
 	deg = BK_REAL(360);
 	rad = BK_REAL(2) * BK_PI;
-	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_RadToDeg(rad));
+	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)deg, (float)BkMath_DegFromRad(rad));
 }
 
 void BkMath_CosFromSin_test(void)

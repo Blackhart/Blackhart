@@ -48,8 +48,7 @@ extern BK_API struct BkQuaternion	BkQuaternion_Mul_BkQuaternion(struct BkQuatern
 
 /*! \brief Constructs a quaternion from an angle axis representation.
  *
- * \param angle The angle in degrees.
- * \param axis The axis.
+ * \param angle_axis The angle axis.
  * \return The newly created quaternion.
  */
 extern BK_API struct BkQuaternion	BkQuaternion_FromAngleAxis(struct BkAngleAxis const* angle_axis);
@@ -63,9 +62,7 @@ extern BK_API struct BkQuaternion	BkQuaternion_FromBkMatrix4x4(struct BkMatrix4x
 
 /*! \brief Constructs a quaternion from an euler angles representation.
  *
- * \param x The angle in degrees along the x axis.
- * \param y The angle in degrees along the y axis.
- * \param z The angle in degrees along the z axis.
+ * \param euler The euler angles.
  * \return The newly created quaternion.
  */
 extern BK_API struct BkQuaternion	BkQuaternion_FromEulerAngles(struct BkEulerAngles const* euler);
@@ -79,19 +76,32 @@ extern BK_API struct BkQuaternion	BkQuaternion_Copy(struct BkQuaternion const* q
 
 /*! \brief Sets x, y, z and w components of a quaternion and returns it.
  *
+ * \param this The quaternion to modify.
  * \param w W component.
  * \param x X component.
  * \param y Y component.
  * \param z Z component.
- * \return The newly created quaternion.
  */
-extern BK_API struct BkQuaternion	BkQuaternion_Set(real const w, real const x, real const y, real const z);
+extern BK_API void	BkQuaternion_Set(struct BkQuaternion* this, real const w, real const x, real const y, real const z);
+
+/*! \brief Normalizes a quaternion.
+ *
+ * \param this The quaternion to normalize.
+ */
+extern BK_API void	BkQuaternion_Normalized(struct BkQuaternion* this);
 
 /*! \brief Normalizes a quaternion.
  *
  * \param q The quaternion to normalize.
+ * \return The normalized quaternion.
  */
-extern BK_API void	BkQuaternion_Normalize(struct BkQuaternion* q);
+extern BK_API struct BkQuaternion	BkQuaternion_Normalize(struct BkQuaternion const* q);
+
+/*! \brief Negates a quaternion.
+*
+* \param this The quaternion to negate.
+*/
+extern BK_API void	BkQuaternion_Negated(struct BkQuaternion* this);
 
 /*! \brief Negates a quaternion.
  *
@@ -108,6 +118,17 @@ extern BK_API struct BkQuaternion	BkQuaternion_Negate(struct BkQuaternion const*
 extern BK_API real	BkQuaternion_Magnitude(struct BkQuaternion const* q);
 
 /*! \brief Returns the conjugate quaternion of the quaternion passed as input.
+*
+* Conjugate method flip the direction that we consider to be positive rotation.
+*
+* As an example:
+*	Instead of rotating an object from left to right, it rotates it from right to left.
+*
+* \param this The quaternion to conjugate.
+*/
+extern BK_API void	BkQuaternion_Conjugated(struct BkQuaternion* this);
+
+/*! \brief Returns the conjugate quaternion of the quaternion passed as input.
  *
  * Conjugate method flip the direction that we consider to be positive rotation.
  * 
@@ -118,6 +139,12 @@ extern BK_API real	BkQuaternion_Magnitude(struct BkQuaternion const* q);
  * \return The conjugated quaternion.
  */
 extern BK_API struct BkQuaternion	BkQuaternion_Conjugate(struct BkQuaternion const* q);
+
+/*! \brief Returns the inverse quaternion of the quaternion passed as input.
+*
+* \param this The quaternion to inverse.
+*/
+extern BK_API void	BkQuaternion_Inversed(struct BkQuaternion* this);
 
 /*! \brief Returns the inverse quaternion of the quaternion passed as input.
  *

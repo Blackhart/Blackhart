@@ -45,14 +45,14 @@ struct BkPoint3	BkPoint3_Copy(struct BkPoint3 const* src)
 	};
 }
 
-void	BkPoint3_Assign(struct BkPoint3* dst, struct BkPoint3 const* src)
+void	BkPoint3_Assign(struct BkPoint3* this, struct BkPoint3 const* src)
 {
-	BK_ASSERT(BK_ISNULL(dst));
+	BK_ASSERT(BK_ISNULL(this));
 	BK_ASSERT(BK_ISNULL(src));
 
-	dst->x = src->x;
-	dst->y = src->y;
-	dst->z = src->z;
+	this->x = src->x;
+	this->y = src->y;
+	this->z = src->z;
 }
 
 struct BkPoint3	BkPoint3_Add_BkVector3(struct BkPoint3 const* p, struct BkVector3 const* v)

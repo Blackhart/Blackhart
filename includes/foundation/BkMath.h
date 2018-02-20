@@ -4,6 +4,7 @@
 // Blackhart.foundation headers.
 #include "foundation\BkExport.h"
 #include "foundation\BkAtomicDataType.h"
+#include "foundation\BkPoint3.h"
 
 static real const BK_PI = BK_REAL(3.141592653589793238462643383279502884197169399375105820974);
 static real const BK_PI_OVER_TWO = BK_REAL(1.570796326794896619231321691639751442098584699687552910487);
@@ -16,13 +17,13 @@ static real const BK_RAD_TO_DEG = BK_REAL(57.29577951308232087679815481410517033
  *
  * \param deg Degree value.
  */
-extern BK_API real	BkMath_DegToRad(real const deg);
+extern BK_API real	BkMath_RadFromDeg(real const deg);
 
 /*! \brief Converts a radian value to a degree value.
  *
  * \param rad Radian value.
  */
-extern BK_API real	BkMath_RadToDeg(real const rad);
+extern BK_API real	BkMath_DegFromRad(real const rad);
 
 /*! \brief Converts a sinus value to the corresponding cosinus value.
  *
@@ -32,7 +33,7 @@ extern BK_API real	BkMath_CosFromSin(real const sin);
 
 /*! \brief Converts a cosinus value to the corresponding sinus value.
  *
- * \param sin Cosinus value.
+ * \param cos Cosinus value.
  */
 extern BK_API real	BkMath_SinFromCos(real const cos);
 
@@ -42,5 +43,15 @@ extern BK_API real	BkMath_SinFromCos(real const cos);
  * \param cos Cosinus value.
  */
 extern BK_API real	BkMath_TanFromSinCos(real const sin, real const cos);
+
+/*! \brief Computes a point into a triangular mesh using barycentric coordinate system.
+ *
+ * The sum of u and v must not be superior to 1.
+ *
+ * \param u The barycentric coordinate u.
+ * \param v The barycentric coordinate v.
+ * \return The new point.
+ */
+extern BK_API struct BkPoint3	BkMath_TriangularBarycentricCoordinate(real const u, real const v);
 
 #endif
