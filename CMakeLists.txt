@@ -39,16 +39,22 @@ file(GLOB_RECURSE HFiles includes/*.h)
 add_definitions(-DBK_EXPORT)
 add_library(${BLACKHART_PROJECT_NAME} SHARED ${CFiles} ${HFiles})
 
-# Renames Blackhart shared library to as 'blackhart32'
-set_target_properties(${BLACKHART_PROJECT_NAME} PROPERTIES OUTPUT_NAME "blackhart32")
+# Renames Blackhart shared library to as 'blackhart'
+set_target_properties(${BLACKHART_PROJECT_NAME} PROPERTIES OUTPUT_NAME "blackhart")
 
 # Links Blackhart's include directory
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/includes")
 
+# Creates install target
+set(CMAKE_INSTALL_PREFIX "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}/build_install")
+install(TARGETS ${BLACKHART_PROJECT_NAME}
+		RUNTIME DESTINATION bin
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib/static)
+install(DIRECTORY "${BLACKHART_PATH}/includes" DESTINATION "${BLACKHART_PATH}/build_install" FILES_MATCHING PATTERN "*.h")
+
 
 # ~~~~~ Tests ~~~~~
-
-message("")
 
 # Sets Blackhart-Tests directory
 set(BLACKHART_TESTS_PATH "${BLACKHART_PATH}/tests")
