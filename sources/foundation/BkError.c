@@ -43,7 +43,7 @@ void	BkError_Fatal(char const* assert, char const* file, uint16 const line, char
 	{
 		BkLog((char*)(BkQueue_Front(&__Bk_Error_Context)));
 		BkLog("\n");
-		BkError_PopContext(&__Bk_Error_Context);
+		BkError_PopContext();
 	}
 
 	BkLog(BkString_CreateFormatted("Unexpected Error: %s\n\t", assert));

@@ -4,6 +4,7 @@
 // Standard headers.
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 
 typedef int8_t      int8;

@@ -4,7 +4,9 @@
 // Blackhart.foundation headers.
 #include "foundation\BkExport.h"
 #include "foundation\BkAtomicDataType.h"
-#include "foundation\BkPoint3.h"
+
+// Forward declarations.
+struct BkPoint3;
 
 static real const BK_PI = BK_REAL(3.141592653589793238462643383279502884197169399375105820974);
 static real const BK_PI_OVER_TWO = BK_REAL(1.570796326794896619231321691639751442098584699687552910487);

@@ -18,7 +18,7 @@ struct BkQueue
  *
  * \param queue The queue to initialize.
  */
-inline BK_API void	BkQueue_Initialize(struct BkQueue* queue)
+static inline void	BkQueue_Initialize(struct BkQueue* queue)
 {
 	BK_ASSERT(BK_ISNULL(queue));
 
@@ -31,7 +31,7 @@ inline BK_API void	BkQueue_Initialize(struct BkQueue* queue)
  * \param queue The queue to evaluate.
  * \return true if the queue's size is 0, false otherwise.
  */
-inline BK_API bool	BkQueue_Empty(struct BkQueue const* queue)
+static inline bool	BkQueue_Empty(struct BkQueue const* queue)
 {
 	BK_ASSERT(BK_ISNULL(queue));
 
@@ -43,7 +43,7 @@ inline BK_API bool	BkQueue_Empty(struct BkQueue const* queue)
  * \param queue The queue.
  * \return The number of elements in the queue.
  */
-inline BK_API size_t	BkQueue_Size(struct BkQueue const* queue)
+static inline size_t	BkQueue_Size(struct BkQueue const* queue)
 {
 	BK_ASSERT(BK_ISNULL(queue));
 
@@ -73,7 +73,7 @@ extern BK_API void*	BkQueue_Back(struct BkQueue* queue);
  * \param queue The queue.
  * \param data The element to insert.
  */
-inline BK_API void	BkQueue_Push(struct BkQueue* queue, void* data)
+static inline void	BkQueue_Push(struct BkQueue* queue, void* data)
 {
 	BK_ASSERT(BK_ISNULL(queue));
 
@@ -87,7 +87,7 @@ inline BK_API void	BkQueue_Push(struct BkQueue* queue, void* data)
  *
  * \param queue The queue.
  */
-inline BK_API void	BkQueue_Pop(struct BkQueue* queue)
+static inline void	BkQueue_Pop(struct BkQueue* queue)
 {
 	BK_ASSERT(BK_ISNULL(queue));
 
@@ -102,7 +102,7 @@ inline BK_API void	BkQueue_Pop(struct BkQueue* queue)
  *
  * \param queue The queue.
  */
-inline BK_API void	BkQueue_Clear(struct BkQueue* queue)
+static inline void	BkQueue_Clear(struct BkQueue* queue)
 {
 	BK_ASSERT(BK_ISNULL(queue));
 
