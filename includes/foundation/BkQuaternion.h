@@ -76,19 +76,19 @@ extern BK_API struct BkQuaternion	BkQuaternion_Copy(struct BkQuaternion const* q
 
 /*! \brief Sets x, y, z and w components of a quaternion and returns it.
  *
- * \param this The quaternion to modify.
+ * \param obj The quaternion to modify.
  * \param w W component.
  * \param x X component.
  * \param y Y component.
  * \param z Z component.
  */
-extern BK_API void	BkQuaternion_Set(struct BkQuaternion* this, real const w, real const x, real const y, real const z);
+extern BK_API void	BkQuaternion_Set(struct BkQuaternion* obj, real const w, real const x, real const y, real const z);
 
 /*! \brief Normalizes a quaternion.
  *
- * \param this The quaternion to normalize.
+ * \param obj The quaternion to normalize.
  */
-extern BK_API void	BkQuaternion_Normalized(struct BkQuaternion* this);
+extern BK_API void	BkQuaternion_Normalized(struct BkQuaternion* obj);
 
 /*! \brief Normalizes a quaternion.
  *
@@ -99,9 +99,9 @@ extern BK_API struct BkQuaternion	BkQuaternion_Normalize(struct BkQuaternion con
 
 /*! \brief Negates a quaternion.
 *
-* \param this The quaternion to negate.
+* \param obj The quaternion to negate.
 */
-extern BK_API void	BkQuaternion_Negated(struct BkQuaternion* this);
+extern BK_API void	BkQuaternion_Negated(struct BkQuaternion* obj);
 
 /*! \brief Negates a quaternion.
  *
@@ -124,9 +124,9 @@ extern BK_API real	BkQuaternion_Magnitude(struct BkQuaternion const* q);
 * As an example:
 *	Instead of rotating an object from left to right, it rotates it from right to left.
 *
-* \param this The quaternion to conjugate.
+* \param obj The quaternion to conjugate.
 */
-extern BK_API void	BkQuaternion_Conjugated(struct BkQuaternion* this);
+extern BK_API void	BkQuaternion_Conjugated(struct BkQuaternion* obj);
 
 /*! \brief Returns the conjugate quaternion of the quaternion passed as input.
  *
@@ -142,9 +142,9 @@ extern BK_API struct BkQuaternion	BkQuaternion_Conjugate(struct BkQuaternion con
 
 /*! \brief Returns the inverse quaternion of the quaternion passed as input.
 *
-* \param this The quaternion to inverse.
+* \param obj The quaternion to inverse.
 */
-extern BK_API void	BkQuaternion_Inversed(struct BkQuaternion* this);
+extern BK_API void	BkQuaternion_Inversed(struct BkQuaternion* obj);
 
 /*! \brief Returns the inverse quaternion of the quaternion passed as input.
  *

@@ -76,12 +76,12 @@ extern BK_API real	BkVector3_Magnitude(struct BkVector3 const* a);
 
 /*! \brief Sets the x, y and z components.
  *
- * \param this The BkVector3 object to modify.
+ * \param obj The BkVector3 object to modify.
  * \param x The cartesian coordinate along the x axis.
  * \param y The cartesian coordinate along the y axis.
  * \param z The cartesian coordinate along the z axis.
  */
-extern BK_API void	BkVector3_Set(struct BkVector3* this, real const x, real const y, real const z);
+extern BK_API void	BkVector3_Set(struct BkVector3* obj, real const x, real const y, real const z);
 
 /*! \brief Copies a BkVector3.
  *
@@ -92,10 +92,10 @@ extern BK_API struct BkVector3	BkVector3_Copy(struct BkVector3 const* src);
 
 /*! \brief Copies a BkVector3 into one another.
 *
-* \param this The BkVector3 into which the data will be copied.
+* \param obj The BkVector3 into which the data will be copied.
 * \param src The BkVector3 to copy.
 */
-extern BK_API void	BkVector3_Assign(struct BkVector3* this, struct BkVector3 const* src);
+extern BK_API void	BkVector3_Assign(struct BkVector3* obj, struct BkVector3 const* src);
 
 /*! \brief Returns the dot product of two BkVector3.
  *
@@ -123,9 +123,9 @@ extern BK_API struct BkVector3	BkVector3_Cross(struct BkVector3 const* a, struct
 
 /*! \brief Negates all the components of a BkVector3.
  *
- * \param this The BkVector3 to negate.
+ * \param obj The BkVector3 to negate.
  */
-extern BK_API void	BkVector3_Negated(struct BkVector3* this);
+extern BK_API void	BkVector3_Negated(struct BkVector3* obj);
 
 /*! \brief Negates all the components of a BkVector3.
  *
@@ -144,9 +144,9 @@ extern BK_API real	BkVector3_Angle(struct BkVector3 const* a, struct BkVector3 c
 
 /*! \brief Normalizes a BkVector3.
  *
- * \param this The BkVector3 to normalize.
+ * \param obj The BkVector3 to normalize.
  */
-extern BK_API void	BkVector3_Normalized(struct BkVector3* this);
+extern BK_API void	BkVector3_Normalized(struct BkVector3* obj);
 
 /*! \brief Normalizes a BkVector3.
  *

@@ -44,11 +44,11 @@ extern BK_API struct BkEulerAngles	BkEulerAngles_FromBkMatrix4x4(struct BkMatrix
 
 /*! \brief Sets the x, y and z components.
  *
- * \param this The BkEulerAngle to modify.
+ * \param obj The BkEulerAngle to modify.
  * \param x The angle of rotation along the x axis. [Must be in degrees]
  * \param y The angle of rotation along the y axis. [Must be in degrees]
  * \param z The angle of rotation along the z axis. [Must be in degrees]
  */
-extern BK_API void	BkEulerAngles_Set(struct BkEulerAngles* this, real const x, real const y, real const z);
+extern BK_API void	BkEulerAngles_Set(struct BkEulerAngles* obj, real const x, real const y, real const z);
 
 #endif

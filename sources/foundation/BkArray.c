@@ -8,145 +8,145 @@
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
-void	BkArray_Initialize(struct BkArray* this, uint8 const data_size)
+void	BkArray_Initialize(struct BkArray* obj, uint8 const data_size)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	this->data = NULL;
-	this->size = 0;
-	this->capacity = 0;
-	this->data_size = data_size;
+	obj->data = NULL;
+	obj->size = 0;
+	obj->capacity = 0;
+	obj->data_size = data_size;
 }
 
-void	BkArray_Reserve(struct BkArray* this, size_t const capacity)
+void	BkArray_Reserve(struct BkArray* obj, size_t const capacity)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	if (capacity <= this->capacity)
+	if (capacity <= obj->capacity)
 		return;
 
-	size_t n = capacity * this->data_size;
+	size_t n = capacity * obj->data_size;
 	
 	char* data = malloc(n);
 	BK_ERROR(BK_ISNULL(data), "Memory system failed to allocate memory block!");
 
-	if (this->size != 0)
+	if (obj->size != 0)
 	{
-		n = this->size * this->data_size;
-		memcpy(data, this->data, n);
+		n = obj->size * obj->data_size;
+		memcpy(data, obj->data, n);
 	}
 
-	this->capacity = capacity;
+	obj->capacity = capacity;
 
-	free(this->data);
-	this->data = data;
+	free(obj->data);
+	obj->data = data;
 }
 
-void	BkArray_Clear(struct BkArray* this)
+void	BkArray_Clear(struct BkArray* obj)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	this->size = 0;
+	obj->size = 0;
 }
 
-void	BkArray_Destroy(struct BkArray* this)
+void	BkArray_Destroy(struct BkArray* obj)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	free(this->data);
-	this->data = NULL;
-	this->capacity = 0;
-	this->size = 0;
+	free(obj->data);
+	obj->data = NULL;
+	obj->capacity = 0;
+	obj->size = 0;
 }
 
-void	BkArray_Erase(struct BkArray* this, size_t const index)
+void	BkArray_Erase(struct BkArray* obj, size_t const index)
 {
-	BK_ASSERT(BK_ISNULL(this));
-	BK_ASSERT(index >= this->size);
+	BK_ASSERT(BK_ISNULL(obj));
+	BK_ASSERT(index >= obj->size);
 
-	if (this->size == 1)
+	if (obj->size == 1)
 	{
-		this->size = 0;
+		obj->size = 0;
 		return;
 	}
 
-	this->size -= 1;
+	obj->size -= 1;
 
-	size_t offset = index * this->data_size;
-	size_t start = this->size * this->data_size;
+	size_t offset = index * obj->data_size;
+	size_t start = obj->size * obj->data_size;
 
-	memcpy(this->data + offset, this->data + start, this->data_size);
+	memcpy(obj->data + offset, obj->data + start, obj->data_size);
 }
 
-void	BkArray_PushBack_t(struct BkArray* this, char const* data)
+void	BkArray_PushBack_t(struct BkArray* obj, char const* data)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 	BK_ASSERT(BK_ISNULL(data));
 
-	if ((this->size + 1) > this->capacity)
+	if ((obj->size + 1) > obj->capacity)
 	{
-		BkArray_Reserve(this, this->capacity + 4);
+		BkArray_Reserve(obj, obj->capacity + 4);
 	}
 	
-	memcpy(this->data + (this->size * this->data_size), data, this->data_size);
+	memcpy(obj->data + (obj->size * obj->data_size), data, obj->data_size);
 	
-	this->size += 1;
+	obj->size += 1;
 }
 
-void	BkArray_PopBack(struct BkArray* this)
+void	BkArray_PopBack(struct BkArray* obj)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	this->size -= 1;
+	obj->size -= 1;
 }
 
-void	BkArray_Insert_t(struct BkArray* this, size_t const index, char const* data)
+void	BkArray_Insert_t(struct BkArray* obj, size_t const index, char const* data)
 {
-	BK_ASSERT(BK_ISNULL(this));
-	BK_ASSERT(BK_ISNULL(this));
-	BK_ASSERT(index > this->size);
+	BK_ASSERT(BK_ISNULL(obj));
+	BK_ASSERT(BK_ISNULL(obj));
+	BK_ASSERT(index > obj->size);
 
-	if (index == this->size)
+	if (index == obj->size)
 	{
-		BkArray_PushBack_t(this, data);
+		BkArray_PushBack_t(obj, data);
 		return;
 	}
 
-	if ((this->size + 1) > this->capacity)
+	if ((obj->size + 1) > obj->capacity)
 	{
-		BkArray_Reserve(this, this->capacity + 4);
+		BkArray_Reserve(obj, obj->capacity + 4);
 	}
 
-	size_t offset = index * this->data_size;
-	size_t start = this->size * this->data_size;
+	size_t offset = index * obj->data_size;
+	size_t start = obj->size * obj->data_size;
 
-	memcpy(this->data + start, this->data + offset, this->data_size);
-	memcpy(this->data + offset, data, this->data_size);
+	memcpy(obj->data + start, obj->data + offset, obj->data_size);
+	memcpy(obj->data + offset, data, obj->data_size);
 
-	this->size += 1;
+	obj->size += 1;
 }
 
-void	BkArray_Resize_t(struct BkArray* this, size_t const size, char const* data)
+void	BkArray_Resize_t(struct BkArray* obj, size_t const size, char const* data)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 	BK_ASSERT(BK_ISNULL(data));
 
-	if (size < this->size)
-		this->size = size;
-	else if (size > this->size)
+	if (size < obj->size)
+		obj->size = size;
+	else if (size > obj->size)
 	{
-		if (size > this->capacity)
-			BkArray_Reserve(this, this->capacity + size + 4);
+		if (size > obj->capacity)
+			BkArray_Reserve(obj, obj->capacity + size + 4);
 
-		size_t offset = this->size * this->data_size;
+		size_t offset = obj->size * obj->data_size;
 
-		for (size_t i = this->size; i < size; i++)
+		for (size_t i = obj->size; i < size; i++)
 		{
-			memcpy(this->data + offset, data, this->data_size);
+			memcpy(obj->data + offset, data, obj->data_size);
 
-			offset += this->data_size;
+			offset += obj->data_size;
 		}
 
-		this->size = size;
+		obj->size = size;
 	}
 }

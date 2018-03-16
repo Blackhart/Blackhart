@@ -4,7 +4,7 @@ var _bk_vector3_8h =
     [ "BkVector3_AbsDot", "_bk_vector3_8h.html#a84e5d0cc0e68a392635eb35d798c9f87", null ],
     [ "BkVector3_Add_BkVector3", "_bk_vector3_8h.html#ac1b18e7c023bb0d501b887b9977383bc", null ],
     [ "BkVector3_Angle", "_bk_vector3_8h.html#a3e2dbb4aab3eb92107565537459b0648", null ],
-    [ "BkVector3_Assign", "_bk_vector3_8h.html#a74856d7a47cb4b1137cec69113136714", null ],
+    [ "BkVector3_Assign", "_bk_vector3_8h.html#adacf8b96a598fc59bc580284f52b1970", null ],
     [ "BkVector3_Copy", "_bk_vector3_8h.html#aa9afbf85a6e3bcd38dc82d5d26b7116c", null ],
     [ "BkVector3_Cross", "_bk_vector3_8h.html#a5ee6fb457231f4209116464c3ad0a4cd", null ],
     [ "BkVector3_Div_Real", "_bk_vector3_8h.html#a9d32e23789a150f686f77bb27fe07a7c", null ],
@@ -16,10 +16,10 @@ var _bk_vector3_8h =
     [ "BkVector3_Min", "_bk_vector3_8h.html#aa45cc4729ed9bf0e82c850a856dae8a1", null ],
     [ "BkVector3_Mul_Real", "_bk_vector3_8h.html#a7737693ac414dd340d053a8485901f71", null ],
     [ "BkVector3_Negate", "_bk_vector3_8h.html#ab01c4f0c87a220251107010eba64b09e", null ],
-    [ "BkVector3_Negated", "_bk_vector3_8h.html#aa0abc947aaa266bab192d644aa921011", null ],
+    [ "BkVector3_Negated", "_bk_vector3_8h.html#aa6211adb7df8ea37fe32d7cef264ef94", null ],
     [ "BkVector3_Normalize", "_bk_vector3_8h.html#a5981a4e6d66e1f76b488ae30ae59cf49", null ],
-    [ "BkVector3_Normalized", "_bk_vector3_8h.html#a206bca554faab80e1f63a106a48c2cb7", null ],
-    [ "BkVector3_Set", "_bk_vector3_8h.html#a129b01404c97c3c4d0cc7013ba53633d", null ],
+    [ "BkVector3_Normalized", "_bk_vector3_8h.html#a21bdab901e95a27ed5cafff4192f7499", null ],
+    [ "BkVector3_Set", "_bk_vector3_8h.html#a824816475e077bb4ee29e3427c977276", null ],
     [ "BkVector3_Sub_BkVector3", "_bk_vector3_8h.html#a32197aa12d846757f6fc7e65e131842d", null ],
     [ "BkVector3_Zero", "_bk_vector3_8h.html#af065c82ccaf1d83a9acf1d9a68201de9", null ]
 ];

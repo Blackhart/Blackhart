@@ -25,16 +25,16 @@ extern BK_API struct BkAngleAxis	BkAngleAxis_FromAngleAxis(real const angle, str
 
 /*! \brief Sets the angle of rotation.
  *
- * \param this The BkAngleAxis struct to modify.
+ * \param obj The BkAngleAxis struct to modify.
  * \param angle The angle of rotation. [Must be in degrees]
  */
-extern BK_API void	BkAngleAxis_SetAngle(struct BkAngleAxis* this, real const angle);
+extern BK_API void	BkAngleAxis_SetAngle(struct BkAngleAxis* obj, real const angle);
 
 /*! \brief Sets the axis of rotation.
  *
- * \param this The BkAngleAxis to modify.
+ * \param obj The BkAngleAxis to modify.
  * \param axis The axis of rotation. [Must be normalized]
  */
-extern BK_API void	BkAngleAxis_SetAxis(struct BkAngleAxis* this, struct BkVector3 const* axis);
+extern BK_API void	BkAngleAxis_SetAxis(struct BkAngleAxis* obj, struct BkVector3 const* axis);
 
 #endif

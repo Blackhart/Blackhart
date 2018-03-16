@@ -86,64 +86,64 @@ struct BkArray
 
 /*! \brief Initializes a BkArray
 *
-* \param this The container
+* \param obj The container
 * \param data_size The size of the data
 */
-extern BK_API void	BkArray_Initialize(struct BkArray* this, uint8 const data_size);
+extern BK_API void	BkArray_Initialize(struct BkArray* obj, uint8 const data_size);
 
 /*! \brief Requests that a BkArray capacity be at least enough to contain n elements.
 *
-* \param this The container
+* \param obj The container
 * \param capacity The new capacity of the container
 */
-extern BK_API void	BkArray_Reserve(struct BkArray* this, size_t const capacity);
+extern BK_API void	BkArray_Reserve(struct BkArray* obj, size_t const capacity);
 
 /*! \brief Removes all elements from a BkArray, leaving the container with a size of 0.
 *
-* \param this The container
+* \param obj The container
 */
-extern BK_API void	BkArray_Clear(struct BkArray* this);
+extern BK_API void	BkArray_Clear(struct BkArray* obj);
 
 /*! \brief Destroy a BkArray
 *
-* \param this The container
+* \param obj The container
 */
-extern BK_API void	BkArray_Destroy(struct BkArray* this);
+extern BK_API void	BkArray_Destroy(struct BkArray* obj);
 
 /*! \brief Removes the element at the given index from a BkArray
 *
-* \param this The container
+* \param obj The container
 * \param index The index of the element to remove
 */
-extern BK_API void	BkArray_Erase(struct BkArray* this, size_t const index);
+extern BK_API void	BkArray_Erase(struct BkArray* obj, size_t const index);
 
 /*! \brief Prepend a new element on to the end of the container
 *
-* \param this The container
+* \param obj The container
 * \param data The data to insert
 */
-extern BK_API void	BkArray_PushBack_t(struct BkArray* this, char const* data);
+extern BK_API void	BkArray_PushBack_t(struct BkArray* obj, char const* data);
 
 /*! \brief Remove the last element from a BkArray
 *
-* \param this The container
+* \param obj The container
 */
-extern BK_API void	BkArray_PopBack(struct BkArray* this);
+extern BK_API void	BkArray_PopBack(struct BkArray* obj);
 
 /*! \brief Inserts a new element at a given position in a BkArray
 *
-* \param this The container
+* \param obj The container
 * \param index The position to insert the data
 * \param data The data to insert
 */
-extern BK_API void	BkArray_Insert_t(struct BkArray* this, size_t const index, char const* data);
+extern BK_API void	BkArray_Insert_t(struct BkArray* obj, size_t const index, char const* data);
 
 /*! \brief Resizes a BkArray so that it contains s elements
 *
-* \param this The container
+* \param obj The container
 * \param size The new container size
 * \param data The data to insert
 */
-extern BK_API void	BkArray_Resize_t(struct BkArray* this, size_t const size, char const* data);
+extern BK_API void	BkArray_Resize_t(struct BkArray* obj, size_t const size, char const* data);
 
 #endif

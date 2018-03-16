@@ -16,14 +16,14 @@ struct BkAngleAxis	BkAngleAxis_FromAngleAxis(real const angle, struct BkVector3 
 	return out;
 }
 
-void	BkAngleAxis_SetAngle(struct BkAngleAxis* this, real const angle)
+void	BkAngleAxis_SetAngle(struct BkAngleAxis* obj, real const angle)
 {
-	this->angle = angle;
+	obj->angle = angle;
 }
 
-void	BkAngleAxis_SetAxis(struct BkAngleAxis* this, struct BkVector3 const* axis)
+void	BkAngleAxis_SetAxis(struct BkAngleAxis* obj, struct BkVector3 const* axis)
 {
-	this->axis.x = axis->x;
-	this->axis.y = axis->y;
-	this->axis.z = axis->z;
+	obj->axis.x = axis->x;
+	obj->axis.y = axis->y;
+	obj->axis.z = axis->z;
 }

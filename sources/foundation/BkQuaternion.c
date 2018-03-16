@@ -153,25 +153,25 @@ struct BkQuaternion	BkQuaternion_Copy(struct BkQuaternion const* q)
 	return ret;
 }
 
-void	BkQuaternion_Set(struct BkQuaternion* this, real const w, real const x, real const y, real const z)
+void	BkQuaternion_Set(struct BkQuaternion* obj, real const w, real const x, real const y, real const z)
 {
-	this->w = w;
-	this->x = x;
-	this->y = y;
-	this->z = z;
+	obj->w = w;
+	obj->x = x;
+	obj->y = y;
+	obj->z = z;
 }
 
-void	BkQuaternion_Normalized(struct BkQuaternion* this)
+void	BkQuaternion_Normalized(struct BkQuaternion* obj)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	real const m = BK_REAL(sqrt(this->w * this->w + this->x * this->x + this->y * this->y + this->z * this->z));
+	real const m = BK_REAL(sqrt(obj->w * obj->w + obj->x * obj->x + obj->y * obj->y + obj->z * obj->z));
 	if (m > BK_REAL(1))
 	{
-		this->w /= m;
-		this->x /= m;
-		this->y /= m;
-		this->z /= m;
+		obj->w /= m;
+		obj->x /= m;
+		obj->y /= m;
+		obj->z /= m;
 	}
 }
 
@@ -194,14 +194,14 @@ struct BkQuaternion	BkQuaternion_Normalize(struct BkQuaternion const* q)
 	return out;
 }
 
-void	BkQuaternion_Negated(struct BkQuaternion* this)
+void	BkQuaternion_Negated(struct BkQuaternion* obj)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	this->w = -this->w;
-	this->x = -this->x;
-	this->y = -this->y;
-	this->z = -this->z;
+	obj->w = -obj->w;
+	obj->x = -obj->x;
+	obj->y = -obj->y;
+	obj->z = -obj->z;
 }
 
 struct BkQuaternion	BkQuaternion_Negate(struct BkQuaternion const* q)
@@ -223,14 +223,14 @@ real	BkQuaternion_Magnitude(struct BkQuaternion const* q)
 	return BK_REAL(sqrt(q->w * q->w + q->x * q->x + q->y * q->y + q->z * q->z));
 }
 
-void	BkQuaternion_Conjugated(struct BkQuaternion* this)
+void	BkQuaternion_Conjugated(struct BkQuaternion* obj)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	this->w = this->w;
-	this->x = -this->x;
-	this->y = -this->y;
-	this->z = -this->z;
+	obj->w = obj->w;
+	obj->x = -obj->x;
+	obj->y = -obj->y;
+	obj->z = -obj->z;
 }
 
 struct BkQuaternion	BkQuaternion_Conjugate(struct BkQuaternion const* q)
@@ -245,18 +245,18 @@ struct BkQuaternion	BkQuaternion_Conjugate(struct BkQuaternion const* q)
 	return ret;
 }
 
-void	BkQuaternion_Inversed(struct BkQuaternion* this)
+void	BkQuaternion_Inversed(struct BkQuaternion* obj)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	real const magn = BkQuaternion_Magnitude(this);
+	real const magn = BkQuaternion_Magnitude(obj);
 
-	BkQuaternion_Conjugated(this);
+	BkQuaternion_Conjugated(obj);
 
-	this->w /= magn;
-	this->x /= magn;
-	this->y /= magn;
-	this->z /= magn;
+	obj->w /= magn;
+	obj->x /= magn;
+	obj->y /= magn;
+	obj->z /= magn;
 }
 
 struct BkQuaternion	BkQuaternion_Inverse(struct BkQuaternion const* q)

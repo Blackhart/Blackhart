@@ -114,9 +114,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a5944eb286c05db0716f9331f9dfc7e87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_bk_export_8h.html#a52517b9587f33b1a6618480c1129c260">BK_API</a> struct <a class="el" href="struct_bk_euler_angles.html">BkEulerAngles</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bk_euler_angles_8h.html#a5944eb286c05db0716f9331f9dfc7e87">BkEulerAngles_FromBkMatrix4x4</a> (struct <a class="el" href="struct_bk_matrix4x4.html">BkMatrix4x4</a> const *m)</td></tr>
 <tr class="memdesc:a5944eb286c05db0716f9331f9dfc7e87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a BkEulerAngle object from a <a class="el" href="struct_bk_matrix4x4.html">BkMatrix4x4</a>.  <a href="#a5944eb286c05db0716f9331f9dfc7e87">More...</a><br /></td></tr>
 <tr class="separator:a5944eb286c05db0716f9331f9dfc7e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fb6bc0d1e9c23ca8f0fe62aed39eb97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_bk_export_8h.html#a52517b9587f33b1a6618480c1129c260">BK_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bk_euler_angles_8h.html#a7fb6bc0d1e9c23ca8f0fe62aed39eb97">BkEulerAngles_Set</a> (struct <a class="el" href="struct_bk_euler_angles.html">BkEulerAngles</a> *this, <a class="el" href="_bk_atomic_data_type_8h.html#a031f8951175b43076c2084a6c2173410">real</a> const x, <a class="el" href="_bk_atomic_data_type_8h.html#a031f8951175b43076c2084a6c2173410">real</a> const y, <a class="el" href="_bk_atomic_data_type_8h.html#a031f8951175b43076c2084a6c2173410">real</a> const z)</td></tr>
-<tr class="memdesc:a7fb6bc0d1e9c23ca8f0fe62aed39eb97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the x, y and z components.  <a href="#a7fb6bc0d1e9c23ca8f0fe62aed39eb97">More...</a><br /></td></tr>
-<tr class="separator:a7fb6bc0d1e9c23ca8f0fe62aed39eb97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33d815891dffc130fcbf5fef9944b173"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_bk_export_8h.html#a52517b9587f33b1a6618480c1129c260">BK_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_bk_euler_angles_8h.html#a33d815891dffc130fcbf5fef9944b173">BkEulerAngles_Set</a> (struct <a class="el" href="struct_bk_euler_angles.html">BkEulerAngles</a> *obj, <a class="el" href="_bk_atomic_data_type_8h.html#a031f8951175b43076c2084a6c2173410">real</a> const x, <a class="el" href="_bk_atomic_data_type_8h.html#a031f8951175b43076c2084a6c2173410">real</a> const y, <a class="el" href="_bk_atomic_data_type_8h.html#a031f8951175b43076c2084a6c2173410">real</a> const z)</td></tr>
+<tr class="memdesc:a33d815891dffc130fcbf5fef9944b173"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the x, y and z components.  <a href="#a33d815891dffc130fcbf5fef9944b173">More...</a><br /></td></tr>
+<tr class="separator:a33d815891dffc130fcbf5fef9944b173"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a5944eb286c05db0716f9331f9dfc7e87"></a>
@@ -218,8 +218,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7fb6bc0d1e9c23ca8f0fe62aed39eb97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fb6bc0d1e9c23ca8f0fe62aed39eb97">&#9670;&nbsp;</a></span>BkEulerAngles_Set()</h2>
+<a id="a33d815891dffc130fcbf5fef9944b173"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33d815891dffc130fcbf5fef9944b173">&#9670;&nbsp;</a></span>BkEulerAngles_Set()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -228,7 +228,7 @@ Functions</h2></td></tr>
           <td class="memname"><a class="el" href="_bk_export_8h.html#a52517b9587f33b1a6618480c1129c260">BK_API</a> void BkEulerAngles_Set </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="struct_bk_euler_angles.html">BkEulerAngles</a> *&#160;</td>
-          <td class="paramname"><em>this</em>, </td>
+          <td class="paramname"><em>obj</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -259,7 +259,7 @@ Functions</h2></td></tr>
 <p>Sets the x, y and z components. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">this</td><td>The BkEulerAngle to modify. </td></tr>
+    <tr><td class="paramname">obj</td><td>The BkEulerAngle to modify. </td></tr>
     <tr><td class="paramname">x</td><td>The angle of rotation along the x axis. [Must be in degrees] </td></tr>
     <tr><td class="paramname">y</td><td>The angle of rotation along the y axis. [Must be in degrees] </td></tr>
     <tr><td class="paramname">z</td><td>The angle of rotation along the z axis. [Must be in degrees] </td></tr>

@@ -171,15 +171,15 @@ struct BkMatrix4x4	BkMatrix4x4_Copy(struct BkMatrix4x4 const* src)
 	};
 }
 
-void	BkMatrix4x4_Assign(struct BkMatrix4x4* this, struct BkMatrix4x4 const* src)
+void	BkMatrix4x4_Assign(struct BkMatrix4x4* obj, struct BkMatrix4x4 const* src)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 	BK_ASSERT(BK_ISNULL(src));
 
-	this->m11 = src->m11;   this->m12 = src->m12;   this->m13 = src->m13;   this->m14 = src->m14;
-	this->m21 = src->m21;   this->m22 = src->m22;   this->m23 = src->m23;   this->m24 = src->m24;
-	this->m31 = src->m31;   this->m32 = src->m32;   this->m33 = src->m33;   this->m34 = src->m34;
-	this->m41 = src->m41;   this->m42 = src->m42;   this->m43 = src->m43;   this->m44 = src->m44;
+	obj->m11 = src->m11;   obj->m12 = src->m12;   obj->m13 = src->m13;   obj->m14 = src->m14;
+	obj->m21 = src->m21;   obj->m22 = src->m22;   obj->m23 = src->m23;   obj->m24 = src->m24;
+	obj->m31 = src->m31;   obj->m32 = src->m32;   obj->m33 = src->m33;   obj->m34 = src->m34;
+	obj->m41 = src->m41;   obj->m42 = src->m42;   obj->m43 = src->m43;   obj->m44 = src->m44;
 }
 
 struct BkMatrix4x4	BkMatrix4x4_Transpose(struct BkMatrix4x4 const* m)

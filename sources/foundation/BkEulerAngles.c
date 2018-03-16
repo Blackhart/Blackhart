@@ -74,11 +74,11 @@ struct BkEulerAngles	BkEulerAngles_FromBkMatrix4x4(struct BkMatrix4x4 const* m)
 	return out;
 }
 
-void	BkEulerAngles_Set(struct BkEulerAngles* this, real const x, real const y, real const z)
+void	BkEulerAngles_Set(struct BkEulerAngles* obj, real const x, real const y, real const z)
 {
-	BK_ASSERT(BK_ISNULL(this));
+	BK_ASSERT(BK_ISNULL(obj));
 
-	this->x = x;
-	this->y = y;
-	this->z = z;
+	obj->x = x;
+	obj->y = y;
+	obj->z = z;
 }

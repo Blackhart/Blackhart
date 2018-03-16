@@ -12,6 +12,7 @@ var dir_4e104ffec8e2f9a189119d57943960e1 =
     [ "BkLogger.h", "_bk_logger_8h.html", "_bk_logger_8h" ],
     [ "BkMath.h", "_bk_math_8h.html", "_bk_math_8h" ],
     [ "BkMatrix4x4.h", "_bk_matrix4x4_8h.html", "_bk_matrix4x4_8h" ],
+    [ "BkMeshSampling.h", "_bk_mesh_sampling_8h.html", "_bk_mesh_sampling_8h" ],
     [ "BkPoint3.h", "_bk_point3_8h.html", "_bk_point3_8h" ],
     [ "BkQuaternion.h", "_bk_quaternion_8h.html", "_bk_quaternion_8h" ],
     [ "BkQueue.h", "_bk_queue_8h.html", "_bk_queue_8h" ],

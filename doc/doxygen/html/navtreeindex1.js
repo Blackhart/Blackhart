@@ -1,8 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"struct_bk_matrix4x4.html#adf78744228ea70841b0d2162aabe7d8d":[0,0,4,8],
-"struct_bk_matrix4x4.html#ae4cf7ab49f8d2f71f0756633d5bbf842":[0,0,4,3],
-"struct_bk_matrix4x4.html#afa9cfb1d6b3b705274bf902beabad3cc":[0,0,4,9],
 "struct_bk_matrix4x4.html#afeedb1d31dae847e1393c8db25082d63":[0,0,4,12],
 "struct_bk_point3.html":[0,0,5],
 "struct_bk_point3.html#a10bcf9869cc0e4a13dc5c090991dac34":[0,0,5,2],

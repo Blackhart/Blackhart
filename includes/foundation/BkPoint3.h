@@ -33,12 +33,12 @@ extern BK_API struct BkPoint3	BkPoint3_FromXYZ(real const x, real const y, real 
 
 /*! \brief Sets the x, y and z components.
  *
- * \param this The BkPoint3 object to modify.
+ * \param obj The BkPoint3 object to modify.
  * \param x The cartesian coordinate along the x axis.
  * \param y The cartesian coordinate along the y axis.
  * \param z The cartesian coordinate along the z axis.
  */
-extern BK_API void		BkPoint3_Set(struct BkPoint3* this, real const x, real const y, real const z);
+extern BK_API void		BkPoint3_Set(struct BkPoint3* obj, real const x, real const y, real const z);
 
 /*! \brief Copies a BkPoint3 object.
  *
@@ -49,10 +49,10 @@ extern BK_API struct BkPoint3	BkPoint3_Copy(struct BkPoint3 const* src);
 
 /*! \brief Copies a BkPoint3 object into one another.
  *
- * \param this The BkPoint3 object into which the data will be copied.
+ * \param obj The BkPoint3 object into which the data will be copied.
  * \param src The BkPoint3 object to copy.
  */
-extern BK_API void		BkPoint3_Assign(struct BkPoint3* this, struct BkPoint3 const* src);
+extern BK_API void		BkPoint3_Assign(struct BkPoint3* obj, struct BkPoint3 const* src);
 
 /*! \brief Addition a BkPoint3 and a BkVector3.
  *

@@ -120,10 +120,10 @@ extern BK_API struct BkMatrix4x4	BkMatrix4x4_Copy(struct BkMatrix4x4 const* src)
 
 /*! \brief Copies a 4x4 matrix into another.
  *
- * \param this The 4x4 matrix into which the copy will be made. (Must be allocated)
+ * \param obj The 4x4 matrix into which the copy will be made. (Must be allocated)
  * \param src The 4x4 matrix to copy.
  */
-extern BK_API void	BkMatrix4x4_Assign(struct BkMatrix4x4* this, struct BkMatrix4x4 const* src);
+extern BK_API void	BkMatrix4x4_Assign(struct BkMatrix4x4* obj, struct BkMatrix4x4 const* src);
 
 /*! \brief Transposes a 4x4 matrix.
  *

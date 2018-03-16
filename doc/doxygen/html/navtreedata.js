@@ -47,7 +47,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_bk_angle_axis_8h.html",
-"struct_bk_matrix4x4.html#adf78744228ea70841b0d2162aabe7d8d"
+"struct_bk_matrix4x4.html#afeedb1d31dae847e1393c8db25082d63"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
