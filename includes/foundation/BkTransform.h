@@ -28,7 +28,7 @@ extern BK_API void	BkTransform_Translate_BkVector3(struct BkTransform* transform
 extern BK_API void	BkTransform_Rotate_BkQuaternion(struct BkTransform* transform, struct BkQuaternion const* rotation);
 extern BK_API void	BkTransform_Rotate_EulerAngle(struct BkTransform* transform, struct BkEulerAngles const* euler);
 extern BK_API void	BkTransform_Rotate_AngleAxis(struct BkTransform* transform, struct BkAngleAxis const* angle_axis);
-extern BK_API void	BkTransform_RotateAround(struct BkTransform* transform, struct BkPoint3 const* point, struct BkAngleAxis const* angle_axis);
+extern BK_API void	BkTransform_RotateAround(struct BkTransform* transform, struct BkPoint3 const* center, struct BkEulerAngles const* euler);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 

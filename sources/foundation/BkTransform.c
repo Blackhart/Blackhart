@@ -1,5 +1,11 @@
+// Standard library headers.
+#include <math.h>
+
 // Blackhart.foundation headers.
 #include "foundation\BkTransform.h"
+#include "foundation\BkAngleAxis.h"
+#include "foundation\BkMath.h"
+#include "foundation\BkError.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -76,21 +82,37 @@ void	BkTransform_Rotate_AngleAxis(struct BkTransform* transform, struct BkAngleA
 	_BkTransform_RecomputeLocal(transform);
 }
 
-void	BkTransform_RotateAround(struct BkTransform* transform, struct BkPoint3 const* point, struct BkAngleAxis const* angle_axis)
+void	BkTransform_RotateAround(struct BkTransform* transform, struct BkPoint3 const* center, struct BkEulerAngles const* euler)
 {
 	BK_ASSERT(BK_ISNULL(transform));
-	BK_ASSERT(BK_ISNULL(point));
-	BK_ASSERT(BK_ISNULL(angle_axis));
+	BK_ASSERT(BK_ISNULL(center));
+	BK_ASSERT(BK_ISNULL(euler));
 
+	struct BkMatrix4x4 local = BkMatrix4x4_Identity();
 
+	struct BkMatrix4x4 const center_matrix = BkMatrix4x4_Translation_BkPoint3(center);
+	struct BkMatrix4x4 const inv_center_matrix = BkMatrix4x4_Inverse(&center_matrix);
+
+	struct BkQuaternion const q = BkQuaternion_FromEulerAngles(euler);
+	struct BkMatrix4x4 const rotation = BkMatrix4x4_FromBkQuaternion(&q);
+
+	local = BkMatrix4x4_Mul_BkMatrix4x4(&inv_center_matrix, &(transform->local));
+	local = BkMatrix4x4_Mul_BkMatrix4x4(&rotation, &local);
+	local = BkMatrix4x4_Mul_BkMatrix4x4(&center_matrix, &local);
+
+	transform->position = BkPoint3_FromXYZ(local.m14 / local.m44, local.m24 / local.m44, local.m34 / local.m44);
+	transform->rotation = BkQuaternion_FromBkMatrix4x4(&local);
+	transform->local = local;
 }
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
 void	_BkTransform_RecomputeLocal(struct BkTransform* transform)
 {
+	BK_ASSERT(BK_ISNULL(transform));
+
 	struct BkMatrix4x4 mt = BkMatrix4x4_Translation_BkPoint3(&(transform->position));
 	struct BkMatrix4x4 mr = BkMatrix4x4_FromBkQuaternion(&(transform->rotation));
 
-	transform->local = BkMatrix4x4_Mul_BkMatrix4x4(&mr, &mt);
+	transform->local = BkMatrix4x4_Mul_BkMatrix4x4(&mt, &mr);
 }
