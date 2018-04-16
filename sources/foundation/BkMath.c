@@ -45,3 +45,13 @@ struct BkPoint3	BkMath_TriangularBarycentricCoordinate(real const u, real const 
 
 	return BkPoint3_Zero();
 }
+
+real	BkMath_Clamp_Real(real const value, real const min, real const max)
+{
+	if (value > max)
+		return max;
+	else if (value < min)
+		return min;
+	else
+		return value;
+}

@@ -119,3 +119,17 @@ struct BkVector3	BkPoint3_Sub_BkPoint3(struct BkPoint3 const* a, struct BkPoint3
 		.z = a->z - b->z
 	};
 }
+
+struct BkPoint3	BkPoint3_RotateAround(struct BkPoint3 const* center, real const radius, real const yaw, real const pitch)
+{
+	real const yaw_radian = BkMath_RadFromDeg(yaw);
+	real const pitch_radian = BkMath_RadFromDeg(pitch);
+
+	struct BkPoint3 position = BkPoint3_Zero();
+
+	position.x = radius * BK_REAL(cos((double)pitch_radian)) * BK_REAL(sin((double)yaw_radian));
+	position.y = radius * BK_REAL(sin((double)pitch_radian));
+	position.z = radius * BK_REAL(cos((double)pitch_radian)) * BK_REAL(cos((double)yaw_radian));
+
+	return position;
+}

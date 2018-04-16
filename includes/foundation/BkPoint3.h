@@ -101,4 +101,13 @@ extern BK_API real		BkPoint3_Distance(struct BkPoint3 const* a, struct BkPoint3 
  */
 extern BK_API struct BkPoint3	BkPoint3_Lerp(struct BkPoint3 const* from, struct BkPoint3 const* to, real const t);
 
+/*! \brief Returns the location of a point rotated around center by yaw and pitch degrees.
+ *
+ * \param center The center of rotation.
+ * \param radius The distance between the center and the point.
+ * \param yaw The rotation angle along the yaw axis. [Must be in degrees]
+ * \param pitch The rotation angle along the pitch axis. [Must be in degrees]
+ */
+extern BK_API struct BkPoint3	BkPoint3_RotateAround(struct BkPoint3 const* center, real const radius, real const yaw, real const pitch);
+
 #endif

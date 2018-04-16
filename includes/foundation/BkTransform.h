@@ -16,22 +16,26 @@ struct BkAngleAxis;
 struct BkTransform
 {
 	struct BkPoint3		position;
-	struct BkQuaternion	rotation;
+	struct BkQuaternion	orientation;
 	struct BkMatrix4x4	local;
+	bool			local_dirty;
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern BK_API void	BkTransform_Initialize(struct BkTransform* transform);
-extern BK_API void	BkTransform_LookAt(struct BkTransform* transform, struct BkPoint3 const* from, struct BkPoint3 const* to, struct BkVector3 const* up);
-extern BK_API void	BkTransform_Translate_BkVector3(struct BkTransform* transform, struct BkVector3 const* translation);
-extern BK_API void	BkTransform_Rotate_BkQuaternion(struct BkTransform* transform, struct BkQuaternion const* rotation);
-extern BK_API void	BkTransform_Rotate_EulerAngle(struct BkTransform* transform, struct BkEulerAngles const* euler);
-extern BK_API void	BkTransform_Rotate_AngleAxis(struct BkTransform* transform, struct BkAngleAxis const* angle_axis);
-extern BK_API void	BkTransform_RotateAround(struct BkTransform* transform, struct BkPoint3 const* center, struct BkEulerAngles const* euler);
-
-// ~~~~~ Dcl(INTERNAL) ~~~~~
-
-extern void		_BkTransform_RecomputeLocal(struct BkTransform* transform);
+extern BK_API void	BkTransform_Initialize(struct BkTransform* obj);
+extern BK_API struct BkMatrix4x4*	BkTransform_Matrix(struct BkTransform* obj);
+extern BK_API struct BkMatrix4x4	BkTransform_InvMatrix(struct BkTransform* obj);
+extern BK_API void	BkTransform_LookAt(struct BkTransform* obj, struct BkPoint3 const* from, struct BkPoint3 const* to, struct BkVector3 const* up);
+extern BK_API void	BkTransform_Translate_BkVector3(struct BkTransform* obj, struct BkVector3 const* translation);
+extern BK_API void	BkTransform_Rotate_BkQuaternion(struct BkTransform* obj, struct BkQuaternion const* rotation);
+extern BK_API void	BkTransform_Rotate_EulerAngle(struct BkTransform* obj, struct BkEulerAngles const* euler);
+extern BK_API void	BkTransform_Rotate_AngleAxis(struct BkTransform* obj, struct BkAngleAxis const* angle_axis);
+extern BK_API void	BkTransform_RotateAround(struct BkTransform* obj, struct BkPoint3 const* center, real const yaw, real const pitch);
+extern BK_API struct BkVector3	BkTransform_Forward(struct BkTransform* obj);
+extern BK_API struct BkVector3	BkTransform_Right(struct BkTransform* obj);
+extern BK_API struct BkVector3	BkTransform_Up(struct BkTransform* obj);
+extern BK_API void	BkTransform_SetPosition(struct BkTransform* obj, struct BkPoint3 const* position);
+extern BK_API void	BkTransform_SetOrientation(struct BkTransform* obj, struct BkQuaternion const* orientation);
 
 #endif
