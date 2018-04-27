@@ -24,7 +24,7 @@ static struct BkOpenGLShader*           __BkOpenGL_PixelShader = NULL;
 static struct BkOpenGLBuffer*           __BkOpenGL_Buffer = NULL;
 
 static real*        __points = NULL;
-static size_t const __nb_points = 10000;
+static size_t const __nb_points = 100000;
 
 void	_BkOpenGL_Initialize(void)
 {
@@ -102,7 +102,7 @@ void	_BkOpenGL_Render(struct BkCamera* camera)
 	struct BkMatrix4x4 const v = BkCamera_ViewMatrix(camera);
 	struct BkMatrix4x4 const pv = BkMatrix4x4_Mul_BkMatrix4x4(BkCamera_Projection(camera), &v);
 
-	struct BkMatrix4x4 const m1 = BkMatrix4x4_Translation_XYZ(BK_REAL(0), BK_REAL(0), BK_REAL(0));
+	struct BkMatrix4x4 m1 = BkMatrix4x4_Translation_XYZ(BK_REAL(0), BK_REAL(0), BK_REAL(0));
 	struct BkMatrix4x4 pvm = BkMatrix4x4_Mul_BkMatrix4x4(&pv, &m1);
 
 	glUniformMatrix4fv(glGetUniformLocation(__BkOpenGL_ShaderProgram->id, "uni_mvp"), 1, GL_TRUE, &(pvm.m11));

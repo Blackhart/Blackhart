@@ -54,9 +54,11 @@ void	BkTransform_LookAt(struct BkTransform* obj, struct BkPoint3 const* from, st
 	struct BkVector3 f = BkPoint3_Sub_BkPoint3(from, to);
 	f = BkVector3_Normalize(&f);
 
-	struct BkVector3 const r = BkVector3_Cross(up, &f);
+	struct BkVector3 r = BkVector3_Cross(up, &f);
+    r = BkVector3_Normalize(&r);
 
-	struct BkVector3 const u = BkVector3_Cross(&f, &r);
+	struct BkVector3 u = BkVector3_Cross(&f, &r);
+    u = BkVector3_Normalize(&u);
 
 	struct BkMatrix4x4 m;
 
@@ -67,8 +69,7 @@ void	BkTransform_LookAt(struct BkTransform* obj, struct BkPoint3 const* from, st
 
 	obj->orientation = BkQuaternion_FromBkMatrix4x4(&m);
 
-    obj->local = m;
-	obj->dirty = false;
+	obj->dirty = true;
 }
 
 void	BkTransform_Translate_BkVector3(struct BkTransform* obj, struct BkVector3 const* translation)

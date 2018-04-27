@@ -143,18 +143,20 @@ void    InputCallback(GLFWwindow* window, int key, int scancode, int action, int
 void    MouseCallback(GLFWwindow* window, double posx, double posy)
 {
     static double last_mouse_pos[2] = { 0.0, 0.0 };
+    static double rotation_zpeed = 20.0;
+    static double zoom_speed = 3.0;
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1)
     {
-        double yaw = posx - last_mouse_pos[0];
-        double pitch = posy - last_mouse_pos[1];
+        double yaw = (posx - last_mouse_pos[0]) * rotation_zpeed * BkTime_DeltaTime();
+        double pitch = (posy - last_mouse_pos[1]) * rotation_zpeed * BkTime_DeltaTime();
         BkOrbitalCamera_Rotate(&g_camera, BK_REAL(yaw), BK_REAL(pitch));
     }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT))
     {
-        double dx = 0.01 * (posx - last_mouse_pos[0]);
-        double dy = 0.01 * (posy - last_mouse_pos[1]);
+        double dx = (posx - last_mouse_pos[0]) * zoom_speed * BkTime_DeltaTime();
+        double dy = (posy - last_mouse_pos[1]) * zoom_speed * BkTime_DeltaTime();
         double radius = dx - dy;
         BkOrbitalCamera_Zoom(&g_camera, BK_REAL(radius));
     }

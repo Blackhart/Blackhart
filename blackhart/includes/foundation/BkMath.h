@@ -69,6 +69,32 @@ extern BK_API struct BkPoint3	BkMath_TriangularBarycentricCoordinate(real const 
  * \param max The maximum clamping range
  * \return The clamped value.
  */
-extern BK_API real	BkMath_Clamp_Real(real const value, real const min, real const max);
+extern BK_API real	BkMath_Clamp(real const value, real const min, real const max);
+
+/*! \brief Returns value clamped to the min value [min,value].
+  *
+ * As follows:
+ *
+ * 1) Returns min if value is less than min; else
+ * 2) Returns value otherwise.
+ *
+ * \param value The value to clamp.
+ * \param min The minimum clamping range.
+ * \return The clamped value.
+ */
+extern BK_API real  BkMath_Min(real const value, real const min);
+
+/*! \brief Returns value clamped to the min value [value,max].
+ *
+ * As follows:
+ *
+ * 1) Returns min if value is less than max; else
+ * 2) Returns value otherwise.
+ *
+ * \param value The value to clamp.
+ * \param max The maximum clamping range.
+ * \return The clamped value.
+ */
+extern BK_API real  BkMath_Max(real const value, real const max);
 
 #endif
