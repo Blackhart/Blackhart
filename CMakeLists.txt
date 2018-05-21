@@ -26,4 +26,8 @@ add_subdirectory("blackhart")
 set(BLACKHART_STUDIO_PROJECT_NAME "blackhart.studio")
 add_subdirectory("blackhart.studio")
 
+# Sets blackhart.studio.qt project
+set(BLACKHART_STUDIO_QT_PROJECT_NAME "blackhart.studio.qt")
+add_subdirectory("blackhart.studio.qt")
+
 message("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")

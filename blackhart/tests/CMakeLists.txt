@@ -37,8 +37,8 @@ message("")
 set(UNITY_LIBRARY_PATH "" CACHE PATH "Unity's library directory")
 
 # Finds unity library
-find_library(UNITY_DEBUG_LIBRARY NAMES Unity32d PATHS "${UNITY_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-find_library(UNITY_RELEASE_LIBRARY NAMES Unity32 PATHS "${UNITY_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
+find_library(UNITY_DEBUG_LIBRARY NAMES unityd PATHS "${UNITY_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
+find_library(UNITY_RELEASE_LIBRARY NAMES unity PATHS "${UNITY_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
 
 if (NOT UNITY_DEBUG_LIBRARY OR NOT UNITY_RELEASE_LIBRARY)
 	message("unity: Library not found!")
