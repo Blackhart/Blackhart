@@ -12,7 +12,5 @@ extern void	BkMath_CosFromSin_test(void);
 extern void	BkMath_SinFromCos_test(void);
 extern void	BkMath_TanFromSinCos_test(void);
 extern void	BkMath_Clamp_test(void);
-extern void BkMath_Min_test(void);
-extern void BkMath_Max_test(void);
 
 #endif

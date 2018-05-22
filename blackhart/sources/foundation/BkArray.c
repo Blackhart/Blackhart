@@ -27,7 +27,7 @@ void	BkArray_Reserve(struct BkArray* obj, size_t const capacity)
 
 	size_t n = capacity * obj->data_size;
 	
-	char* data = malloc(n);
+	void* data = malloc(n);
 	BK_ERROR(BK_ISNULL(data), "Memory system failed to allocate memory block!");
 
 	if (obj->size != 0)

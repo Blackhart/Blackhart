@@ -20,8 +20,6 @@ void BkMath_RunTests(void)
 	RUN_TEST(BkMath_SinFromCos_test);
 	RUN_TEST(BkMath_TanFromSinCos_test);
 	RUN_TEST(BkMath_Clamp_test);
-    RUN_TEST(BkMath_Min_test);
-    RUN_TEST(BkMath_Max_test);
 }
 
 void BkMath_PI_test(void)
@@ -167,20 +165,4 @@ void	BkMath_Clamp_test(void)
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)min, (float)BkMath_Clamp(BK_REAL(-3), min, max));
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)max, (float)BkMath_Clamp(BK_REAL(10), min, max));
 	TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, 0.0f, (float)BkMath_Clamp(BK_REAL(0), min, max));
-}
-
-void    BkMath_Min_test(void)
-{
-    real const min = BK_REAL(-2);
-    real const max = BK_REAL(0);
-
-    TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)min, (float)BkMath_Min(min, max));
-}
-
-void    BkMath_Max_test(void)
-{
-    real const min = BK_REAL(-2);
-    real const max = BK_REAL(0);
-
-    TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)max, (float)BkMath_Max(min, max));
 }
