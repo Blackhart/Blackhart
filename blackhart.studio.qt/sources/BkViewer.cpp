@@ -4,6 +4,10 @@
 // blackhart headers.
 #include "..\..\blackhart\export\cpp\Blackhart.hpp"
 
+// Qt's headers
+#include <QMouseEvent>
+#include <Qt>
+
 // ~~~~~ Def(PUBLIC) ~~~~~
 
 static struct BkOrbitalCamera   g_camera;
@@ -11,6 +15,11 @@ static struct BkOrbitalCamera   g_camera;
 BkViewer::BkViewer(QWidget* parent) :
     QOpenGLWidget{ parent }
 {
+    // Set Qt's OpenGL format
+    QSurfaceFormat format;
+    format.setVersion(4, 5);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    setFormat(format);
 }
 
 BkViewer::~BkViewer()
@@ -30,6 +39,9 @@ void    BkViewer::initializeGL()
     struct BkPoint3 const to = BkPoint3_FromXYZ(BK_REAL(0.0), BK_REAL(0.0), BK_REAL(0.0));
     BkOrbitalCamera_SetTarget(&g_camera, &to);
     BkOrbitalCamera_SetRadius(&g_camera, BK_REAL(5));
+
+    // Initialize Qt's timer
+    time.start();
 }
 
 void    BkViewer::paintGL()

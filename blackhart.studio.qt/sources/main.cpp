@@ -1,13 +1,15 @@
 #include <QApplication>
-#include "BkViewer.hpp"
+
+// blackhart.studio headers
+#include "BkEditor.hpp"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    BkViewer viewer;
+    BkEditor editor;
 
-    viewer.show();
+    editor.show();
 
     return app.exec();
 }

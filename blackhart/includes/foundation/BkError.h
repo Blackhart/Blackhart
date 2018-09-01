@@ -17,16 +17,17 @@
 #define BK_ERROR(test, str)	if (test) { BkError_Fatal(#test, __FILE__, __LINE__, str); }
 
 #define BK_ASSERT(test)	assert(!(test))
+#define BK_COMPILER_ASSERT(test)    if(!(test)) { int 0_COMPILER_ASSERT_FAILED; }
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /*! \brief 
  */
-extern void	BkError_PushContext(char* msg);
+extern BK_API void	BkError_PushContext(char* msg);
 
 /*! \brief
  */
-extern void	BkError_PopContext(void);
+extern BK_API void	BkError_PopContext(void);
 
 /*! \brief Logs a fatal error msg and exit the program.
  *
@@ -35,7 +36,7 @@ extern void	BkError_PopContext(void);
  * \param line The line where the error has occured.
  * \param str Additionnal error msg.
  */
-extern void	BkError_Fatal(char const* __restrict assert, char const* __restrict file, uint16 const line, char const* __restrict str);
+extern BK_API void	BkError_Fatal(char const* __restrict assert, char const* __restrict file, uint16 const line, char const* __restrict str);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
