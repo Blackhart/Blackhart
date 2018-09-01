@@ -146,6 +146,8 @@ void    MouseCallback(GLFWwindow* window, double posx, double posy)
     static double rotation_zpeed = 20.0;
     static double zoom_speed = 3.0;
 
+    double time = BkTime_DeltaTime();
+
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1)
     {
         double yaw = (posx - last_mouse_pos[0]) * rotation_zpeed * BkTime_DeltaTime();
