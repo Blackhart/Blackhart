@@ -5,22 +5,22 @@
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-static BkFlux*	__BkLogger_LogFile = NULL;
+static BkFlux*	__BkLogFile = NULL;
 
 void	_BkLogger_Initialize(void)
 {
-	BkFileSystem_OpenFlux(&__BkLogger_LogFile, "Log.txt", "w");
+	BkFileSystem_OpenFlux(&__BkLogFile, "Log.txt", "w");
 }
 
 void	_BkLogger_Uninitialize(void)
 {
-	BkFileSystem_CloseFlux(&__BkLogger_LogFile);
+	BkFileSystem_CloseFlux(&__BkLogFile);
 }
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
 void	BkLog(char const* str)
 {
-	if (!BK_ISNULL(__BkLogger_LogFile))
-		BkFileSystem_WriteToFlux(__BkLogger_LogFile, str);
+	if (!BK_ISNULL(__BkLogFile))
+		BkFileSystem_WriteToFlux(__BkLogFile, str);
 }
