@@ -11,7 +11,7 @@
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
-struct BkMatrix4x4	BkMatrix4x4_Identity()
+struct BkMatrix4x4	BkMatrix4x4_Identity(void)
 {
 	return (struct BkMatrix4x4) {
 		.m11 = BK_REAL(1.0),   .m12 = BK_REAL(0.0),   .m13 = BK_REAL(0.0),   .m14 = BK_REAL(0.0),

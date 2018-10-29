@@ -1,0 +1,2 @@
+# warning level 3 and all warnings as errors
+add_compile_options(/W3 /WX)

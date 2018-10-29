@@ -10,7 +10,7 @@
 
 /*! \brief Initializes Blackhart.
  */
-extern BK_API void	BkInitialize();
+extern BK_API void	BkInitialize(void);
 
 /*! \brief Uninitializes Blackhart.
  */

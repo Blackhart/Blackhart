@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.7)
 
 # ~~~~~ Blackhart ~~~~~
 
+# Set blackhart project name
+set(BLACKHART_PROJECT_NAME "blackhart")
+
 message("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 message("${BLACKHART_PROJECT_NAME}: BUILD ENABLE")
 message("${BLACKHART_PROJECT_NAME}: Library:(SHARED)")
@@ -75,6 +78,7 @@ set(GLEW_INCLUDE_PATH "" CACHE PATH "glew's include directory")
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH}")
 
 message("glew: include_path:(${GLEW_INCLUDE_PATH})")
+
 
 # ~~~~~ Tests ~~~~~
 

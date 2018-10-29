@@ -27,7 +27,7 @@ struct BkMatrix4x4
  *
  * \return The 4x4 identity matrix.
  */
-extern BK_API struct BkMatrix4x4	BkMatrix4x4_Identity();
+extern BK_API struct BkMatrix4x4	BkMatrix4x4_Identity(void);
 
 /*! \brief Multiplies a 4x4 matrix with another 4x4 matrix.
  *

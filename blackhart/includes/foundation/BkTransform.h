@@ -19,6 +19,7 @@ struct BkTransform
 	struct BkQuaternion orientation;
 	struct BkMatrix4x4  local;
 	bool                dirty;
+    uint8               __padding__[3];
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

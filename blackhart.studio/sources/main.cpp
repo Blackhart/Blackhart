@@ -41,9 +41,9 @@ int main()
 
 	// Initialize glfw windows and set OpenGL context
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 
 	GLFWwindow* window = NULL;
 
@@ -106,6 +106,8 @@ int main()
 	{
 		BkTime_Update();
 
+        BkOrbitalCamera_Rotate(&g_camera, BK_REAL(50) * BK_REAL(BkTime_DeltaTime()), BK_REAL(0));
+
 		ShowFPS(window);
 
 		glfwPollEvents();
@@ -134,6 +136,10 @@ EXIT:
 
 void    InputCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    (void)mods;
+    (void)scancode;
+    (void)window;
+
 	// ~~~~~ GLFW EVENTS ~~~~~~
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -145,8 +151,6 @@ void    MouseCallback(GLFWwindow* window, double posx, double posy)
     static double last_mouse_pos[2] = { 0.0, 0.0 };
     static double rotation_zpeed = 20.0;
     static double zoom_speed = 3.0;
-
-    double time = BkTime_DeltaTime();
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1)
     {
@@ -169,12 +173,16 @@ void    MouseCallback(GLFWwindow* window, double posx, double posy)
 
 void    ResizeCallback(GLFWwindow* window, int width, int height)
 {
+    (void)window;
+
 	glViewport(0, 0, width, height);
 	g_camera.base.projection = BkProjection_Perspective(BK_REAL(45), BK_REAL(width) / BK_REAL(height), BK_REAL(0.1), BK_REAL(1000));
 }
 
 void    ErrorCallback(int error, const char* msg)
 {
+    (void)error;
+
 	std::cout << "Fatal: " << msg << std::endl;
 	exit(EXIT_FAILURE);
 }

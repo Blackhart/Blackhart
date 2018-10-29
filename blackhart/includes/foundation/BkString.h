@@ -18,12 +18,4 @@
  */
 extern BK_API char const*	BkString_CreateFormatted(char const* format, ...);
 
-/*! \brief Compares two strings.
- *
- * \param str1 The first string.
- * \param str2 The second string.
- * \return True if the strings are the same, false otherwise.
- */
-extern BK_API bool	BkString_Compare(char const* __restrict str1, char const* __restrict str2);
-
 #endif

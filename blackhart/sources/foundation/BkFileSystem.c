@@ -83,7 +83,7 @@ void	BkFileSystem_ReadFromFlux(BkFlux* flux, char** buffer, size_t* buffer_size)
 	BK_ERROR(fseek(flux, 0, SEEK_END) != 0 || ferror(flux) != 0, "File system has failed to read from the flux");
 	
 	*buffer_size = ftell(flux);
-	BK_ERROR(*buffer_size < 0, "File system has failed to read from the flux");
+	BK_ERROR((*buffer_size) == -1L, "File system has failed to read from the flux");
 	
 	rewind(flux);
 	

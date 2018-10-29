@@ -41,7 +41,7 @@ struct BkPoint3	BkMath_TriangularBarycentricCoordinate(real const u, real const 
 {
 	BK_ASSERT(u + v > BK_REAL(1));
 
-	real const w = BK_REAL(1) - (u + v);
+	//real const w = BK_REAL(1) - (u + v);
 
 	return BkPoint3_Zero();
 }

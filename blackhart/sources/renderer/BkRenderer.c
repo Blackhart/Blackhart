@@ -23,9 +23,8 @@ static struct BkShader*             __BkVertexShader = NULL;
 static struct BkShader*             __BkGeometryShader = NULL;
 static struct BkShader*             __BkPixelShader = NULL;
 static struct BkBuffer*             __BkBuffer = NULL;
-
-static real*        __points = NULL;
-static size_t const __nb_points = 100000;
+static real*                        __points = NULL;
+static size_t const                 __nb_points = 100000;
 
 void    _BkRender_Initialize(void)
 {
@@ -46,10 +45,6 @@ void    _BkRender_Initialize(void)
     BkFileSystem_CombinePath(path, BK_DEFAULT_SHADER_PATH, "vertex.glsl");
     __BkVertexShader = _BkShader_Create(path, _BK_VERTEX_SHADER_);
 
-    // Create geometry shader
-    BkFileSystem_CombinePath(path, BK_DEFAULT_SHADER_PATH, "geometry.glsl");
-    __BkGeometryShader = _BkShader_Create(path, _BK_GEOMETRY_SHADER);
-
     // Create fragment shader
     BkFileSystem_CombinePath(path, BK_DEFAULT_SHADER_PATH, "pixel.glsl");
     __BkPixelShader = _BkShader_Create(path, _BK_PIXEL_SHADER_);
@@ -59,12 +54,10 @@ void    _BkRender_Initialize(void)
     // Create material
     __BkShaderProgram = _BkShaderProgram_Create();
     _BkShaderProgram_AttachShader(__BkShaderProgram, __BkVertexShader);
-    //_BkShaderProgram_AttachShader(__BkShaderProgram, __BkGeometryShader);
     _BkShaderProgram_AttachShader(__BkShaderProgram, __BkPixelShader);
     _BkShaderProgram_Compile(__BkShaderProgram);
 
     _BkShader_Release(&__BkVertexShader);
-    _BkShader_Release(&__BkGeometryShader);
     _BkShader_Release(&__BkPixelShader);
 
     __points = malloc((__nb_points * 3) * sizeof(real));
@@ -105,7 +98,7 @@ void    _BkRender_Uninitialize(void)
 
 void	BkRender(struct BkCamera* camera)
 {
-    static real const background[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    static real const background[4] = { BK_REAL(0), BK_REAL(0), BK_REAL(0), BK_REAL(1) };
 
     glClearBufferfv(GL_COLOR, 0, background);
 

@@ -30,23 +30,3 @@ char const*	BkString_CreateFormatted(char const* format, ...)
 
 	return str;
 }
-
-bool	BkString_Compare(char const* __restrict str1, char const* __restrict str2)
-{
-	BK_ASSERT(BK_ISNULL(str1));
-	BK_ASSERT(BK_ISNULL(str2));
-
-	size_t const str1_len = strlen(str1);
-	size_t const str2_len = strlen(str2);
-
-	if (str1_len != str2_len)
-		return false;
-
-	for (size_t i = 0; i < str1_len; i++)
-	{
-		if (str1[i] != str2[i])
-			return false;
-	}
-
-	return true;
-}

@@ -80,6 +80,7 @@ struct BkArray
 	size_t	size;
 	size_t	capacity;
 	uint8	data_size;
+    uint8   __padding__[7];
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~

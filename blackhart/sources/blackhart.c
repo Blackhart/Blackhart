@@ -8,7 +8,7 @@
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
-void	BkInitialize()
+void	BkInitialize(void)
 {
 	_BkError_Initialize();
 	_BkLogger_Initialize();

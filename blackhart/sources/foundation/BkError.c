@@ -1,5 +1,6 @@
 // Standard headers.
 #include <stdlib.h>
+#include <string.h>
 
 // blackhart headers.
 #include "foundation\BkError.h"
@@ -28,7 +29,7 @@ void	BkError_PushContext(char* msg)
 	BkQueue_Push(&__Bk_Error_Context, msg);
 }
 
-void	BkError_PopContext()
+void	BkError_PopContext(void)
 {
 	BkQueue_Pop(&__Bk_Error_Context);
 }
@@ -48,7 +49,7 @@ void	BkError_Fatal(char const* __restrict assert, char const* __restrict file, u
 
 	BkLog(BkString_CreateFormatted("Unexpected Error: %s\n\t", assert));
 
-	if (str != "")
+	if (strcmp(str, "") != 0)
 		BkLog(str);
 
 	BkLog(BkString_CreateFormatted("\n\tIn %s:%d", file, line));
