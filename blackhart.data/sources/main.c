@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 // ~~~~~ Standard headers ~~~~~
 
 #include <stdlib.h>
@@ -15,25 +17,10 @@ static int const    DISTANCE_MIN = 0;
 static int const    DISTANCE_MAX = 1000;
 static int const    STARS_PER_SOLID_ANGLE = 1700000000 / (360 * 180);
 
-// ~~~~~ Structs ~~~~~
-
-struct EquatorialCoord
-{
-    double  ra;
-    double  dec;
-    double  dist;
-};
-
-struct Stars
-{
-    size_t                  count;
-    struct EquatorialCoord* coords;
-};
-
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
 static void generate_data(void);
-static void serialize(struct Stars const* stars, int ra, int dec);
+static void serialize(void* buffer, size_t buffer_length, int ra, int dec);
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -52,37 +39,42 @@ int main(void)
 
 void    generate_data(void)
 {
-    struct Stars stars;
+    size_t buffer_length = sizeof(size_t) + STARS_PER_SOLID_ANGLE * 3 * sizeof(double);
+    void* buffer = malloc(buffer_length * sizeof(char));
+    if (buffer == NULL)
+        return;
 
-    stars.count = STARS_PER_SOLID_ANGLE;
-    stars.coords = malloc(stars.count * sizeof(struct EquatorialCoord));
+    ((size_t*)buffer)[0] = STARS_PER_SOLID_ANGLE;
+
+    double* coords = (double*)(((char*)buffer) + sizeof(size_t));
 
     for (int right_ascension = RIGHT_ASCENSION_MIN; right_ascension <= RIGHT_ASCENSION_MAX; ++right_ascension)
     {
         for (int declinaison = DECLINAISON_MIN; declinaison <= DECLINAISON_MAX; ++declinaison)
         {
-            for (int star_count = 0; star_count < stars.count; ++star_count)
+            for (int star_count = 0; star_count < STARS_PER_SOLID_ANGLE; ++star_count)
             {
                 // generate random RA, Dec, Dist
-                stars.coords[star_count].ra = (rand() / (double)RAND_MAX) * ((right_ascension + 1) - right_ascension) + right_ascension;
-                stars.coords[star_count].dec = (rand() / (double)RAND_MAX) * ((declinaison + 1) - declinaison) + declinaison;
-                stars.coords[star_count].dist = (rand() / (double)RAND_MAX) * (DISTANCE_MAX - DISTANCE_MIN) + DISTANCE_MIN;
+                coords[star_count] = (rand() / (double)RAND_MAX) * ((right_ascension + 1) - right_ascension) + right_ascension;
+                coords[star_count + 1] = (rand() / (double)RAND_MAX) * ((declinaison + 1) - declinaison) + declinaison;
+                coords[star_count + 2] = (rand() / (double)RAND_MAX) * (DISTANCE_MAX - DISTANCE_MIN) + DISTANCE_MIN;
             }
 
-            serialize(&stars, right_ascension, declinaison);
+            // serialize stars coords on the disk
+            serialize(buffer, buffer_length, right_ascension, declinaison);
         }
     }
 
-    free(stars.coords);
+    free(buffer);
 }
 
-void    serialize(struct Stars const* stars, int ra, int dec)
+void    serialize(void* buffer, size_t buffer_length, int ra, int dec)
 {
-    char filename[14];
+    char filename[100];
+    memset(filename, '\0', 100);
+    sprintf(filename, "%s/Stars_%d_%d", BK_DEFAULT_DATA_PATH, ra, dec);
 
-    memset(filename, '\0', 14);
-
-    sprintf_s(filename, 14, "Stars_%d_%d", ra, dec);
-
-    printf("%s\n", filename);
+    FILE* flux = fopen(filename, "w");
+    fwrite(buffer, sizeof(char), buffer_length, flux);
+    fclose(flux);
 }
