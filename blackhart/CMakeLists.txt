@@ -21,6 +21,9 @@ set(BLACKHART_PATH "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}")
 # Sets default shader path
 add_definitions(-DBK_DEFAULT_SHADER_PATH="${BLACKHART_PATH}/shaders")
 
+# Sets default data path
+add_definitions(-DBK_DEFAULT_DATA_PATH="${BLACKHART_DATA_PATH}/data")
+
 # Sets debug postfix
 set(CMAKE_DEBUG_POSTFIX d)
 
