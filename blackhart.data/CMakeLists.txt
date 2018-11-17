@@ -13,6 +13,9 @@ project(${BLACKHART_DATA_PROJECT_NAME} C)
 # Sets Blackhart-Editor's sources directory
 set(BLACKHART_DATA_PATH "${${BLACKHART_DATA_PROJECT_NAME}_SOURCE_DIR}")
 
+# Sets default data path
+add_definitions(-DBK_DEFAULT_DATA_PATH="${BLACKHART_DATA_PATH}/data")
+
 # Gets all the source code (both .c and .h files)
 file(GLOB_RECURSE CFiles sources/*.c)
 file(GLOB_RECURSE HFiles includes/*.h)
