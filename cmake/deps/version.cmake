@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.21)
 
 # Centralized dependency versions.
 # This file is the single source of truth for modules in `cmake/deps/`.
