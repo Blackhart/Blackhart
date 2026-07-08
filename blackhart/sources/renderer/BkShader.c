@@ -2,12 +2,13 @@
 #include <stdlib.h>
 
 // Glew headers.
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 // blackhart headers.
-#include "foundation\BkError.h"
-#include "foundation\BkFileSystem.h"
-#include "renderer\BkShader.h"
+#include "foundation/BkError.h"
+#include "foundation/BkString.h"
+#include "foundation/BkFileSystem.h"
+#include "renderer/BkShader.h"
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
@@ -25,8 +26,30 @@ struct BkShader*	_BkShader_Create(char const* path, enum BkShaderType const shad
 
 	shader->id = glCreateShader(shader_type);
 
-	glShaderSource(shader->id, 1, &str, NULL);
+	const GLchar* source = (const GLchar*)str;
+
+	glShaderSource(shader->id, 1, &source, NULL);
+
 	glCompileShader(shader->id);
+
+	GLint compile_status = 0;
+
+	glGetShaderiv(shader->id, GL_COMPILE_STATUS, &compile_status);
+
+	if (!compile_status)
+	{
+		GLchar info_log[1024];
+		GLsizei log_length = 0;
+
+		glGetShaderInfoLog(shader->id, (GLsizei)sizeof(info_log), &log_length, info_log);
+
+
+		free(str);
+
+		BK_ERROR(true, BkString_CreateFormatted("Shader compilation failed: %s", info_log));
+	}
+
+	free(str);
 
 	return shader;
 }
@@ -64,6 +87,22 @@ void _BkShaderProgram_Compile(struct BkShaderProgram* shader_program)
     BK_ASSERT(BK_ISNULL(shader_program));
 
     glLinkProgram(shader_program->id);
+
+	GLint link_status = 0;
+
+	glGetProgramiv(shader_program->id, GL_LINK_STATUS, &link_status);
+
+	if (!link_status)
+	{
+		GLchar info_log[1024];
+		GLsizei log_length = 0;
+
+		glGetProgramInfoLog(shader_program->id, (GLsizei)sizeof(info_log), &log_length, info_log);
+		
+		_BkShaderProgram_Release(&shader_program);
+		
+		BK_ERROR(true, BkString_CreateFormatted("Shader program link failed: %s", info_log));
+	}
 }
 
 void	_BkShaderProgram_Release(struct BkShaderProgram** shader_program)

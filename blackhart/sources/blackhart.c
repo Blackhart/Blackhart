@@ -1,10 +1,10 @@
 // Blackhart headers.
-#include "Blackhart.h"
+#include "blackhart.h"
 
 // blackhart headers.
-#include "foundation\BkLogger.h"
-#include "foundation\BkError.h"
-#include "renderer\BkRenderer.h"
+#include "foundation/BkLogger.h"
+#include "foundation/BkError.h"
+#include "renderer/BkRenderer.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 

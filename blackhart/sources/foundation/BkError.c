@@ -3,10 +3,10 @@
 #include <string.h>
 
 // blackhart headers.
-#include "foundation\BkError.h"
-#include "foundation\BkLogger.h"
-#include "foundation\BkQueue.h"
-#include "foundation\BkString.h"
+#include "foundation/BkError.h"
+#include "foundation/BkLogger.h"
+#include "foundation/BkQueue.h"
+#include "foundation/BkString.h"
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 

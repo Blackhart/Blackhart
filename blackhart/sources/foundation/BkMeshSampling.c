@@ -3,11 +3,11 @@
 #include <math.h>
 
 // blackhart headers.
-#include "foundation\BkMeshSampling.h"
-#include "foundation\BkPoint3.h"
-#include "foundation\BkVector3.h"
-#include "foundation\BkError.h"
-#include "foundation\BkMath.h"
+#include "foundation/BkMeshSampling.h"
+#include "foundation/BkPoint3.h"
+#include "foundation/BkVector3.h"
+#include "foundation/BkError.h"
+#include "foundation/BkMath.h"
 
 // ~~~~~ Dcl(PRIVATE) ~~~~~
 

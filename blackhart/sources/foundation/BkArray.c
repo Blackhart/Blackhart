@@ -3,8 +3,8 @@
 #include <string.h>
 
 // blackhart headers.
-#include "foundation\BkArray.h"
-#include "foundation\BkError.h"
+#include "foundation/BkArray.h"
+#include "foundation/BkError.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 

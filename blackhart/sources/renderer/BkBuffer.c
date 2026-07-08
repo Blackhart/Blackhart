@@ -2,11 +2,11 @@
 #include <stdlib.h>
 
 // Glew headers.
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 // blackhart headers.
-#include "foundation\BkError.h"
-#include "renderer\BkBuffer.h"
+#include "foundation/BkError.h"
+#include "renderer/BkBuffer.h"
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 

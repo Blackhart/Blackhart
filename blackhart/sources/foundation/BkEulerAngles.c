@@ -2,11 +2,11 @@
 #include <math.h>
 
 // blackhart headers.
-#include "foundation\BkMath.h"
-#include "foundation\BkError.h"
-#include "foundation\BkEulerAngles.h"
-#include "foundation\BkQuaternion.h"
-#include "foundation\BkMatrix4x4.h"
+#include "foundation/BkMath.h"
+#include "foundation/BkError.h"
+#include "foundation/BkEulerAngles.h"
+#include "foundation/BkQuaternion.h"
+#include "foundation/BkMatrix4x4.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 

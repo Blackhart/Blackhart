@@ -3,13 +3,13 @@
 #include <sstream>
 
 // Graphics library headers.
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 // blackhart headers.
-#include "..\..\blackhart\export\cpp\Blackhart.hpp"
+#include "../../blackhart/export/cpp/Blackhart.hpp"
 
 // blackhart.studio headers.
-#include "foundation\BkTime.hpp"
+#include "foundation/BkTime.hpp"
 
 // Globales
 static struct BkOrbitalCamera   g_camera;
@@ -34,7 +34,7 @@ int main()
 
 	// Initialize glfw
 	if (!glfwInit())
-		goto EXIT;
+		return EXIT_FAILURE;
 
 	// Set error callback function
 	glfwSetErrorCallback(ErrorCallback);
@@ -44,7 +44,7 @@ int main()
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-
+	
 	GLFWwindow* window = NULL;
 
 	if (g_full_screen)
@@ -64,7 +64,10 @@ int main()
 	}
 
 	if (window == NULL)
-		goto GLFW_TERMINATE;
+	{
+		glfwTerminate();
+		return EXIT_FAILURE;
+	}
 
 	glfwMakeContextCurrent(window);
 
@@ -87,8 +90,8 @@ int main()
 	BkInitialize();
 
 	// Initialize Camera
-	BkOrbitalCamera_Initialize(&g_camera);
 	struct BkPoint3 const to = BkPoint3_FromXYZ(BK_REAL(0.0), BK_REAL(0.0), BK_REAL(0.0));
+	BkOrbitalCamera_Initialize(&g_camera);
 	BkOrbitalCamera_SetTarget(&g_camera, &to);
 	BkOrbitalCamera_SetRadius(&g_camera, BK_REAL(5));
 
@@ -97,7 +100,6 @@ int main()
 	// Initialize OpenGL viewport
 	int width = 0;
 	int height = 0;
-
 	glfwGetWindowSize(window, &width, &height);
 	ResizeCallback(window, width, height);
 
@@ -127,10 +129,8 @@ int main()
 
 	glfwDestroyWindow(window);
 
-GLFW_TERMINATE:
 	glfwTerminate();
 
-EXIT:
 	return EXIT_SUCCESS;
 }
 

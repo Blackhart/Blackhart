@@ -23,6 +23,12 @@ file(GLOB_RECURSE HFiles includes/*.h)
 # Compiles Blackhart-Editor
 add_executable(${BLACKHART_DATA_PROJECT_NAME} ${CFiles} ${HFiles})
 
+# Find OpenMP
+find_package(OpenMP REQUIRED)
+if (OpenMP_FOUND)
+	target_link_libraries(${BLACKHART_DATA_PROJECT_NAME} PUBLIC OpenMP::OpenMP_C)
+endif()
+
 # Links Blackhart's include directory
 target_include_directories(${BLACKHART_DATA_PROJECT_NAME} PUBLIC "${BLACKHART_DATA_PATH}/includes")
 

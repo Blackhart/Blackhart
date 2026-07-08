@@ -2,7 +2,7 @@
 #include "BkViewer.hpp"
 
 // blackhart headers.
-#include "..\..\blackhart\export\cpp\Blackhart.hpp"
+#include "../../blackhart/export/cpp/Blackhart.hpp"
 
 // Qt's headers
 #include <QMouseEvent>

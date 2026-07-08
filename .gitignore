@@ -2,3 +2,42 @@
 
 [Bb]uild*
 [Ee]xtlibs
+_build/
+
+# IDE/Editor files
+compile_commands.json
+.vscode/
+.idea/
+.cache/
+
+# CMake generated files (au cas où le build dir n'est pas `_build/`)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+install_manifest.txt
+progress.marks
+
+# Object files / binaries
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Logs
+Log.txt
+*.log
+
+# Documentation générée par doxygen
+doc/html/
+doc/latex/
+doc/xml/
+
+# Doxygen output (selon config)
+doc/doxygen/
+doc/doxygen/html/
+doc/doxygen/latex/
+doc/doxygen/xml/

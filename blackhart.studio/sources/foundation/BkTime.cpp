@@ -1,8 +1,8 @@
 // GLFW library headers.
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 // Blackhart-Editor headers.
-#include "foundation\BkTime.hpp"
+#include "foundation/BkTime.hpp"
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 

@@ -4,8 +4,8 @@
 #include <stdio.h>
 
 // blackhart headers.
-#include "foundation\BkString.h"
-#include "foundation\BkError.h"
+#include "foundation/BkString.h"
+#include "foundation/BkError.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -29,4 +29,11 @@ char const*	BkString_CreateFormatted(char const* format, ...)
 	va_end(arglist);
 
 	return str;
+}
+
+void	BkString_Free(char const* str)
+{
+	BK_ASSERT(BK_ISNULL(str));
+
+	free((void*)str);
 }

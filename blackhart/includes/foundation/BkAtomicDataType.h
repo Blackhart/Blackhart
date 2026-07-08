@@ -1,10 +1,13 @@
 #ifndef __BK_ATOMIC_DATA_TYPES_H__
 #define __BK_ATOMIC_DATA_TYPES_H__
 
-// Standard headers.
+// ~~~~~ Standard Headers ~~~~~
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+
+// ~~~~~ Type Definitions ~~~~~
 
 typedef int8_t      int8;
 typedef int16_t     int16;
@@ -21,6 +24,8 @@ typedef uint64_t    uint64;
 #else
     typedef float   real;
 #endif
+
+// ~~~~~ Macros Definitions ~~~~~
 
 #define BK_REAL(x)	(real)(x)
 

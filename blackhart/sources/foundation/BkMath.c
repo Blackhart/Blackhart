@@ -2,10 +2,10 @@
 #include <math.h>
 
 // blackhart headers.
-#include "foundation\BkMath.h"
-#include "foundation\BkError.h"
-#include "foundation\BkPoint3.h"
-#include "foundation\BkVector3.h"
+#include "foundation/BkMath.h"
+#include "foundation/BkError.h"
+#include "foundation/BkPoint3.h"
+#include "foundation/BkVector3.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 

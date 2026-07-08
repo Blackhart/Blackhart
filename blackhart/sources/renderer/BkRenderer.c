@@ -4,16 +4,17 @@
 #include <string.h>
 
 // Glew library headers.
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 // blackhart headers.
-#include "foundation\BkCamera.h"
-#include "renderer\BkRenderer.h"
-#include "foundation\BkError.h"
-#include "foundation\BkString.h"
-#include "foundation\BkFileSystem.h"
-#include "renderer\BkBuffer.h"
-#include "renderer\BkShader.h"
+#include "foundation/BkCamera.h"
+#include "foundation/BkError.h"
+#include "foundation/BkString.h"
+#include "foundation/BkFileSystem.h"
+
+#include "renderer/BkRenderer.h"
+#include "renderer/BkBuffer.h"
+#include "renderer/BkShader.h"
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 

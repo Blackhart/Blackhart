@@ -2,9 +2,9 @@
 #include <math.h>
 
 // blackhart headers.
-#include "foundation\BkOrbitalCamera.h"
-#include "foundation\BkAtomicDataType.h"
-#include "foundation\BkMath.h"
+#include "foundation/BkOrbitalCamera.h"
+#include "foundation/BkAtomicDataType.h"
+#include "foundation/BkMath.h"
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
