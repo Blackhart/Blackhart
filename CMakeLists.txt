@@ -14,8 +14,6 @@ set(MAIN_PROJECT_NAME "Main")
 
 project(${MAIN_PROJECT_NAME})
 
-include(GNUInstallDirs)
-
 # Sets Blackhart's sources directory
 set(MAIN_PATH "${${MAIN_PROJECT_NAME}_SOURCE_DIR}")
 
@@ -24,11 +22,24 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+#--------------------------------------------------------------------------------------------------
+# Debug
+#--------------------------------------------------------------------------------------------------
+
 # Export compile commands for IDE support
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Enable CTest integration (IDE, ctest --preset, CI).
-enable_testing()
+# Symlink compile_commands.json at the project root for clangd / IDE support.
+if (CMAKE_EXPORT_COMPILE_COMMANDS)
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E rm -f "${CMAKE_SOURCE_DIR}/compile_commands.json"
+  )
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+      "${CMAKE_BINARY_DIR}/compile_commands.json"
+      "${CMAKE_SOURCE_DIR}/compile_commands.json"
+  )
+endif ()
 
 #--------------------------------------------------------------------------------------------------
 # Platform-specific settings.
@@ -38,6 +49,19 @@ enable_testing()
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     include (cmake/config/platform/win-vs.txt)
 endif ()
+
+#--------------------------------------------------------------------------------------------------
+# Test
+#--------------------------------------------------------------------------------------------------
+
+# Enable CTest integration (IDE, ctest --preset, CI).
+enable_testing()
+
+#--------------------------------------------------------------------------------------------------
+# Install
+#--------------------------------------------------------------------------------------------------
+
+include(GNUInstallDirs)
 
 #--------------------------------------------------------------------------------------------------
 # Products.
