@@ -6,6 +6,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/version.cmake")
 FetchContent_Declare(
   glfw
   URL https://github.com/glfw/glfw/archive/refs/tags/${BK_GLFW_VERSION}.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
 FetchContent_MakeAvailable(glfw)

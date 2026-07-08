@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.21)
 
+# URL-based FetchContent downloads use extraction timestamps (CMP0135).
+if(POLICY CMP0135)
+  cmake_policy(SET CMP0135 NEW)
+endif()
+
 #--------------------------------------------------------------------------------------------------
 # Project configuration.
 #--------------------------------------------------------------------------------------------------

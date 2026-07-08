@@ -6,6 +6,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/version.cmake")
 FetchContent_Declare(
   glew
   URL https://github.com/nigels-com/glew/archive/refs/tags/glew-${BK_GLEW_VERSION}.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
 FetchContent_Populate(glew)
