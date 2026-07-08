@@ -48,7 +48,6 @@ set_target_properties(${BLACKHART_PROJECT_NAME} PROPERTIES OUTPUT_NAME "blackhar
 # Links Blackhart's include directory
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/includes")
 
-
 # ~~~~~ Dependencies: GLEW + OpenGL ~~~~~
 
 include("${MAIN_PATH}/cmake/deps/glew.cmake")
@@ -61,7 +60,6 @@ target_link_libraries(${BLACKHART_PROJECT_NAME}
     m
 )
 
-
 # ~~~~~ Tests ~~~~~
 
 # Sets Blackhart-Tests directory
@@ -71,3 +69,25 @@ option(BUILD_BLACKHART_TESTS "Build Blackhart's tests" OFF)
 if (BUILD_BLACKHART_TESTS)
 	add_subdirectory("${BLACKHART_TESTS_PATH}")
 endif (BUILD_BLACKHART_TESTS)
+
+# ~~~~~ Install ~~~~~
+
+install(TARGETS ${BLACKHART_PROJECT_NAME}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(DIRECTORY "${BLACKHART_PATH}/includes/"
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	FILES_MATCHING PATTERN "*.h"
+)
+
+install(FILES "${BLACKHART_PATH}/export/cpp/Blackhart.hpp"
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/blackhart
+)
+
+install(DIRECTORY "${BLACKHART_PATH}/shaders/"
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/blackhart/shaders
+	FILES_MATCHING PATTERN "*.glsl"
+)

@@ -30,7 +30,6 @@ target_include_directories(${BLACKHART_STUDIO_PROJECT_NAME} PUBLIC "${MAIN_PATH}
 # OpenGL (glViewport, glClear, ...)
 find_package(OpenGL REQUIRED)
 
-
 # ~~~~~ Dependency: GLFW ~~~~~
 
 include("${MAIN_PATH}/cmake/deps/glfw.cmake")
@@ -38,7 +37,6 @@ target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE GLFW::GLFW)
 
 # main.cpp uses OpenGL symbols directly.
 target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE OpenGL::GL)
-
 
 # ~~~~~ Tests ~~~~~
 
@@ -49,3 +47,9 @@ option(BUILD_BLACKHART_STUDIO_TESTS "Build Blackhart studio's tests" OFF)
 if (BUILD_BLACKHART_STUDIO_TESTS)
 	add_subdirectory("${BLACKHART_STUDIO_TESTS_PATH}")
 endif (BUILD_BLACKHART_STUDIO_TESTS)
+
+# ~~~~~ Install ~~~~~
+
+install(TARGETS ${BLACKHART_STUDIO_PROJECT_NAME}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

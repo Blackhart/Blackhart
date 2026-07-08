@@ -14,6 +14,8 @@ set(MAIN_PROJECT_NAME "Main")
 
 project(${MAIN_PROJECT_NAME})
 
+include(GNUInstallDirs)
+
 # Sets Blackhart's sources directory
 set(MAIN_PATH "${${MAIN_PROJECT_NAME}_SOURCE_DIR}")
 
@@ -43,7 +45,6 @@ endif ()
 
 add_subdirectory("blackhart")
 add_subdirectory("blackhart.studio")
-# add_subdirectory("blackhart.studio.qt")
 add_subdirectory("blackhart.data")
 
 message("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
