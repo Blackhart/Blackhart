@@ -31,6 +31,13 @@
         "BUILD_BLACKHART_STUDIO_TESTS": "OFF",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
+    },
+    {
+      "name": "docker-debug",
+      "displayName": "Docker Debug",
+      "description": "Debug configuration used inside the CI Docker container (_build/docker-debug)",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/_build/docker-debug"
     }
   ],
   "buildPresets": [
@@ -47,6 +54,13 @@
       "configurePreset": "release",
       "description": "Builds the Release configuration",
       "jobs": 0
+    },
+    {
+      "name": "docker-debug",
+      "displayName": "Build Docker Debug",
+      "configurePreset": "docker-debug",
+      "description": "Builds the Debug configuration inside the CI Docker container",
+      "jobs": 0
     }
   ],
   "testPresets": [
@@ -55,6 +69,12 @@
       "displayName": "Test Debug",
       "configurePreset": "debug",
       "description": "Runs all CTest targets in the Debug configuration"
+    },
+    {
+      "name": "docker-debug",
+      "displayName": "Test Docker Debug",
+      "configurePreset": "docker-debug",
+      "description": "Runs all CTest targets inside the CI Docker container"
     }
   ]
 }

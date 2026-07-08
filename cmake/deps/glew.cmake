@@ -35,6 +35,17 @@ set(BUILD_UTILS OFF CACHE BOOL "Build GLEW utils" FORCE)
 
 add_subdirectory("${glew_SOURCE_DIR}/build/cmake" "${CMAKE_BINARY_DIR}/_deps/glew-build")
 
+# GLEW's CMake only sets INSTALL_INTERFACE includes; add BUILD_INTERFACE so
+# consumers get headers when GLEW is built via FetchContent (not installed).
+foreach(_bk_glew_target IN ITEMS glew glew_s)
+  if (TARGET ${_bk_glew_target})
+    target_include_directories(${_bk_glew_target}
+      PUBLIC
+        $<BUILD_INTERFACE:${glew_SOURCE_DIR}/include>
+    )
+  endif()
+endforeach()
+
 if (NOT TARGET GLEW::GLEW)
   if (TARGET glew)
     add_library(GLEW::GLEW ALIAS glew)

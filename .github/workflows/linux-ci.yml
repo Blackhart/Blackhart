@@ -15,38 +15,34 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          apt-get update
-          apt-get install -y --no-install-recommends \
-            ca-certificates \
-            python3 \
-            python-is-python3 \
-            build-essential \
-            cmake \
-            git \
-            make \
-            libgl1-mesa-dev \
-            libopengl-dev \
-            libx11-dev \
-            libxrandr-dev \
-            libxinerama-dev \
-            libxcursor-dev \
-            libxi-dev \
-            libomp-dev
+      - name: Build CI image
+        run: docker build -t blackhart-ci:local -f docker/ci/Dockerfile docker/ci
 
       - name: Configure (Debug)
-        run: cmake --preset debug
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            blackhart-ci:local \
+            cmake --preset docker-debug
 
       - name: Build (Debug)
-        run: cmake --build --preset debug -j"$(nproc)"
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            blackhart-ci:local \
+            cmake --build --preset docker-debug -j"$(nproc)"
 
       - name: Test
-        run: ctest --preset debug --output-on-failure
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            blackhart-ci:local \
+            ctest --preset docker-debug --output-on-failure
