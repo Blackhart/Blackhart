@@ -14,18 +14,27 @@ char const*	BkString_CreateFormatted(char const* format, ...)
 	BK_ASSERT(BK_ISNULL(format));
 
 	va_list arglist;
+	va_list arglist_copy;
 
 	va_start(arglist, format);
 
 	char* str = NULL;
 
-	size_t const size = vsnprintf(NULL, 0, format, arglist) + 1;
+	/* First pass: compute required size. */
+	size_t const size = (size_t)vsnprintf(NULL, 0, format, arglist) + 1;
+
+	/* We must copy or reinitialize the va_list before using it again. */
+	va_end(arglist);
+	va_start(arglist, format);
+	va_copy(arglist_copy, arglist);
 	
 	str = malloc(size * sizeof(char));
 	BK_ERROR(BK_ISNULL(str), "Memory system failed to allocate memory block");
 	
-	vsnprintf(str, size, format, arglist);
+	/* Second pass: actually format into the allocated buffer. */
+	vsnprintf(str, size, format, arglist_copy);
 
+	va_end(arglist_copy);
 	va_end(arglist);
 
 	return str;
@@ -36,4 +45,12 @@ void	BkString_Free(char const* str)
 	BK_ASSERT(BK_ISNULL(str));
 
 	free((void*)str);
+}
+
+bool	BkString_Compare(char const* str1, char const* str2)
+{
+	BK_ASSERT(BK_ISNULL(str1));
+	BK_ASSERT(BK_ISNULL(str2));
+
+	return strcmp(str1, str2) == 0;
 }

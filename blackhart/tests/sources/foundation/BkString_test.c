@@ -23,11 +23,17 @@ void	BkString_CreateFormatted_test(void)
 	char const* str2 = BkString_CreateFormatted("lol: %s", "lul");
 	TEST_ASSERT_EQUAL_STRING("lol: lul", str2);
 
-	char const* str3 = BkString_CreateFormatted("", 2);
+	/* No extra arguments when the format string has no specifiers. */
+	char const* str3 = BkString_CreateFormatted("");
 	TEST_ASSERT_EQUAL_STRING("", str3);
 
 	char const* str4 = BkString_CreateFormatted("number %d, %i", 5, 10);
 	TEST_ASSERT_EQUAL_STRING("number 5, 10", str4);
+
+	BkString_Free(str1);
+	BkString_Free(str2);
+	BkString_Free(str3);
+	BkString_Free(str4);
 }
 
 void	BkString_Compare_test(void)

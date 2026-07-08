@@ -20,46 +20,24 @@ file(GLOB_RECURSE HppFiles includes/*.hpp includes/*.h)
 # Compiles Blackhart-Editor
 add_executable(${BLACKHART_STUDIO_PROJECT_NAME} ${CppFiles} ${HppFiles})
 
-# Links Blackhart's include directory
+# Links Blackhart-Editor include directory
 target_include_directories(${BLACKHART_STUDIO_PROJECT_NAME} PUBLIC "${BLACKHART_STUDIO_PATH}/includes")
 
-# Sets Blackhart's library directory
-set(BLACKHART_LIBRARY_PATH "${MAIN_PATH}/build_install/bin" CACHE PATH "Blackhart's library directory")
-
-# Finds Blackhart library
-target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} blackhart)
-
-# Links Blackhart's include directory
+# Link against the Blackhart library
+target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE blackhart)
 target_include_directories(${BLACKHART_STUDIO_PROJECT_NAME} PUBLIC "${MAIN_PATH}/blackhart/includes")
 
+# OpenGL (glViewport, glClear, ...)
+find_package(OpenGL REQUIRED)
 
-# ~~~~~ glfw ~~~~~
 
-message("")
+# ~~~~~ Dependency: GLFW ~~~~~
 
-# Sets glfw's library directory
-set(GLFW_LIBRARY_PATH "" CACHE PATH "")
+include("${MAIN_PATH}/cmake/deps/glfw.cmake")
+target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE GLFW::GLFW)
 
-# Finds glfw library
-find_library(GLFW_DEBUG_LIBRARY NAMES glfw3 PATHS "${GLFW_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-find_library(GLFW_RELEASE_LIBRARY NAMES glfw3 PATHS "${GLFW_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
-
-if (NOT GLFW_DEBUG_LIBRARY OR NOT GLFW_RELEASE_LIBRARY)
-	message("glfw: Library not found!")
-else ()
-	message("glfw: Library found!")
-	message("glfw: Debug/library_path:(${GLFW_DEBUG_LIBRARY}) | Release/library_path:(${GLFW_RELEASE_LIBRARY})")
-	# Links glfw library
-	target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} debug "${GLFW_DEBUG_LIBRARY}" optimized "${GLFW_RELEASE_LIBRARY}")
-endif ()
-
-# Sets glfw's include directory
-set(GLFW_INCLUDE_PATH "" CACHE PATH "Include directory of the glfw library")
-
-# Links glfw's include directory
-target_include_directories(${BLACKHART_STUDIO_PROJECT_NAME} PUBLIC "${GLFW_INCLUDE_PATH}")
-
-message("glfw: include_path:(${GLFW_INCLUDE_PATH})")
+# main.cpp uses OpenGL symbols directly.
+target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE OpenGL::GL)
 
 
 # ~~~~~ Tests ~~~~~

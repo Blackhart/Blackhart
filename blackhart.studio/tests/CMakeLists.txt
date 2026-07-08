@@ -22,7 +22,7 @@ file(GLOB_RECURSE CppFiles sources/*.cpp)
 add_executable(${BLACKHART_STUDIO_TEST_PROJECT_NAME} ${CppFiles})
 
 # Links Blackhart library
-target_link_libraries(${BLACKHART_STUDIO_TEST_PROJECT_NAME} ${BLACKHART_PROJECT_NAME})
+target_link_libraries(${BLACKHART_STUDIO_TEST_PROJECT_NAME} PRIVATE ${BLACKHART_PROJECT_NAME})
 
 # Links Blackhart's include directory
 target_include_directories(${BLACKHART_STUDIO_TEST_PROJECT_NAME} PUBLIC "${MAIN_PATH}/blackhart/includes")
@@ -30,28 +30,16 @@ target_include_directories(${BLACKHART_STUDIO_TEST_PROJECT_NAME} PUBLIC "${MAIN_
 
 # ~~~~~ gtest ~~~~~
 
-message("")
+include("${MAIN_PATH}/cmake/deps/gtest.cmake")
 
-# Sets googletest's library directory
-set(GTEST_LIBRARY_PATH "" CACHE PATH "googletest's library directory")
+# gtest already provides include directories through its target.
+target_link_libraries(${BLACKHART_STUDIO_TEST_PROJECT_NAME} PRIVATE gtest)
 
-# Finds googletest library
-find_library(GTEST_DEBUG_LIBRARY NAMES gtest PATHS "${GTEST_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-find_library(GTEST_RELEASE_LIBRARY NAMES gtest PATHS "${GTEST_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
 
-if (NOT GTEST_DEBUG_LIBRARY OR NOT GTEST_RELEASE_LIBRARY)
-	message("gtest: Library not found!")
-else ()
-	message("gtest: Library found!")
-	message("gtest: Debug/library_path:(${GTEST_DEBUG_LIBRARY}) | Release/library_path:(${GTEST_RELEASE_LIBRARY})")
-	# Links googletest library to Blackhart-test
-	target_link_libraries(${BLACKHART_STUDIO_TEST_PROJECT_NAME} debug "${GTEST_DEBUG_LIBRARY}" optimized "${GTEST_RELEASE_LIBRARY}")
-endif ()
+# ~~~~~ CTest ~~~~~
 
-# Sets googletest's include directory
-set(GTEST_INCLUDE_PATH "" CACHE PATH "googletest's include directory")
+include(GoogleTest)
 
-# Links googletest's include directory
-target_include_directories(${BLACKHART_STUDIO_TEST_PROJECT_NAME} PUBLIC "${GTEST_INCLUDE_PATH}")
-
-message("gtest: include_path:(${GTEST_INCLUDE_PATH})")
+gtest_discover_tests(${BLACKHART_STUDIO_TEST_PROJECT_NAME}
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)

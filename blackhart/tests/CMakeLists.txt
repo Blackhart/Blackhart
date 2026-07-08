@@ -26,33 +26,21 @@ target_include_directories(${BLACKHART_TEST_PROJECT_NAME} PUBLIC "${BLACKHART_PA
 target_include_directories(${BLACKHART_TEST_PROJECT_NAME} PUBLIC "${BLACKHART_TEST_PATH}/includes")
 
 # Links Blackhart library
-target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} ${BLACKHART_PROJECT_NAME})
+target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} PRIVATE ${BLACKHART_PROJECT_NAME})
 
 
 # ~~~~~ Unity ~~~~~
 
-message("")
+include("${BLACKHART_PATH}/../cmake/deps/unity.cmake")
 
-# Sets unity's library directory
-set(UNITY_LIBRARY_PATH "" CACHE PATH "Unity's library directory")
+# `unity::framework` provides both include paths and the library.
+target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} PRIVATE unity::framework)
 
-# Finds unity library
-find_library(UNITY_DEBUG_LIBRARY NAMES unityd PATHS "${UNITY_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-find_library(UNITY_RELEASE_LIBRARY NAMES unity PATHS "${UNITY_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
 
-if (NOT UNITY_DEBUG_LIBRARY OR NOT UNITY_RELEASE_LIBRARY)
-	message("unity: Library not found!")
-else ()
-	message("unity: Library found!")
-	message("unity: Debug/library_path:(${UNITY_DEBUG_LIBRARY}) | Release/library_path:(${UNITY_RELEASE_LIBRARY})")
-	# Links unity library to Blackhart-test
-	target_link_libraries(${BLACKHART_TEST_PROJECT_NAME} debug "${UNITY_DEBUG_LIBRARY}" optimized "${UNITY_RELEASE_LIBRARY}")
-endif ()
+# ~~~~~ CTest ~~~~~
 
-# Sets unity's include directory
-set(UNITY_INCLUDE_PATH "" CACHE PATH "unity's include directory")
-
-# Links unity's include directory
-target_include_directories(${BLACKHART_TEST_PROJECT_NAME} PUBLIC "${UNITY_INCLUDE_PATH}")
-
-message("unity: include_path:(${UNITY_INCLUDE_PATH})")
+add_test(
+	NAME ${BLACKHART_TEST_PROJECT_NAME}
+	COMMAND $<TARGET_FILE:${BLACKHART_TEST_PROJECT_NAME}>
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)

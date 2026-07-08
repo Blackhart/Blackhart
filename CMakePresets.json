@@ -1,0 +1,61 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "description": "Debug configuration for Blackhart (_build/debug)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/_build/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BUILD_BLACKHART_TESTS": "ON",
+        "BUILD_BLACKHART_STUDIO_TESTS": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "description": "Release configuration for Blackhart (_build/release)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/_build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_BLACKHART_TESTS": "OFF",
+        "BUILD_BLACKHART_STUDIO_TESTS": "OFF",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Build Debug",
+      "configurePreset": "debug",
+      "description": "Builds the Debug configuration",
+      "jobs": 0
+    },
+    {
+      "name": "release",
+      "displayName": "Build Release",
+      "configurePreset": "release",
+      "description": "Builds the Release configuration",
+      "jobs": 0
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "debug",
+      "displayName": "Test Debug",
+      "configurePreset": "debug",
+      "description": "Runs all CTest targets in the Debug configuration"
+    }
+  ]
+}
+

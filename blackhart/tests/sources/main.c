@@ -46,7 +46,5 @@ int main(int argc, char** argv)
 	BkAngleAxis_RunTests();
 	BkEulerAngles_RunTests();
 
-	getchar();
-
 	return UNITY_END();
 }

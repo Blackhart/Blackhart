@@ -20,6 +20,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Export compile commands for IDE support
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Enable CTest integration (IDE, ctest --preset, CI).
+enable_testing()
+
 #--------------------------------------------------------------------------------------------------
 # Platform-specific settings.
 #--------------------------------------------------------------------------------------------------

@@ -12,11 +12,11 @@
 // ~~~~~ Standard Headers ~~~~~
 
 #include <stdarg.h>
+#include <stdbool.h>
 
 // ~~~~~ Blackhart Headers ~~~~~
 
 #include "foundation/BkExport.h"
-#include "foundation/BkAtomicDataType.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
@@ -35,6 +35,13 @@
  *         Returns NULL if formatting fails.
  */
 extern BK_API char const*	BkString_CreateFormatted(char const* format, ...);
+
+/**
+ * @brief Compares two strings.
+ *
+ * @return true if the strings are equal, false otherwise.
+ */
+extern BK_API bool	BkString_Compare(char const* str1, char const* str2);
 
 /**
  * @brief Frees a string allocated by BkString_CreateFormatted.

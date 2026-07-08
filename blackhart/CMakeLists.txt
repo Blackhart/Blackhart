@@ -49,47 +49,17 @@ set_target_properties(${BLACKHART_PROJECT_NAME} PROPERTIES OUTPUT_NAME "blackhar
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/includes")
 
 
-# ~~~~~ Glew ~~~~~
+# ~~~~~ Dependencies: GLEW + OpenGL ~~~~~
 
-message("")
-
-# Sets glew's library directory
-set(GLEW_LIBRARY_PATH "" CACHE PATH "glew's library directory")
-
-# Finds glew library - Windows specific names
-find_library(GLEW_DEBUG_LIBRARY NAMES glew32d PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Debug" "debug" NO_DEFAULT_PATH)
-find_library(GLEW_RELEASE_LIBRARY NAMES glew32 PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES "Release" "release" NO_DEFAULT_PATH)
-
-# Finds glew library - Linux/Unix names
-if (NOT GLEW_RELEASE_LIBRARY)
-	find_library(GLEW_RELEASE_LIBRARY NAMES GLEW PATHS "${GLEW_LIBRARY_PATH}" PATH_SUFFIXES lib lib64 NO_DEFAULT_PATH)
-endif()
-
-# Finds OpenGL package
+include("${MAIN_PATH}/cmake/deps/glew.cmake")
 find_package(OpenGL REQUIRED)
 
-if (NOT GLEW_RELEASE_LIBRARY)
-	message("glew: Library not found!")
-else ()
-	message("glew: Library found!")
-	message("glew: Debug/library_path:(${GLEW_DEBUG_LIBRARY}) | Release/library_path:(${GLEW_RELEASE_LIBRARY})")
-	# Links glew library to blackhart
-	if (GLEW_DEBUG_LIBRARY)
-		target_link_libraries(${BLACKHART_PROJECT_NAME} debug "${GLEW_DEBUG_LIBRARY}" optimized "${GLEW_RELEASE_LIBRARY}")
-	else()
-		target_link_libraries(${BLACKHART_PROJECT_NAME} "${GLEW_RELEASE_LIBRARY}")
-	endif()
-	# Links opengl libraries to blackhart
-	target_link_libraries(${BLACKHART_PROJECT_NAME} "${OPENGL_LIBRARIES}")
-endif ()
-
-# Sets glew's include directory
-set(GLEW_INCLUDE_PATH "" CACHE PATH "glew's include directory")
-
-# Links glew's include directory
-target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${GLEW_INCLUDE_PATH}")
-
-message("glew: include_path:(${GLEW_INCLUDE_PATH})")
+target_link_libraries(${BLACKHART_PROJECT_NAME}
+  PRIVATE
+    GLEW::GLEW
+    OpenGL::GL
+    m
+)
 
 
 # ~~~~~ Tests ~~~~~
