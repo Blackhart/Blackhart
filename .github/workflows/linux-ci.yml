@@ -28,6 +28,7 @@ jobs:
           apt-get install -y --no-install-recommends \
             ca-certificates \
             python3 \
+            python-is-python3 \
             build-essential \
             cmake \
             git \
