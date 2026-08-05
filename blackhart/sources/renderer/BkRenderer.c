@@ -68,6 +68,9 @@ void _BkRender_Initialize(void) {
   _BkShader_Release(&__BkPixelShader);
 
   __BkGpuCache = _BkGpuCache_Create();
+
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
 }
 
 void _BkRender_Uninitialize(void) {
@@ -92,7 +95,10 @@ void BkRender(BkScene* scene, BkCamera* camera) {
     _BkGpuCache_FlushDirty(__BkGpuCache);
   }
 
+  static GLfloat const clear_depth = 1.0f;
+
   glClearBufferfv(GL_COLOR, 0, background);
+  glClearBufferfv(GL_DEPTH, 0, &clear_depth);
 
   GLuint const program = (GLuint)_BkShaderProgram_GetId(__BkShaderProgram);
   glUseProgram(program);

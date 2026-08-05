@@ -19,6 +19,7 @@ static bool g_full_screen = false;
 
 // Constantes
 static char const* APP_TITLE = "Blackhart Studio";
+static int const DEPTH_BUFFER_BITS = 24;
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
@@ -42,6 +43,7 @@ int main() {
 
   // Initialize glfw windows and set OpenGL context
   glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+  glfwWindowHint(GLFW_DEPTH_BITS, DEPTH_BUFFER_BITS);
   // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
