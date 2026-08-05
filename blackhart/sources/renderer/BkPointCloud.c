@@ -12,6 +12,7 @@
 
 struct BkPointCloud {
   struct BkArray* points;
+  BkAABB aabb;
 };
 
 // ~~~~~ Def(INTERNAL) ~~~~~
@@ -51,6 +52,8 @@ BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
   }
 
   pointCloud->points = points;
+  pointCloud->aabb =
+      BkAABB_FromPoints((BkPoint3 const*)points->data, BkArray_Size((*points)));
   return pointCloud;
 }
 
@@ -86,4 +89,9 @@ BkPoint3 const* BkPointCloud_GetPoints(BkPointCloud const* pointCloud) {
   }
 
   return (BkPoint3 const*)pointCloud->points->data;
+}
+
+BkAABB BkPointCloud_GetAABB(BkPointCloud const* pointCloud) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+  return pointCloud->aabb;
 }

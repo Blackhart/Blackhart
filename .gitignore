@@ -31,6 +31,9 @@ progress.marks
 Log.txt
 *.log
 
+# Local backlog (not tracked)
+TODO.md
+
 # Documentation générée par doxygen
 doc/html/
 doc/latex/

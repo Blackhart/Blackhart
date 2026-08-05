@@ -2,6 +2,7 @@
 #include <unity.h>
 
 // Test headers
+#include "foundation/BkAABB_test.h"
 #include "foundation/BkAngleAxis_test.h"
 #include "foundation/BkArray_test.h"
 #include "foundation/BkEulerAngles_test.h"
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
   UNITY_BEGIN();
 
   BkArray_RunTests();
+  BkAABB_RunTests();
   BkList_RunTests();
   BkMath_RunTests();
   BkMatrix4x4_RunTests();

@@ -3,6 +3,7 @@
 
 // ~~~~~ Blackhart Headers ~~~~~
 
+#include "foundation/BkAABB.h"
 #include "foundation/BkAngleAxis.h"
 #include "foundation/BkArray.h"
 #include "foundation/BkAtomicDataType.h"

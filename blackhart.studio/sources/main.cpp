@@ -1,4 +1,5 @@
 // Standard library headers.
+#include <cmath>
 #include <iostream>
 #include <sstream>
 
@@ -20,6 +21,8 @@ static bool g_full_screen = false;
 // Constantes
 static char const* APP_TITLE = "Blackhart Studio";
 static int const DEPTH_BUFFER_BITS = 24;
+static real const CAMERA_FOV_DEG = BK_REAL(45);
+static real const CAMERA_FRAME_MARGIN = BK_REAL(1.25);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
@@ -111,12 +114,18 @@ int main() {
   }
   BkScene_AddCloud(g_scene, g_bunny);
 
-  // Initialize Camera (bunny is ~0.15 units tall around y≈0.1)
-  struct BkPoint3 const to =
-      BkPoint3_FromXYZ(BK_REAL(0.0), BK_REAL(0.1), BK_REAL(0.0));
+  // Frame camera so the whole AABB stays in view while orbiting
+  struct BkAABB const aabb = BkPointCloud_GetAABB(g_bunny);
+  struct BkPoint3 const target = BkAABB_Center(&aabb);
+  struct BkVector3 const size = BkAABB_Size(&aabb);
+  real const bounding_sphere_radius = BkVector3_Magnitude(&size) * BK_REAL(0.5);
+  real const half_fov_rad = BkMath_RadFromDeg(CAMERA_FOV_DEG) * BK_REAL(0.5);
+  real const radius =
+      CAMERA_FRAME_MARGIN * bounding_sphere_radius / BK_REAL(tan(half_fov_rad));
+
   BkOrbitalCamera_Initialize(&g_camera);
-  BkOrbitalCamera_SetTarget(&g_camera, &to);
-  BkOrbitalCamera_SetRadius(&g_camera, BK_REAL(0.4));
+  BkOrbitalCamera_SetTarget(&g_camera, &target);
+  BkOrbitalCamera_SetRadius(&g_camera, radius);
 
   // ~~~~~ RENDER LOOP ~~~~~
 
@@ -199,7 +208,7 @@ void ResizeCallback(GLFWwindow* window, int width, int height) {
 
   glViewport(0, 0, width, height);
   g_camera.base.projection =
-      BkProjection_Perspective(BK_REAL(45), BK_REAL(width) / BK_REAL(height),
+      BkProjection_Perspective(CAMERA_FOV_DEG, BK_REAL(width) / BK_REAL(height),
                                BK_REAL(0.1), BK_REAL(1000));
 }
 
