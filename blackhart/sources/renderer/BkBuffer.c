@@ -10,34 +10,33 @@
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-struct BkBuffer*	_BkBuffer_Create(size_t const size, void const* data)
-{
-    BK_ASSERT(size == 0);
-    BK_ASSERT(BK_ISNULL(data));
+struct BkBuffer* _BkBuffer_Create(size_t const size, void const* data) {
+  BK_ASSERT(size == 0);
+  BK_ASSERT(BK_ISNULL(data));
 
-    struct BkBuffer* buffer = malloc(sizeof(struct BkBuffer));
-    BK_FATAL(BK_ISNULL(buffer), ((struct BkErrorInfo){
-		.what = "Fatal error",
-		.why = "Memory system failed to allocate memory block",
-		.result = "Process aborted",
-	}));
+  struct BkBuffer* buffer = malloc(sizeof(struct BkBuffer));
+  BK_FATAL(BK_ISNULL(buffer),
+           ((struct BkErrorInfo){
+               .what = "Fatal error",
+               .why = "Memory system failed to allocate memory block",
+               .result = "Process aborted",
+           }));
 
-	glGenBuffers(1, &(buffer->id));
-	glBindBuffer(GL_ARRAY_BUFFER, buffer->id);
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+  glGenBuffers(1, &(buffer->id));
+  glBindBuffer(GL_ARRAY_BUFFER, buffer->id);
+  glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	return buffer;
+  return buffer;
 }
 
-void	_BkBuffer_Release(struct BkBuffer** buffer)
-{
-	BK_ASSERT(BK_ISNULL(buffer));
-	BK_ASSERT(BK_ISNULL(*buffer));
+void _BkBuffer_Release(struct BkBuffer** buffer) {
+  BK_ASSERT(BK_ISNULL(buffer));
+  BK_ASSERT(BK_ISNULL(*buffer));
 
-	glDeleteBuffers(1, &((*buffer)->id));
+  glDeleteBuffers(1, &((*buffer)->id));
 
-	free(*buffer);
-	*buffer = NULL;
+  free(*buffer);
+  *buffer = NULL;
 }

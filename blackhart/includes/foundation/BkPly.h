@@ -25,9 +25,10 @@
  * then free() the BkArray pointer itself.
  *
  * @param filename Path to the PLY file to load.
- * @return Pointer to a BkArray filled with BkPoint3 vertices, or NULL on failure
- *         (NULL path, missing/unreadable file, invalid PLY, missing header/vertices).
+ * @return Pointer to a BkArray filled with BkPoint3 vertices, or NULL on
+ * failure (NULL path, missing/unreadable file, invalid PLY, missing
+ * header/vertices).
  */
-extern struct BkArray*	_BkPly_LoadPoints(char const* filename);
+extern struct BkArray* _BkPly_LoadPoints(char const* filename);
 
 #endif

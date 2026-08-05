@@ -3,7 +3,7 @@
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
-extern void     BkTime_Update();
-extern double	BkTime_DeltaTime();
+extern void BkTime_Update();
+extern double BkTime_DeltaTime();
 
 #endif

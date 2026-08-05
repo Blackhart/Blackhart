@@ -3,39 +3,44 @@
 
 /**
  * @file BkOrbitalCamera.h
- * @brief Defines the BkOrbitalCamera structure and functions for orbital camera control.
+ * @brief Defines the BkOrbitalCamera structure and functions for orbital camera
+ * control.
  *
- * This file provides the definition of the BkOrbitalCamera struct, which extends BkCamera to provide
- * orbital camera controls. An orbital camera rotates around a target point at a specified radius,
- * with configurable yaw and pitch angles.
+ * This file provides the definition of the BkOrbitalCamera struct, which
+ * extends BkCamera to provide orbital camera controls. An orbital camera
+ * rotates around a target point at a specified radius, with configurable yaw
+ * and pitch angles.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
 
 #include "foundation/BkAtomicDataType.h"
-#include "foundation/BkExport.h"
 #include "foundation/BkCamera.h"
+#include "foundation/BkExport.h"
 #include "foundation/BkPoint3.h"
 
 // ~~~~~ Type Definitions ~~~~~
 
 /**
  * @struct BkOrbitalCamera
- * @brief Structure representing an orbital camera that rotates around a target point.
+ * @brief Structure representing an orbital camera that rotates around a target
+ * point.
  *
- * The orbital camera extends BkCamera to provide orbital movement controls. The camera rotates
- * around a target point at a specified radius, with yaw (horizontal rotation) and pitch (vertical rotation)
- * angles. Pitch limits can be set to prevent camera flipping.
+ * The orbital camera extends BkCamera to provide orbital movement controls. The
+ * camera rotates around a target point at a specified radius, with yaw
+ * (horizontal rotation) and pitch (vertical rotation) angles. Pitch limits can
+ * be set to prevent camera flipping.
  */
-struct BkOrbitalCamera
-{
-	struct BkCamera	base;               /**< Base camera structure (transform and projection). */
-	struct BkPoint3 target;             /**< The target point around which the camera orbits. */
-	real radius;                        /**< The distance from the target point. */
-	real pitch_min_limit;               /**< Minimum pitch angle limit (in degrees). */
-	real pitch_max_limit;               /**< Maximum pitch angle limit (in degrees). */
-	real yaw;                           /**< Horizontal rotation angle around the target (in degrees). */
-	real pitch;                         /**< Vertical rotation angle around the target (in degrees). */
+struct BkOrbitalCamera {
+  struct BkCamera
+      base; /**< Base camera structure (transform and projection). */
+  struct BkPoint3
+      target; /**< The target point around which the camera orbits. */
+  real radius; /**< The distance from the target point. */
+  real pitch_min_limit; /**< Minimum pitch angle limit (in degrees). */
+  real pitch_max_limit; /**< Maximum pitch angle limit (in degrees). */
+  real yaw; /**< Horizontal rotation angle around the target (in degrees). */
+  real pitch; /**< Vertical rotation angle around the target (in degrees). */
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
@@ -43,12 +48,12 @@ struct BkOrbitalCamera
 /**
  * @brief Initializes a BkOrbitalCamera object with default values.
  *
- * Initializes the base camera and sets default values for target, radius, and angles.
- * Must be called before using the orbital camera.
+ * Initializes the base camera and sets default values for target, radius, and
+ * angles. Must be called before using the orbital camera.
  *
  * @param obj Pointer to the BkOrbitalCamera object to initialize.
  */
-extern BK_API void  BkOrbitalCamera_Initialize(struct BkOrbitalCamera* obj);
+extern BK_API void BkOrbitalCamera_Initialize(struct BkOrbitalCamera* obj);
 
 /**
  * @brief Rotates the orbital camera by the specified yaw and pitch amounts.
@@ -60,7 +65,8 @@ extern BK_API void  BkOrbitalCamera_Initialize(struct BkOrbitalCamera* obj);
  * @param yaw The horizontal rotation amount to add (in degrees).
  * @param pitch The vertical rotation amount to add (in degrees).
  */
-extern BK_API void  BkOrbitalCamera_Rotate(struct BkOrbitalCamera* obj, real const yaw, real const pitch);
+extern BK_API void BkOrbitalCamera_Rotate(struct BkOrbitalCamera* obj,
+                                          real const yaw, real const pitch);
 
 /**
  * @brief Zooms the orbital camera in or out by adjusting the radius.
@@ -69,9 +75,11 @@ extern BK_API void  BkOrbitalCamera_Rotate(struct BkOrbitalCamera* obj, real con
  * negative values zoom in. The radius should remain positive.
  *
  * @param obj Pointer to the BkOrbitalCamera object to modify.
- * @param radius The amount to add to the current radius (positive = zoom out, negative = zoom in).
+ * @param radius The amount to add to the current radius (positive = zoom out,
+ * negative = zoom in).
  */
-extern BK_API void  BkOrbitalCamera_Zoom(struct BkOrbitalCamera* obj, real const radius);
+extern BK_API void BkOrbitalCamera_Zoom(struct BkOrbitalCamera* obj,
+                                        real const radius);
 
 /**
  * @brief Sets the target point around which the camera orbits.
@@ -79,7 +87,8 @@ extern BK_API void  BkOrbitalCamera_Zoom(struct BkOrbitalCamera* obj, real const
  * @param obj Pointer to the BkOrbitalCamera object to modify.
  * @param target Pointer to the target point in 3D space.
  */
-extern BK_API void  BkOrbitalCamera_SetTarget(struct BkOrbitalCamera* obj, struct BkPoint3 const* target);
+extern BK_API void BkOrbitalCamera_SetTarget(struct BkOrbitalCamera* obj,
+                                             struct BkPoint3 const* target);
 
 /**
  * @brief Sets the radius (distance) from the target point.
@@ -89,18 +98,24 @@ extern BK_API void  BkOrbitalCamera_SetTarget(struct BkOrbitalCamera* obj, struc
  * @param obj Pointer to the BkOrbitalCamera object to modify.
  * @param radius The new radius value (should be positive).
  */
-extern BK_API void  BkOrbitalCamera_SetRadius(struct BkOrbitalCamera* obj, real const radius);
+extern BK_API void BkOrbitalCamera_SetRadius(struct BkOrbitalCamera* obj,
+                                             real const radius);
 
 /**
  * @brief Sets the pitch angle limits to prevent camera flipping.
  *
- * When the camera rotates, the pitch angle will be clamped between these limits.
+ * When the camera rotates, the pitch angle will be clamped between these
+ * limits.
  *
  * @param obj Pointer to the BkOrbitalCamera object to modify.
- * @param pitch_min_limit The minimum pitch angle (in degrees, typically negative).
- * @param pitch_max_limit The maximum pitch angle (in degrees, typically positive).
+ * @param pitch_min_limit The minimum pitch angle (in degrees, typically
+ * negative).
+ * @param pitch_max_limit The maximum pitch angle (in degrees, typically
+ * positive).
  */
-extern BK_API void  BkOrbitalCamera_SetPitchBoundLimits(struct BkOrbitalCamera* obj, real const pitch_min_limit, real const pitch_max_limit);
+extern BK_API void BkOrbitalCamera_SetPitchBoundLimits(
+    struct BkOrbitalCamera* obj, real const pitch_min_limit,
+    real const pitch_max_limit);
 
 /**
  * @brief Sets the yaw (horizontal rotation) angle.
@@ -108,7 +123,8 @@ extern BK_API void  BkOrbitalCamera_SetPitchBoundLimits(struct BkOrbitalCamera* 
  * @param obj Pointer to the BkOrbitalCamera object to modify.
  * @param yaw The new yaw angle (in degrees).
  */
-extern BK_API void  BkOrbitalCamera_SetYaw(struct BkOrbitalCamera* obj, real const yaw);
+extern BK_API void BkOrbitalCamera_SetYaw(struct BkOrbitalCamera* obj,
+                                          real const yaw);
 
 /**
  * @brief Sets the pitch (vertical rotation) angle.
@@ -118,6 +134,7 @@ extern BK_API void  BkOrbitalCamera_SetYaw(struct BkOrbitalCamera* obj, real con
  * @param obj Pointer to the BkOrbitalCamera object to modify.
  * @param pitch The new pitch angle (in degrees).
  */
-extern BK_API void  BkOrbitalCamera_SetPitch(struct BkOrbitalCamera* obj, real const pitch);
+extern BK_API void BkOrbitalCamera_SetPitch(struct BkOrbitalCamera* obj,
+                                            real const pitch);
 
 #endif

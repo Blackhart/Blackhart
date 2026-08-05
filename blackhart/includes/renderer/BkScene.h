@@ -23,9 +23,8 @@ struct BkPointCloud;
  * @struct BkScene
  * @brief Scene containing point clouds to render.
  */
-struct BkScene
-{
-	struct BkList*	clouds; /**< List of BkPointCloud pointers. */
+struct BkScene {
+  struct BkList* clouds; /**< List of BkPointCloud pointers. */
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
@@ -35,7 +34,7 @@ struct BkScene
  *
  * @return A scene with an empty cloud list.
  */
-extern BK_API struct BkScene	BkScene_Initialize(void);
+extern BK_API struct BkScene BkScene_Initialize(void);
 
 /**
  * @brief Releases scene list resources.
@@ -44,7 +43,7 @@ extern BK_API struct BkScene	BkScene_Initialize(void);
  *
  * @param obj Scene to uninitialize.
  */
-extern BK_API void	BkScene_Uninitialize(struct BkScene* obj);
+extern BK_API void BkScene_Uninitialize(struct BkScene* obj);
 
 /**
  * @brief Adds a point cloud to the scene.
@@ -52,7 +51,8 @@ extern BK_API void	BkScene_Uninitialize(struct BkScene* obj);
  * @param scene Target scene.
  * @param cloud Point cloud to add (not owned by the scene).
  */
-extern BK_API void	BkScene_AddCloud(struct BkScene* scene, struct BkPointCloud* cloud);
+extern BK_API void BkScene_AddCloud(struct BkScene* scene,
+                                    struct BkPointCloud* cloud);
 
 /**
  * @brief Removes a point cloud from the scene.
@@ -60,6 +60,7 @@ extern BK_API void	BkScene_AddCloud(struct BkScene* scene, struct BkPointCloud* 
  * @param scene Target scene.
  * @param cloud Point cloud to remove.
  */
-extern BK_API void	BkScene_RemoveCloud(struct BkScene* scene, struct BkPointCloud* cloud);
+extern BK_API void BkScene_RemoveCloud(struct BkScene* scene,
+                                       struct BkPointCloud* cloud);
 
 #endif

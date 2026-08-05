@@ -28,16 +28,16 @@ struct BkCamera;
  *
  * @param camera Pointer to the BkCamera object to use for rendering.
  */
-extern BK_API void	BkRender(struct BkCamera* camera);
+extern BK_API void BkRender(struct BkCamera* camera);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
 /**
  * @brief Initializes the render context.
  *
- * Sets up the rendering infrastructure, including OpenGL context initialization.
- * This function should be called during library initialization, after the
- * OpenGL context has been created.
+ * Sets up the rendering infrastructure, including OpenGL context
+ * initialization. This function should be called during library initialization,
+ * after the OpenGL context has been created.
  */
 extern void _BkRender_Initialize(void);
 

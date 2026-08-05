@@ -23,7 +23,7 @@
  *
  * @param str The message string to log.
  */
-extern BK_API void	BkLog(char const* str);
+extern BK_API void BkLog(char const* str);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
@@ -33,7 +33,7 @@ extern BK_API void	BkLog(char const* str);
  * Sets up the logging infrastructure, including opening the log file.
  * This function should be called during library initialization.
  */
-extern void	_BkLogger_Initialize(void);
+extern void _BkLogger_Initialize(void);
 
 /**
  * @brief Uninitializes the logger system.
@@ -41,6 +41,6 @@ extern void	_BkLogger_Initialize(void);
  * Cleans up the logging infrastructure, including closing the log file.
  * This function should be called during library cleanup.
  */
-extern void	_BkLogger_Uninitialize(void);
+extern void _BkLogger_Uninitialize(void);
 
 #endif

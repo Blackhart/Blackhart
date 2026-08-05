@@ -3,16 +3,18 @@
 
 /**
  * @file BkPointCloud.h
- * @brief Defines the BkPointCloud structure and functions for point cloud management in 3D rendering.
+ * @brief Defines the BkPointCloud structure and functions for point cloud
+ * management in 3D rendering.
  *
- * This file provides the definition of the BkPointCloud struct, which represents a point cloud with a list of points.
- * It includes functions for initializing, adding, and removing points from the point cloud.
+ * This file provides the definition of the BkPointCloud struct, which
+ * represents a point cloud with a list of points. It includes functions for
+ * initializing, adding, and removing points from the point cloud.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
 
-#include "foundation/BkExport.h"
 #include "foundation/BkArray.h"
+#include "foundation/BkExport.h"
 
 // ~~~~~ Type Definitions ~~~~~
 
@@ -22,9 +24,8 @@
  *
  * The point cloud contains a list of points that can be rendered.
  */
-struct BkPointCloud
-{
-    struct BkArray* points; /**< List of points in the point cloud. */
+struct BkPointCloud {
+  struct BkArray* points; /**< List of points in the point cloud. */
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
@@ -39,15 +40,17 @@ struct BkPointCloud
  * @param filename Path to the PLY file to load.
  * @return Pointer to the newly created point cloud, or NULL on failure.
  */
-extern BK_API struct BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename);
+extern BK_API struct BkPointCloud* BkPointCloud_CreateFromPlyFile(
+    char const* filename);
 
 /**
  * @brief Releases a point cloud and frees its resources.
  *
- * Deletes the point cloud and frees the memory allocated for the point cloud structure.
- * The point cloud pointer is set to NULL after release.
+ * Deletes the point cloud and frees the memory allocated for the point cloud
+ * structure. The point cloud pointer is set to NULL after release.
  *
- * @param pointCloud Pointer to a pointer to the point cloud to release. The pointer will be set to NULL.
+ * @param pointCloud Pointer to a pointer to the point cloud to release. The
+ * pointer will be set to NULL.
  */
 extern BK_API void BkPointCloud_Release(struct BkPointCloud** pointCloud);
 

@@ -3,30 +3,30 @@
 
 // ~~~~~ Standard Headers ~~~~~
 
-#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 // ~~~~~ Type Definitions ~~~~~
 
-typedef int8_t      int8;
-typedef int16_t     int16;
-typedef int32_t     int32;
-typedef int64_t     int64;
+typedef int8_t int8;
+typedef int16_t int16;
+typedef int32_t int32;
+typedef int64_t int64;
 
-typedef uint8_t     uint8;
-typedef uint16_t    uint16;
-typedef uint32_t    uint32;
-typedef uint64_t    uint64;
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
 
 #ifdef __BK_DOUBLE_PRECISION_FLOATING_POINT
-    typedef double  real;
+typedef double real;
 #else
-    typedef float   real;
+typedef float real;
 #endif
 
 // ~~~~~ Macros Definitions ~~~~~
 
-#define BK_REAL(x)	(real)(x)
+#define BK_REAL(x) (real)(x)
 
 #endif

@@ -5,7 +5,8 @@ _build/
 
 # IDE/Editor files
 compile_commands.json
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 .idea/
 .cache/
 

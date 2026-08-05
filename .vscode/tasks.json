@@ -1,0 +1,125 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build (Debug)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "cmake --preset debug && cmake --build --preset debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Build (Release)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "cmake --preset release && cmake --build --preset release"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Run Blackhart (Debug)",
+            "type": "shell",
+            "command": "${workspaceFolder}/_build/debug/bin/blackhart.studio",
+            "dependsOn": [
+                "Build (Debug)"
+            ],
+            "dependsOrder": "sequence",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Blackhart (Release)",
+            "type": "shell",
+            "command": "${workspaceFolder}/_build/release/bin/blackhart.studio",
+            "dependsOn": [
+                "Build (Release)"
+            ],
+            "dependsOrder": "sequence",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Tests (Debug)",
+            "type": "shell",
+            "command": "ctest",
+            "args": [
+                "--preset",
+                "debug",
+                "--output-on-failure"
+            ],
+            "dependsOn": [
+                "Build (Debug)"
+            ],
+            "dependsOrder": "sequence",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Format",
+            "type": "shell",
+            "command": "cmake --build --preset debug --target format",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "group": "build"
+        },
+        {
+            "label": "Format (Check)",
+            "type": "shell",
+            "command": "cmake --build --preset debug --target format-check",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "group": "test"
+        }
+    ]
+}

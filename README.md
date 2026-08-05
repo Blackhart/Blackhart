@@ -33,6 +33,13 @@ cmake --preset debug
 cmake --build --preset debug
 ```
 
+Format sources (Google style via clang-format):
+
+```bash
+cmake --build --preset debug --target format
+cmake --build --preset debug --target format-check
+```
+
 Binaries are generated in `_build/debug/bin/`:
 
 - `blackhart.studio` — application

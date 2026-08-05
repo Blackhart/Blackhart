@@ -33,6 +33,16 @@ jobs:
             blackhart-ci:local \
             cmake --preset docker-debug
 
+      - name: Format check
+        run: |
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            blackhart-ci:local \
+            cmake --build --preset docker-debug --target format-check
+
       - name: Build (Debug)
         run: |
           docker run --rm \

@@ -5,8 +5,8 @@
  * @file blackhart.h
  * @brief The main header file for the Blackhart library.
  *
- * This file includes all the necessary headers for the Blackhart library and provides
- * the public API for initializing and uninitializing the library.
+ * This file includes all the necessary headers for the Blackhart library and
+ * provides the public API for initializing and uninitializing the library.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
@@ -19,10 +19,10 @@
 
 /*! \brief Initializes Blackhart.
  */
-extern BK_API void	BkInitialize(void);
+extern BK_API void BkInitialize(void);
 
 /*! \brief Uninitializes Blackhart.
  */
-extern BK_API void	BkUninitialize(void);
+extern BK_API void BkUninitialize(void);
 
 #endif

@@ -9,6 +9,7 @@ RUN apt-get update \
     python-is-python3 \
     build-essential \
     cmake \
+    clang-format \
     git \
     make \
     libgl1-mesa-dev \
