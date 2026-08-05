@@ -114,8 +114,8 @@ int main() {
   }
   BkScene_AddCloud(g_scene, g_bunny);
 
-  // Frame camera so the whole AABB stays in view while orbiting
-  struct BkAABB const aabb = BkPointCloud_GetAABB(g_bunny);
+  // Frame camera so the whole world AABB stays in view while orbiting
+  struct BkAABB const aabb = BkPointCloud_GetWorldAABB(g_bunny);
   struct BkPoint3 const target = BkAABB_Center(&aabb);
   struct BkVector3 const size = BkAABB_Size(&aabb);
   real const bounding_sphere_radius = BkVector3_Magnitude(&size) * BK_REAL(0.5);

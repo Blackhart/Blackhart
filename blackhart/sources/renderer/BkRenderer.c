@@ -107,18 +107,19 @@ void BkRender(BkScene* scene, BkCamera* camera) {
   struct BkMatrix4x4 const pv =
       BkMatrix4x4_Mul_BkMatrix4x4(BkCamera_Projection(camera), &v);
 
-  struct BkMatrix4x4 m1 =
-      BkMatrix4x4_Translation_XYZ(BK_REAL(0), BK_REAL(0), BK_REAL(0));
-  struct BkMatrix4x4 pvm = BkMatrix4x4_Mul_BkMatrix4x4(&pv, &m1);
-
-  glUniformMatrix4fv(glGetUniformLocation(program, "uni_mvp"), 1, GL_TRUE,
-                     &(pvm.m11));
+  GLint const uni_mvp = glGetUniformLocation(program, "uni_mvp");
 
   glPointSize(2.0f);
 
   size_t const cloud_count = BkScene_GetCloudCount(scene);
   for (size_t i = 0; i < cloud_count; ++i) {
     BkPointCloud* cloud = BkScene_GetCloud(scene, i);
+    struct BkMatrix4x4 const* model =
+        BkTransform_Matrix(BkPointCloud_GetTransform(cloud));
+    struct BkMatrix4x4 const pvm = BkMatrix4x4_Mul_BkMatrix4x4(&pv, model);
+
+    glUniformMatrix4fv(uni_mvp, 1, GL_TRUE, &(pvm.m11));
+
     BkGpuPointCloud* gpu = _BkGpuCache_GetOrUpload(__BkGpuCache, cloud);
     if (!BK_ISNULL(gpu)) {
       _BkGpuPointCloud_Render(gpu);

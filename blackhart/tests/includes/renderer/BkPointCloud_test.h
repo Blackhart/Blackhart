@@ -9,6 +9,9 @@ extern void BkPointCloud_CreateFromPlyFile_MissingFile_test(void);
 extern void BkPointCloud_CreateFromPlyFile_InvalidPly_test(void);
 extern void BkPointCloud_GetPoints_Contents_test(void);
 extern void BkPointCloud_GetAABB_MatchesPoints_test(void);
+extern void BkPointCloud_GetWorldAABB_Identity_test(void);
+extern void BkPointCloud_GetWorldAABB_AfterSetPosition_test(void);
+extern void BkPointCloud_GetWorldAABB_AfterSetOrientation_test(void);
 extern void BkPointCloud_Release_SetsNull_test(void);
 
 #endif

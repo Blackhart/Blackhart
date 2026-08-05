@@ -4,6 +4,7 @@
 // Blackhart headers.
 #include "foundation/BkArray.h"
 #include "foundation/BkError.h"
+#include "foundation/BkMatrix4x4.h"
 #include "foundation/BkPly.h"
 #include "foundation/BkPoint3.h"
 #include "renderer/BkPointCloud.h"
@@ -13,6 +14,7 @@
 struct BkPointCloud {
   struct BkArray* points;
   BkAABB aabb;
+  struct BkTransform transform;
 };
 
 // ~~~~~ Def(INTERNAL) ~~~~~
@@ -54,6 +56,7 @@ BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
   pointCloud->points = points;
   pointCloud->aabb =
       BkAABB_FromPoints((BkPoint3 const*)points->data, BkArray_Size((*points)));
+  BkTransform_Initialize(&pointCloud->transform);
   return pointCloud;
 }
 
@@ -94,4 +97,47 @@ BkPoint3 const* BkPointCloud_GetPoints(BkPointCloud const* pointCloud) {
 BkAABB BkPointCloud_GetAABB(BkPointCloud const* pointCloud) {
   BK_ASSERT(BK_ISNULL(pointCloud));
   return pointCloud->aabb;
+}
+
+BkAABB BkPointCloud_GetWorldAABB(BkPointCloud* pointCloud) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+
+  struct BkMatrix4x4 const* model = BkTransform_Matrix(&pointCloud->transform);
+  BkAABB const* local = &pointCloud->aabb;
+
+  struct BkPoint3 corners[8] = {
+      {local->min.x, local->min.y, local->min.z},
+      {local->max.x, local->min.y, local->min.z},
+      {local->min.x, local->max.y, local->min.z},
+      {local->max.x, local->max.y, local->min.z},
+      {local->min.x, local->min.y, local->max.z},
+      {local->max.x, local->min.y, local->max.z},
+      {local->min.x, local->max.y, local->max.z},
+      {local->max.x, local->max.y, local->max.z},
+  };
+
+  for (size_t i = 0; i < 8; ++i) {
+    corners[i] = BkMatrix4x4_Mul_BkPoint3(model, &corners[i]);
+  }
+
+  return BkAABB_FromPoints(corners, 8);
+}
+
+struct BkTransform* BkPointCloud_GetTransform(BkPointCloud* pointCloud) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+  return &pointCloud->transform;
+}
+
+void BkPointCloud_SetPosition(BkPointCloud* pointCloud,
+                              BkPoint3 const* position) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+  BK_ASSERT(BK_ISNULL(position));
+  BkTransform_SetPosition(&pointCloud->transform, position);
+}
+
+void BkPointCloud_SetOrientation(BkPointCloud* pointCloud,
+                                 BkQuaternion const* orientation) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+  BK_ASSERT(BK_ISNULL(orientation));
+  BkTransform_SetOrientation(&pointCloud->transform, orientation);
 }

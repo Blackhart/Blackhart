@@ -57,6 +57,9 @@ void BkPointCloud_RunTests(void) {
   RUN_TEST(BkPointCloud_CreateFromPlyFile_InvalidPly_test);
   RUN_TEST(BkPointCloud_GetPoints_Contents_test);
   RUN_TEST(BkPointCloud_GetAABB_MatchesPoints_test);
+  RUN_TEST(BkPointCloud_GetWorldAABB_Identity_test);
+  RUN_TEST(BkPointCloud_GetWorldAABB_AfterSetPosition_test);
+  RUN_TEST(BkPointCloud_GetWorldAABB_AfterSetOrientation_test);
   RUN_TEST(BkPointCloud_Release_SetsNull_test);
 }
 
@@ -138,6 +141,91 @@ void BkPointCloud_GetAABB_MatchesPoints_test(void) {
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.x, (float)0.0);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.y, (float)2.0);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.z, (float)0.5);
+
+  BkPointCloud_Release(&cloud);
+}
+
+void BkPointCloud_GetWorldAABB_Identity_test(void) {
+  char const* path = __BkPointCloud_WriteTempPly(
+      "blackhart_pointcloud_world_id.ply", __BkPointCloud_ValidPly);
+
+  BkPointCloud* cloud = BkPointCloud_CreateFromPlyFile(path);
+  __BkPointCloud_RemoveFile(path);
+  TEST_ASSERT_NOT_NULL(cloud);
+
+  BkAABB const local = BkPointCloud_GetAABB(cloud);
+  BkAABB const world = BkPointCloud_GetWorldAABB(cloud);
+
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.x, (float)world.min.x);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.y, (float)world.min.y);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.z, (float)world.min.z);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.max.x, (float)world.max.x);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.max.y, (float)world.max.y);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.max.z, (float)world.max.z);
+
+  TEST_ASSERT_NOT_NULL(BkPointCloud_GetTransform(cloud));
+
+  BkPointCloud_Release(&cloud);
+}
+
+void BkPointCloud_GetWorldAABB_AfterSetPosition_test(void) {
+  char const* path = __BkPointCloud_WriteTempPly(
+      "blackhart_pointcloud_world_pos.ply", __BkPointCloud_ValidPly);
+
+  BkPointCloud* cloud = BkPointCloud_CreateFromPlyFile(path);
+  __BkPointCloud_RemoveFile(path);
+  TEST_ASSERT_NOT_NULL(cloud);
+
+  struct BkPoint3 const position = {
+      .x = BK_REAL(5), .y = BK_REAL(-1), .z = BK_REAL(2)};
+  BkPointCloud_SetPosition(cloud, &position);
+
+  BkAABB const world = BkPointCloud_GetWorldAABB(cloud);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.x, (float)4.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.y, (float)-1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.z, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.x, (float)6.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)3.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.z, (float)5.0);
+
+  BkAABB const local = BkPointCloud_GetAABB(cloud);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.x, (float)-1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.max.x, (float)1.0);
+
+  BkPointCloud_Release(&cloud);
+}
+
+void BkPointCloud_GetWorldAABB_AfterSetOrientation_test(void) {
+  char const* path =
+      __BkPointCloud_WriteTempPly("blackhart_pointcloud_world_ori.ply",
+                                  "ply\n"
+                                  "format ascii 1.0\n"
+                                  "element vertex 2\n"
+                                  "property float x\n"
+                                  "property float y\n"
+                                  "property float z\n"
+                                  "end_header\n"
+                                  "0 0 0\n"
+                                  "1 0 0\n");
+
+  BkPointCloud* cloud = BkPointCloud_CreateFromPlyFile(path);
+  __BkPointCloud_RemoveFile(path);
+  TEST_ASSERT_NOT_NULL(cloud);
+
+  struct BkVector3 const axis = {
+      .x = BK_REAL(0), .y = BK_REAL(0), .z = BK_REAL(1)};
+  struct BkAngleAxis const aa = BkAngleAxis_FromAngleAxis(BK_REAL(90), &axis);
+  struct BkQuaternion const q = BkQuaternion_FromAngleAxis(&aa);
+  BkPointCloud_SetOrientation(cloud, &q);
+
+  BkAABB const world = BkPointCloud_GetWorldAABB(cloud);
+  /* Local segment (0,0,0)-(1,0,0) rotated 90° around Z → (0,0,0)-(0,1,0) */
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.x, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.y, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.z, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.x, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.z, (float)0.0);
 
   BkPointCloud_Release(&cloud);
 }
