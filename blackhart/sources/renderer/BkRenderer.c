@@ -21,7 +21,6 @@
 static GLuint                       __BkVertexArrayObject = 0;
 static struct BkShaderProgram*      __BkShaderProgram = NULL;
 static struct BkShader*             __BkVertexShader = NULL;
-static struct BkShader*             __BkGeometryShader = NULL;
 static struct BkShader*             __BkPixelShader = NULL;
 static struct BkBuffer*             __BkBuffer = NULL;
 static real*                        __points = NULL;

@@ -3,12 +3,9 @@
 
 /**
  * @file BkScene.h
- * @brief Defines the BkScene structure and functions for scene management in 3D
- * rendering.
+ * @brief Scene container for point cloud rendering.
  *
- * This file provides the definition of the BkScene struct, which represents a
- * scene with a list of objects. It includes functions for initializing, adding,
- * and removing objects from the scene.
+ * A scene holds the list of point clouds to draw.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
@@ -16,64 +13,53 @@
 #include "foundation/BkExport.h"
 #include "foundation/BkList.h"
 
-#include "renderer/BkModel.h"
+// ~~~~~ Forward declarations ~~~~~
+
+struct BkPointCloud;
 
 // ~~~~~ Type Definitions ~~~~~
 
 /**
  * @struct BkScene
- * @brief Structure representing a scene in 3D rendering.
- *
- * The scene contains a list of models that can be rendered.
+ * @brief Scene containing point clouds to render.
  */
-struct BkScene {
-  struct BkList *models; /**< List of models in the scene. */
+struct BkScene
+{
+	struct BkList*	clouds; /**< List of BkPointCloud pointers. */
 };
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /**
- * @brief Adds a model to the scene.
+ * @brief Initializes an empty scene.
  *
- * Adds a model to the scene's model list.
- *
- * @param scene Pointer to the BkScene object to add the model to.
- * @param model Pointer to the BkModel object to add to the scene.
+ * @return A scene with an empty cloud list.
  */
-extern BK_API void BkScene_AddModel(struct BkScene *scene, struct BkModel *model);
+extern BK_API struct BkScene	BkScene_Initialize(void);
 
 /**
- * @brief Removes a model from the scene.
+ * @brief Releases scene list resources.
  *
- * Removes a model from the scene's model list.
+ * Does not release the point clouds themselves; the caller owns them.
  *
- * @param scene Pointer to the BkScene object to remove the model from.
- * @param model Pointer to the BkModel object to remove from the scene.
+ * @param obj Scene to uninitialize.
  */
-extern BK_API void BkScene_RemoveModel(struct BkScene *scene,
-                                       struct BkModel *model);
-
-// ~~~~~ Dcl(INTERNAL) ~~~~~
+extern BK_API void	BkScene_Uninitialize(struct BkScene* obj);
 
 /**
- * @brief Initializes and returns a new BkScene object.
+ * @brief Adds a point cloud to the scene.
  *
- * Allocates and initializes a new scene with an empty model list.
- * The caller is responsible for releasing the scene using
- * BkScene_Uninitialize().
- *
- * @return A new BkScene object with an initialized model list.
+ * @param scene Target scene.
+ * @param cloud Point cloud to add (not owned by the scene).
  */
-extern BK_API struct BkScene BkScene_Initialize(void);
+extern BK_API void	BkScene_AddCloud(struct BkScene* scene, struct BkPointCloud* cloud);
 
 /**
- * @brief Uninitializes a BkScene object and releases its resources.
+ * @brief Removes a point cloud from the scene.
  *
- * Frees the model list and any associated resources within the scene.
- * After this call, the BkScene object should not be used unless reinitialized.
- *
- * @param obj Pointer to the BkScene object to uninitialize.
+ * @param scene Target scene.
+ * @param cloud Point cloud to remove.
  */
-extern BK_API void BkScene_Uninitialize(struct BkScene *obj);
+extern BK_API void	BkScene_RemoveCloud(struct BkScene* scene, struct BkPointCloud* cloud);
 
 #endif

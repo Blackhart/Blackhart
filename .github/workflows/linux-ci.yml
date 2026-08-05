@@ -26,6 +26,8 @@ jobs:
       - name: Configure (Debug)
         run: |
           docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
             -v "${{ github.workspace }}:/workspace" \
             -w /workspace \
             blackhart-ci:local \
@@ -34,6 +36,8 @@ jobs:
       - name: Build (Debug)
         run: |
           docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
             -v "${{ github.workspace }}:/workspace" \
             -w /workspace \
             blackhart-ci:local \
@@ -42,6 +46,8 @@ jobs:
       - name: Test
         run: |
           docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
             -v "${{ github.workspace }}:/workspace" \
             -w /workspace \
             blackhart-ci:local \
