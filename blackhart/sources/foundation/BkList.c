@@ -215,7 +215,11 @@ struct BkList*	BkList_PopBack(struct BkList* obj)
 struct BkList*	BkList_Alloc(void)
 {
 	struct BkList* list = malloc(sizeof(struct BkList));
-	BK_ERROR(BK_ISNULL(list), "Memory system failed to allocate memory block");
+	BK_FATAL(BK_ISNULL(list), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system failed to allocate memory block",
+		.result = "Process aborted",
+	}));
 
 	list->data = NULL;
 	list->next = NULL;

@@ -22,7 +22,11 @@ struct BkShader*	_BkShader_Create(char const* path, enum BkShaderType const shad
 	BkFileSystem_ReadFromPath(path, &str, &size);
 
 	struct BkShader* shader = malloc(sizeof(struct BkShader));
-    BK_ERROR(BK_ISNULL(shader), "Memory system failed to allocate memory");
+    BK_FATAL(BK_ISNULL(shader), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system failed to allocate memory",
+		.result = "Process aborted",
+	}));
 
 	shader->id = glCreateShader(shader_type);
 
@@ -46,7 +50,12 @@ struct BkShader*	_BkShader_Create(char const* path, enum BkShaderType const shad
 
 		free(str);
 
-		BK_ERROR(true, BkString_CreateFormatted("Shader compilation failed: %s", info_log));
+		BK_FATAL(true, ((struct BkErrorInfo){
+			.what = "Cannot compile shader",
+			.why = BkString_CreateFormatted("GLSL compile error: %s", info_log),
+			.how = "Fix the shader source and reload",
+			.result = "Process aborted",
+		}));
 	}
 
 	free(str);
@@ -67,7 +76,11 @@ void	_BkShader_Release(struct BkShader** shader)
 struct BkShaderProgram*	_BkShaderProgram_Create(void)
 {
 	struct BkShaderProgram* shader_program = malloc(sizeof(struct BkShaderProgram));
-    BK_ERROR(BK_ISNULL(shader_program), "Memory system failed to allocate memory block");
+    BK_FATAL(BK_ISNULL(shader_program), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system failed to allocate memory block",
+		.result = "Process aborted",
+	}));
 
 	shader_program->id = glCreateProgram();
 
@@ -101,7 +114,12 @@ void _BkShaderProgram_Compile(struct BkShaderProgram* shader_program)
 		
 		_BkShaderProgram_Release(&shader_program);
 		
-		BK_ERROR(true, BkString_CreateFormatted("Shader program link failed: %s", info_log));
+		BK_FATAL(true, ((struct BkErrorInfo){
+			.what = "Cannot link shader program",
+			.why = BkString_CreateFormatted("GLSL link error: %s", info_log),
+			.how = "Check shader stage compatibility and uniforms",
+			.result = "Process aborted",
+		}));
 	}
 }
 

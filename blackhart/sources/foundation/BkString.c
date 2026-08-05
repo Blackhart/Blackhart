@@ -29,7 +29,11 @@ char const*	BkString_CreateFormatted(char const* format, ...)
 	va_copy(arglist_copy, arglist);
 	
 	str = malloc(size * sizeof(char));
-	BK_ERROR(BK_ISNULL(str), "Memory system failed to allocate memory block");
+	BK_FATAL(BK_ISNULL(str), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system failed to allocate memory block",
+		.result = "Process aborted",
+	}));
 	
 	/* Second pass: actually format into the allocated buffer. */
 	vsnprintf(str, size, format, arglist_copy);

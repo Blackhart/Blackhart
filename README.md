@@ -16,7 +16,7 @@ The repository also includes tools and unit tests (Unity, Google Test).
 blackhart/          Core library
 blackhart.studio/   GLFW application
 blackhart.data/     Data tool
-cmake/deps/         Dependencies (GLEW, GLFW, gtest, Unity)
+cmake/deps/         Dependencies (GLEW, GLFW, RPly, gtest, Unity)
 docker/ci/          Docker image for CI
 ```
 

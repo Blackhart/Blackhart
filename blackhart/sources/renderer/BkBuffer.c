@@ -16,7 +16,11 @@ struct BkBuffer*	_BkBuffer_Create(size_t const size, void const* data)
     BK_ASSERT(BK_ISNULL(data));
 
     struct BkBuffer* buffer = malloc(sizeof(struct BkBuffer));
-    BK_ERROR(BK_ISNULL(buffer), "Memory system failed to allocate memory block");
+    BK_FATAL(BK_ISNULL(buffer), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system failed to allocate memory block",
+		.result = "Process aborted",
+	}));
 
 	glGenBuffers(1, &(buffer->id));
 	glBindBuffer(GL_ARRAY_BUFFER, buffer->id);

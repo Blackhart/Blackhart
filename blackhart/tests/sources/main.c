@@ -7,6 +7,7 @@
 #include "foundation/BkMath_test.h"
 #include "foundation/BkMatrix4x4_test.h"
 #include "foundation/BkPoint3_test.h"
+#include "foundation/BkPly_test.h"
 #include "foundation/BkQueue_test.h"
 #include "foundation/BkVector3_test.h"
 #include "foundation/BkString_test.h"
@@ -39,6 +40,7 @@ int main(int argc, char** argv)
 	BkMath_RunTests();
 	BkMatrix4x4_RunTests();
 	BkPoint3_RunTests();
+	BkPly_RunTests();
 	BkQueue_RunTests();
 	BkVector3_RunTests();
 	BkString_RunTests();

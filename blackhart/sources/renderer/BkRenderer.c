@@ -33,14 +33,23 @@ void    _BkRender_Initialize(void)
     GLenum result = GLEW_OK;
 
     result = glewInit();
-    BK_ERROR(result != GLEW_OK, BkString_CreateFormatted("Glew error : %s\nFailed to initialize OpenGL!", glewGetErrorString(result)));
+    BK_FATAL(result != GLEW_OK, ((struct BkErrorInfo){
+		.what = "Cannot initialize OpenGL",
+		.why = BkString_CreateFormatted("GLEW error: %s", glewGetErrorString(result)),
+		.how = "Verify that a valid OpenGL context exists before BkInitialize",
+		.result = "Process aborted",
+	}));
 
     // Create VAO
     glGenVertexArrays(1, &__BkVertexArrayObject);
     glBindVertexArray(__BkVertexArrayObject);
 
     char* path = malloc((strlen(BK_DEFAULT_SHADER_PATH) + 15) * sizeof(char));
-    BK_ERROR(BK_ISNULL(path), "Memory system has failed to allocate memory block");
+    BK_FATAL(BK_ISNULL(path), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system has failed to allocate memory block",
+		.result = "Process aborted",
+	}));
 
     // Create vertex shader
     BkFileSystem_CombinePath(path, BK_DEFAULT_SHADER_PATH, "vertex.glsl");

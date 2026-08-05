@@ -3,15 +3,20 @@
 
 /**
  * @file BkError.h
- * @brief Defines error handling macros and functions for the Blackhart library.
+ * @brief Error handling for the Blackhart library.
  *
- * This file provides error handling utilities including macros for assertions,
- * error checking, and functions for fatal error reporting and error context management.
+ * Two recoverable/fatal paths share the same structured log format
+ * (what / why / where / how / result):
+ * - BK_ERROR  : log and return
+ * - BK_FATAL  : log and exit
+ *
+ * BK_ASSERT remains for programmer invariants (debug abort).
  */
 
 // ~~~~~ Standard Headers ~~~~~
 
 #include <assert.h>
+#include <stdlib.h>
 
 // ~~~~~ Blackhart Headers ~~~~~
 
@@ -42,76 +47,109 @@
  */
 #define BK_ISTRUE(boolean)	(boolean == true)
 
-/** @def BK_ERROR(test, str)
- *  @brief Logs a fatal error and exits if the test condition is true.
- *  @param test The condition to test.
- *  @param str Additional error message string.
- */
-#define BK_ERROR(test, str)	if (test) { BkError_Fatal(#test, __FILE__, __LINE__, str); }
-
-/** @def BK_ASSERT(test)
- *  @brief Asserts that the test condition is false. If true, the program aborts.
- *  @param test The condition to assert.
+/**
+ * @def BK_ASSERT(test)
+ * @brief Aborts in debug if the failure condition is true.
+ * @param test The condition that must be false.
  */
 #define BK_ASSERT(test)	assert(!(test))
 
-/** @def BK_COMPILER_ASSERT(test)
- *  @brief Compile-time assertion. Causes a compilation error if the test fails.
- *  @param test The condition to test at compile time.
+/**
+ * @def BK_COMPILER_ASSERT(test)
+ * @brief Compile-time assertion. Fails to compile if the failure condition is true.
+ * @param test The failure condition (same convention as BK_ASSERT).
  */
-#define BK_COMPILER_ASSERT(test)    if(!(test)) { int 0_COMPILER_ASSERT_FAILED; }
+#define BK_COMPILER_ASSERT(test)	_Static_assert(!(test), #test)
+
+/**
+ * @def BK_FATAL(test, info)
+ * @brief If test is true, logs a structured error and exits the process.
+ * @param test Failure condition.
+ * @param info struct BkErrorInfo (or compound literal).
+ */
+#define BK_FATAL(test, info)                                                       \
+	do {                                                                       \
+		if (test) {                                                        \
+			struct BkErrorInfo const _bk_err_info_ = (info);            \
+			BkError_Fatal(&_bk_err_info_, __FILE__, __LINE__);          \
+		}                                                                  \
+	} while (0)
+
+/**
+ * @def BK_ERROR(test, info, ret)
+ * @brief If test is true, logs a structured error and returns ret.
+ * @param test Failure condition.
+ * @param info struct BkErrorInfo (or compound literal).
+ * @param ret Value returned to the caller.
+ */
+#define BK_ERROR(test, info, ret)                                                  \
+	do {                                                                       \
+		if (test) {                                                        \
+			struct BkErrorInfo const _bk_err_info_ = (info);            \
+			BkError_Log(&_bk_err_info_, __FILE__, __LINE__);            \
+			return (ret);                                               \
+		}                                                                  \
+	} while (0)
+
+/**
+ * @def BK_ERROR_VOID(test, info)
+ * @brief If test is true, logs a structured error and returns from a void function.
+ */
+#define BK_ERROR_VOID(test, info)                                                  \
+	do {                                                                       \
+		if (test) {                                                        \
+			struct BkErrorInfo const _bk_err_info_ = (info);            \
+			BkError_Log(&_bk_err_info_, __FILE__, __LINE__);            \
+			return;                                                     \
+		}                                                                  \
+	} while (0)
+
+// ~~~~~ Type Definitions ~~~~~
+
+/**
+ * @struct BkErrorInfo
+ * @brief Structured error description for logging.
+ *
+ * Optional fields may be NULL and will be omitted or defaulted in the log.
+ */
+struct BkErrorInfo
+{
+	char const*	what;   /**< What failed (required). */
+	char const*	why;    /**< Why it failed (required). */
+	char const*	where;  /**< Resource path / name (optional). */
+	char const*	how;    /**< How to resolve (optional). */
+	char const*	result; /**< Consequence for the caller (optional). */
+};
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /**
- * @brief Pushes an error context message onto the error context stack.
+ * @brief Logs a structured error (does not abort).
  *
- * Error contexts allow tracking the call stack when errors occur. Each call to
- * BkError_PushContext adds a context message, which should be matched with a
- * corresponding call to BkError_PopContext.
- *
- * @param msg The error context message to push.
+ * @param info Error description.
+ * @param file Source file (__FILE__).
+ * @param line Source line (__LINE__).
  */
-extern BK_API void	BkError_PushContext(char* msg);
+extern BK_API void	BkError_Log(struct BkErrorInfo const* info, char const* file, int line);
 
 /**
- * @brief Pops the most recent error context message from the error context stack.
+ * @brief Logs a structured error and terminates the process.
  *
- * This function should be called to remove an error context that was previously
- * added with BkError_PushContext. It should be called in pairs with PushContext
- * to maintain a proper call stack trace.
+ * @param info Error description.
+ * @param file Source file (__FILE__).
+ * @param line Source line (__LINE__).
  */
-extern BK_API void	BkError_PopContext(void);
-
-/**
- * @brief Logs a fatal error message and exits the program.
- *
- * This function is called when a fatal error is detected. It logs the error
- * information including the assertion that failed, the file and line where it
- * occurred, and an additional error message. The program then exits.
- *
- * @param assert The test condition string that failed.
- * @param file The source file name where the error occurred.
- * @param line The line number where the error occurred.
- * @param str Additional error message providing context about the error.
- */
-extern BK_API void	BkError_Fatal(char const* __restrict assert, char const* __restrict file, uint16 const line, char const* __restrict str);
+extern BK_API void	BkError_Fatal(struct BkErrorInfo const* info, char const* file, int line);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
 /**
- * @brief Initializes the Blackhart error handling context.
- *
- * This function should be called during library initialization to set up
- * the error handling system.
+ * @brief Initializes the Blackhart error handling system.
  */
 extern void	_BkError_Initialize(void);
 
 /**
- * @brief Uninitializes the Blackhart error handling context.
- *
- * This function should be called during library cleanup to tear down
- * the error handling system.
+ * @brief Uninitializes the Blackhart error handling system.
  */
 extern void	_BkError_Uninitialize(void);
 

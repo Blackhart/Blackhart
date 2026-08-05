@@ -39,7 +39,12 @@ void	BkFileSystem_OpenFlux(BkFlux** flux, char const* __restrict filename, char 
 	fopen_s(flux, filename, mode);
 #else
 	*flux = fopen(filename, mode);
-	BK_ERROR(BK_ISNULL(*flux), BkString_CreateFormatted("File system has failed to open the flux: %s", filename));
+	BK_FATAL(BK_ISNULL(*flux), ((struct BkErrorInfo){
+		.what = "Cannot open file",
+		.why = BkString_CreateFormatted("fopen failed for: %s", filename),
+		.where = filename,
+		.result = "Process aborted",
+	}));
 #endif
 }
 
@@ -47,7 +52,11 @@ void	BkFileSystem_CloseFlux(BkFlux** flux)
 {
 	BK_ASSERT(BK_ISNULL(flux) || BK_ISNULL(*flux));
 
-	BK_ERROR(fclose(*flux), "File system has failed to close the flux");
+	BK_FATAL(fclose(*flux), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "File system has failed to close the flux",
+		.result = "Process aborted",
+	}));
 
 	*flux = NULL;
 }
@@ -56,7 +65,11 @@ void	BkFileSystem_WriteToFlux(BkFlux* flux, char const* str)
 {
 	BK_ASSERT(BK_ISNULL(flux));
 
-	BK_ERROR(fprintf(flux, str) < 0 || ferror(flux) != 0, "File system has failed to write in the flux");
+	BK_FATAL(fprintf(flux, str) < 0 || ferror(flux) != 0, ((struct BkErrorInfo){
+		.what = "Cannot write to file",
+		.why = "fprintf failed or the stream is in error",
+		.result = "Process aborted",
+	}));
 }
 
 void	BkFileSystem_ReadFromPath(char const* path, char** buffer, size_t* buffer_size)
@@ -80,18 +93,34 @@ void	BkFileSystem_ReadFromFlux(BkFlux* flux, char** buffer, size_t* buffer_size)
 	BK_ASSERT(BK_ISNULL(buffer));
 	BK_ASSERT(BK_ISNULL(buffer_size));
 
-	BK_ERROR(fseek(flux, 0, SEEK_END) != 0 || ferror(flux) != 0, "File system has failed to read from the flux");
+	BK_FATAL(fseek(flux, 0, SEEK_END) != 0 || ferror(flux) != 0, ((struct BkErrorInfo){
+		.what = "Cannot seek in file",
+		.why = "fseek failed or the stream is in error",
+		.result = "Process aborted",
+	}));
 	
 	*buffer_size = ftell(flux);
-	BK_ERROR((*buffer_size) == -1L, "File system has failed to read from the flux");
+	BK_FATAL((*buffer_size) == -1L, ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "File system has failed to read from the flux",
+		.result = "Process aborted",
+	}));
 	
 	rewind(flux);
 	
 	*buffer = malloc(((*buffer_size) + 1) * sizeof(char));
-	BK_ERROR(BK_ISNULL(*buffer), "Memory system has failed to allocate memory block");
+	BK_FATAL(BK_ISNULL(*buffer), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system has failed to allocate memory block",
+		.result = "Process aborted",
+	}));
 
 	*buffer_size = fread(*buffer, sizeof(char), *buffer_size, flux);
-	BK_ERROR(ferror(flux) != 0, "File system has failed to read from the flux");
+	BK_FATAL(ferror(flux) != 0, ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "File system has failed to read from the flux",
+		.result = "Process aborted",
+	}));
 
 	(*buffer)[*buffer_size] = '\0';
 }

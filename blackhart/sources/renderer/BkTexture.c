@@ -17,7 +17,11 @@ struct BkTexture*  _BkTexture_Create(uint16 const width, uint16 const height, vo
     BK_ASSERT(BK_ISNULL(data));
 
     struct BkTexture* texture = malloc(sizeof(struct BkTexture));
-    BK_ERROR(BK_ISNULL(texture), "Memory system failed to allocate memory block");
+    BK_FATAL(BK_ISNULL(texture), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system failed to allocate memory block",
+		.result = "Process aborted",
+	}));
 
     glGenTextures(1, &(texture->id));
     glBindTexture(GL_TEXTURE_2D, texture->id);

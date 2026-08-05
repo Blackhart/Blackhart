@@ -48,15 +48,17 @@ set_target_properties(${BLACKHART_PROJECT_NAME} PROPERTIES OUTPUT_NAME "blackhar
 # Links Blackhart's include directory
 target_include_directories(${BLACKHART_PROJECT_NAME} PUBLIC "${BLACKHART_PATH}/includes")
 
-# ~~~~~ Dependencies: GLEW + OpenGL ~~~~~
+# ~~~~~ Dependencies: GLEW + OpenGL + RPly ~~~~~
 
 include("${MAIN_PATH}/cmake/deps/glew.cmake")
+include("${MAIN_PATH}/cmake/deps/rply.cmake")
 find_package(OpenGL REQUIRED)
 
 target_link_libraries(${BLACKHART_PROJECT_NAME}
   PRIVATE
     GLEW::GLEW
     OpenGL::GL
+    RPly::RPly
     m
 )
 

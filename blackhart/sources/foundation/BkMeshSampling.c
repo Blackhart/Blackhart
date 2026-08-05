@@ -35,7 +35,11 @@ static void	__BkMeshSampling_ComputeBarycentricSteps(real* barycentric_steps, re
 void	BkMeshSampling_Sample(struct BkPoint3 const* vertices, size_t const number_of_geoms, size_t const number_of_points)
 {
 	real* tmp = malloc(number_of_geoms * sizeof(real));
-	BK_ERROR(BK_ISNULL(tmp), "Memory system failed to allocate memory block!");
+	BK_FATAL(BK_ISNULL(tmp), ((struct BkErrorInfo){
+		.what = "Fatal error",
+		.why = "Memory system failed to allocate memory block!",
+		.result = "Process aborted",
+	}));
 
 	real total_scale_factors = 0;
 
