@@ -18,12 +18,6 @@ set(${BLACKHART_PROJECT_NAME}_VERSION_PATCH 0)
 # Sets Blackhart's sources directory
 set(BLACKHART_PATH "${${BLACKHART_PROJECT_NAME}_SOURCE_DIR}")
 
-# Sets default shader path
-add_definitions(-DBK_DEFAULT_SHADER_PATH="${BLACKHART_PATH}/shaders")
-
-# Sets default data path
-add_definitions(-DBK_DEFAULT_DATA_PATH="${BLACKHART_DATA_PATH}/data")
-
 # Sets debug postfix
 set(CMAKE_DEBUG_POSTFIX d)
 
@@ -33,6 +27,14 @@ file(GLOB_RECURSE HFiles includes/*.h)
 
 # Compiles Blackhart as shared library
 add_library(${BLACKHART_PROJECT_NAME} SHARED ${CFiles} ${HFiles})
+
+# Default resource paths (PUBLIC so studio / tests see them too)
+target_compile_definitions(${BLACKHART_PROJECT_NAME}
+  PUBLIC
+    BK_DEFAULT_SHADER_PATH="${BLACKHART_PATH}/shaders"
+    BK_DEFAULT_ASSET_PATH="${BLACKHART_PATH}/assets"
+    BK_DEFAULT_DATA_PATH="${BLACKHART_DATA_PATH}/data"
+)
 
 # MSVC definitions
 if (MSVC)

@@ -3,30 +3,35 @@
 
 /**
  * @file BkPointCloud.h
- * @brief Defines the BkPointCloud structure and functions for point cloud
- * management in 3D rendering.
+ * @brief Point cloud data living on the CPU.
  *
- * This file provides the definition of the BkPointCloud struct, which
- * represents a point cloud with a list of points. It includes functions for
- * initializing, adding, and removing points from the point cloud.
+ * A BkPointCloud is a list of 3D positions (BkPoint3). There is no OpenGL
+ * here: you load points (usually from a PLY file), read them with getters if
+ * needed, and add the cloud to a BkScene so the renderer can draw it.
+ *
+ * The renderer uploads the cloud to the GPU automatically through its cache.
+ * When you are done, remove the cloud from the scene first, then release it.
+ * That way the GPU copy can be marked dirty and freed on the next BkRender.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
 
-#include "foundation/BkArray.h"
+#include "foundation/BkAtomicDataType.h"
 #include "foundation/BkExport.h"
 
 // ~~~~~ Type Definitions ~~~~~
 
 /**
- * @struct BkPointCloud
- * @brief Structure representing a point cloud in 3D rendering.
- *
- * The point cloud contains a list of points that can be rendered.
+ * @typedef BkPoint3
+ * @brief 3D point type (see BkPoint3.h).
  */
-struct BkPointCloud {
-  struct BkArray* points; /**< List of points in the point cloud. */
-};
+typedef struct BkPoint3 BkPoint3;
+
+/**
+ * @typedef BkPointCloud
+ * @brief Opaque handle to a CPU point cloud (list of BkPoint3).
+ */
+typedef struct BkPointCloud BkPointCloud;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
@@ -38,20 +43,37 @@ struct BkPointCloud {
  * (missing header / vertices). Does not abort the process on bad input.
  *
  * @param filename Path to the PLY file to load.
- * @return Pointer to the newly created point cloud, or NULL on failure.
+ * @return New point cloud handle, or NULL on failure.
  */
-extern BK_API struct BkPointCloud* BkPointCloud_CreateFromPlyFile(
+extern BK_API BkPointCloud* BkPointCloud_CreateFromPlyFile(
     char const* filename);
 
 /**
- * @brief Releases a point cloud and frees its resources.
+ * @brief Releases a point cloud and frees its CPU resources.
  *
- * Deletes the point cloud and frees the memory allocated for the point cloud
- * structure. The point cloud pointer is set to NULL after release.
+ * Call BkScene_RemoveCloud first so the GPU entry is marked dirty; the
+ * renderer frees GPU resources on the next BkRender. Sets @p pointCloud to
+ * NULL.
  *
- * @param pointCloud Pointer to a pointer to the point cloud to release. The
- * pointer will be set to NULL.
+ * @param pointCloud Pointer to the point cloud handle to release.
  */
-extern BK_API void BkPointCloud_Release(struct BkPointCloud** pointCloud);
+extern BK_API void BkPointCloud_Release(BkPointCloud** pointCloud);
+
+/**
+ * @brief Returns the number of points in the cloud.
+ *
+ * @param pointCloud Point cloud to query. Must not be NULL.
+ * @return Point count (0 if empty).
+ */
+extern BK_API size_t BkPointCloud_GetCount(BkPointCloud const* pointCloud);
+
+/**
+ * @brief Returns a read-only pointer to the contiguous point array.
+ *
+ * @param pointCloud Point cloud to query. Must not be NULL.
+ * @return Pointer to BkPoint3[count], or NULL if there is no data.
+ */
+extern BK_API BkPoint3 const* BkPointCloud_GetPoints(
+    BkPointCloud const* pointCloud);
 
 #endif

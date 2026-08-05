@@ -2,9 +2,17 @@
 #include <stdlib.h>
 
 // Blackhart headers.
+#include "foundation/BkArray.h"
 #include "foundation/BkError.h"
 #include "foundation/BkPly.h"
+#include "foundation/BkPoint3.h"
 #include "renderer/BkPointCloud.h"
+
+// ~~~~~ Type Definitions ~~~~~
+
+struct BkPointCloud {
+  struct BkArray* points;
+};
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
@@ -13,7 +21,7 @@ static char const* const __BkPointCloud_CreateAborted =
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
-struct BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
+BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
   struct BkArray* points = _BkPly_LoadPoints(filename);
   BK_ERROR(
       BK_ISNULL(points),
@@ -27,7 +35,7 @@ struct BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
       }),
       NULL);
 
-  struct BkPointCloud* pointCloud = malloc(sizeof(struct BkPointCloud));
+  BkPointCloud* pointCloud = malloc(sizeof(BkPointCloud));
   if (BK_ISNULL(pointCloud)) {
     BkArray_Destroy(points);
     free(points);
@@ -46,7 +54,7 @@ struct BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
   return pointCloud;
 }
 
-void BkPointCloud_Release(struct BkPointCloud** pointCloud) {
+void BkPointCloud_Release(BkPointCloud** pointCloud) {
   BK_ASSERT(BK_ISNULL(pointCloud));
   BK_ASSERT(BK_ISNULL(*pointCloud));
 
@@ -58,4 +66,24 @@ void BkPointCloud_Release(struct BkPointCloud** pointCloud) {
 
   free(*pointCloud);
   *pointCloud = NULL;
+}
+
+size_t BkPointCloud_GetCount(BkPointCloud const* pointCloud) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+
+  if (BK_ISNULL(pointCloud->points)) {
+    return 0;
+  }
+
+  return BkArray_Size((*pointCloud->points));
+}
+
+BkPoint3 const* BkPointCloud_GetPoints(BkPointCloud const* pointCloud) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+
+  if (BK_ISNULL(pointCloud->points) || BK_ISNULL(pointCloud->points->data)) {
+    return NULL;
+  }
+
+  return (BkPoint3 const*)pointCloud->points->data;
 }

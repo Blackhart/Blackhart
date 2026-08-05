@@ -3,12 +3,26 @@
 
 /**
  * @file BkShader.h
- * @brief Defines shader and shader program structures for OpenGL rendering.
+ * @brief Compiles GLSL sources into a usable OpenGL program.
  *
- * This file provides structures and functions for managing OpenGL shaders and
- * shader programs. Note: Functions in this file are marked as INTERNAL and
- * should not be used directly by external code.
+ * A BkShader is one stage loaded from a `.glsl` file (vertex or fragment).
+ * A BkShaderProgram combines several stages: you attach the shaders, compile
+ * (link) the program, then bind it with its OpenGL id before drawing.
+ *
+ * Stages can be released after they are attached and linked; the program
+ * keeps what it needs. Compile or link failures abort the process.
+ *
+ * Internal only — BkRenderer builds the default point-cloud program at
+ * startup. A valid OpenGL context is required.
  */
+
+// ~~~~~ Glew Headers ~~~~~
+
+#include <GL/glew.h>
+
+// ~~~~~ Blackhart Headers ~~~~~
+
+#include "foundation/BkAtomicDataType.h"
 
 // ~~~~~ Type Definitions ~~~~~
 
@@ -22,26 +36,16 @@ enum BkShaderType {
 };
 
 /**
- * @struct BkShader
- * @brief Structure representing an OpenGL shader object.
- *
- * Contains the OpenGL shader ID for managing individual shader objects
- * (vertex shaders, fragment shaders, etc.).
+ * @typedef BkShader
+ * @brief Opaque handle to an OpenGL shader object (vertex, fragment, etc.).
  */
-struct BkShader {
-  GLuint id; /**< OpenGL shader object ID. */
-};
+typedef struct BkShader BkShader;
 
 /**
- * @struct BkShaderProgram
- * @brief Structure representing an OpenGL shader program.
- *
- * Contains the OpenGL shader program ID that links multiple shaders together
- * to form a complete rendering pipeline.
+ * @typedef BkShaderProgram
+ * @brief Opaque handle to an OpenGL shader program (linked pipeline stages).
  */
-struct BkShaderProgram {
-  GLuint id; /**< OpenGL shader program object ID. */
-};
+typedef struct BkShaderProgram BkShaderProgram;
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
@@ -49,70 +53,83 @@ struct BkShaderProgram {
  * @brief Creates a shader from a source file.
  *
  * Loads the shader source code from the specified file path, compiles it as
- * the specified shader type, and returns a shader object.
+ * the specified shader type, and returns a shader handle.
  *
  * @param path Path to the shader source file.
  * @param shader_type The type of shader to create (vertex or fragment).
- * @return Pointer to the created shader object, or NULL if creation fails.
+ * @return Pointer to the created shader handle, or NULL if creation fails.
  */
-extern struct BkShader* _BkShader_Create(char const* path,
-                                         enum BkShaderType const shader_type);
+extern BkShader* _BkShader_Create(char const* path,
+                                  enum BkShaderType const shader_type);
 
 /**
  * @brief Releases a shader object and frees its resources.
  *
  * Deletes the OpenGL shader object and frees the memory allocated for the
- * shader structure. The shader pointer is set to NULL after release.
+ * shader handle. The shader pointer is set to NULL after release.
  *
- * @param shader Pointer to a pointer to the shader to release. The pointer will
- * be set to NULL.
+ * @param shader Pointer to a pointer to the shader to release.
  */
-extern void _BkShader_Release(struct BkShader** shader);
+extern void _BkShader_Release(BkShader** shader);
+
+/**
+ * @brief Returns the OpenGL shader object name.
+ *
+ * @param shader Shader handle. Must not be NULL.
+ * @return OpenGL shader ID.
+ */
+extern uint32 _BkShader_GetId(BkShader const* shader);
 
 /**
  * @brief Creates a new shader program object.
  *
- * Allocates and initializes a new shader program structure. Shaders can then be
+ * Allocates and initializes a new shader program handle. Shaders can then be
  * attached to this program using _BkShaderProgram_AttachShader.
  *
  * @return Pointer to the newly created shader program, or NULL if creation
  * fails.
  */
-extern struct BkShaderProgram* _BkShaderProgram_Create(void);
+extern BkShaderProgram* _BkShaderProgram_Create(void);
 
 /**
  * @brief Attaches a shader to a shader program.
  *
  * Attaches the specified shader to the shader program. The shader will be
- * included in the program when it is compiled. Multiple shaders of different
+ * included in the program when it is linked. Multiple shaders of different
  * types can be attached to the same program.
  *
  * @param shader_program Pointer to the shader program.
  * @param shader Pointer to the shader to attach.
  */
-extern void _BkShaderProgram_AttachShader(
-    struct BkShaderProgram* shader_program, struct BkShader* shader);
+extern void _BkShaderProgram_AttachShader(BkShaderProgram* shader_program,
+                                          BkShader* shader);
 
 /**
  * @brief Compiles and links a shader program.
  *
- * Compiles all attached shaders and links them into a complete shader program.
- * If compilation or linking fails, error information should be retrieved from
- * OpenGL.
+ * Links all attached shaders into a complete shader program. If linking fails,
+ * the process aborts with a structured error.
  *
  * @param shader_program Pointer to the shader program to compile.
  */
-extern void _BkShaderProgram_Compile(struct BkShaderProgram* shader_program);
+extern void _BkShaderProgram_Compile(BkShaderProgram* shader_program);
 
 /**
  * @brief Releases a shader program object and frees its resources.
  *
  * Deletes the OpenGL shader program object and frees the memory allocated for
- * the program structure. The program pointer is set to NULL after release.
+ * the program handle. The program pointer is set to NULL after release.
  *
  * @param shader_program Pointer to a pointer to the shader program to release.
- *                       The pointer will be set to NULL.
  */
-extern void _BkShaderProgram_Release(struct BkShaderProgram** shader_program);
+extern void _BkShaderProgram_Release(BkShaderProgram** shader_program);
+
+/**
+ * @brief Returns the OpenGL program object name.
+ *
+ * @param shader_program Program handle. Must not be NULL.
+ * @return OpenGL program ID.
+ */
+extern uint32 _BkShaderProgram_GetId(BkShaderProgram const* shader_program);
 
 #endif

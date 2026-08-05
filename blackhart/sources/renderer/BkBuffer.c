@@ -8,13 +8,19 @@
 #include "foundation/BkError.h"
 #include "renderer/BkBuffer.h"
 
+// ~~~~~ Type Definitions ~~~~~
+
+struct BkBuffer {
+  GLuint id;
+};
+
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-struct BkBuffer* _BkBuffer_Create(size_t const size, void const* data) {
+BkBuffer* _BkBuffer_Create(size_t const size, void const* data) {
   BK_ASSERT(size == 0);
   BK_ASSERT(BK_ISNULL(data));
 
-  struct BkBuffer* buffer = malloc(sizeof(struct BkBuffer));
+  BkBuffer* buffer = malloc(sizeof(BkBuffer));
   BK_FATAL(BK_ISNULL(buffer),
            ((struct BkErrorInfo){
                .what = "Fatal error",
@@ -31,7 +37,7 @@ struct BkBuffer* _BkBuffer_Create(size_t const size, void const* data) {
   return buffer;
 }
 
-void _BkBuffer_Release(struct BkBuffer** buffer) {
+void _BkBuffer_Release(BkBuffer** buffer) {
   BK_ASSERT(BK_ISNULL(buffer));
   BK_ASSERT(BK_ISNULL(*buffer));
 
@@ -39,4 +45,9 @@ void _BkBuffer_Release(struct BkBuffer** buffer) {
 
   free(*buffer);
   *buffer = NULL;
+}
+
+uint32 _BkBuffer_GetId(BkBuffer const* buffer) {
+  BK_ASSERT(BK_ISNULL(buffer));
+  return (uint32)buffer->id;
 }

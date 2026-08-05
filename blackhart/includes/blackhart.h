@@ -13,7 +13,9 @@
 
 #include "foundation/BkExport.h"
 #include "foundation/BkFoundation.h"
+#include "renderer/BkPointCloud.h"
 #include "renderer/BkRenderer.h"
+#include "renderer/BkScene.h"
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 

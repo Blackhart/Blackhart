@@ -10,10 +10,20 @@
 #include "foundation/BkString.h"
 #include "renderer/BkShader.h"
 
+// ~~~~~ Type Definitions ~~~~~
+
+struct BkShader {
+  GLuint id;
+};
+
+struct BkShaderProgram {
+  GLuint id;
+};
+
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-struct BkShader* _BkShader_Create(char const* path,
-                                  enum BkShaderType const shader_type) {
+BkShader* _BkShader_Create(char const* path,
+                           enum BkShaderType const shader_type) {
   BK_ASSERT(BK_ISNULL(path));
 
   char* str = NULL;
@@ -21,7 +31,7 @@ struct BkShader* _BkShader_Create(char const* path,
 
   BkFileSystem_ReadFromPath(path, &str, &size);
 
-  struct BkShader* shader = malloc(sizeof(struct BkShader));
+  BkShader* shader = malloc(sizeof(BkShader));
   BK_FATAL(BK_ISNULL(shader),
            ((struct BkErrorInfo){
                .what = "Fatal error",
@@ -29,7 +39,7 @@ struct BkShader* _BkShader_Create(char const* path,
                .result = "Process aborted",
            }));
 
-  shader->id = glCreateShader(shader_type);
+  shader->id = glCreateShader((GLenum)shader_type);
 
   const GLchar* source = (const GLchar*)str;
 
@@ -65,7 +75,7 @@ struct BkShader* _BkShader_Create(char const* path,
   return shader;
 }
 
-void _BkShader_Release(struct BkShader** shader) {
+void _BkShader_Release(BkShader** shader) {
   BK_ASSERT(BK_ISNULL(shader) || BK_ISNULL(*shader));
 
   glDeleteShader((*shader)->id);
@@ -74,9 +84,13 @@ void _BkShader_Release(struct BkShader** shader) {
   *shader = NULL;
 }
 
-struct BkShaderProgram* _BkShaderProgram_Create(void) {
-  struct BkShaderProgram* shader_program =
-      malloc(sizeof(struct BkShaderProgram));
+uint32 _BkShader_GetId(BkShader const* shader) {
+  BK_ASSERT(BK_ISNULL(shader));
+  return (uint32)shader->id;
+}
+
+BkShaderProgram* _BkShaderProgram_Create(void) {
+  BkShaderProgram* shader_program = malloc(sizeof(BkShaderProgram));
   BK_FATAL(BK_ISNULL(shader_program),
            ((struct BkErrorInfo){
                .what = "Fatal error",
@@ -89,15 +103,15 @@ struct BkShaderProgram* _BkShaderProgram_Create(void) {
   return shader_program;
 }
 
-void _BkShaderProgram_AttachShader(struct BkShaderProgram* shader_program,
-                                   struct BkShader* shader) {
+void _BkShaderProgram_AttachShader(BkShaderProgram* shader_program,
+                                   BkShader* shader) {
   BK_ASSERT(BK_ISNULL(shader_program));
   BK_ASSERT(BK_ISNULL(shader));
 
   glAttachShader(shader_program->id, shader->id);
 }
 
-void _BkShaderProgram_Compile(struct BkShaderProgram* shader_program) {
+void _BkShaderProgram_Compile(BkShaderProgram* shader_program) {
   BK_ASSERT(BK_ISNULL(shader_program));
 
   glLinkProgram(shader_program->id);
@@ -126,11 +140,16 @@ void _BkShaderProgram_Compile(struct BkShaderProgram* shader_program) {
   }
 }
 
-void _BkShaderProgram_Release(struct BkShaderProgram** shader_program) {
+void _BkShaderProgram_Release(BkShaderProgram** shader_program) {
   BK_ASSERT(BK_ISNULL(shader_program) || BK_ISNULL(*shader_program));
 
   glDeleteProgram((*shader_program)->id);
 
   free(*shader_program);
   *shader_program = NULL;
+}
+
+uint32 _BkShaderProgram_GetId(BkShaderProgram const* shader_program) {
+  BK_ASSERT(BK_ISNULL(shader_program));
+  return (uint32)shader_program->id;
 }

@@ -13,6 +13,8 @@
 
 // Globales
 static struct BkOrbitalCamera g_camera;
+static BkScene* g_scene = NULL;
+static BkPointCloud* g_bunny = NULL;
 static bool g_full_screen = false;
 
 // Constantes
@@ -85,12 +87,34 @@ int main() {
   // Initialize Blackhart
   BkInitialize();
 
-  // Initialize Camera
+  g_scene = BkScene_Create();
+  if (g_scene == NULL) {
+    std::cout << "Fatal: failed to create scene" << std::endl;
+    BkUninitialize();
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    return EXIT_FAILURE;
+  }
+
+  char bunny_path[1024];
+  BkFileSystem_CombinePath(bunny_path, BK_DEFAULT_ASSET_PATH, "bunny.ply");
+  g_bunny = BkPointCloud_CreateFromPlyFile(bunny_path);
+  if (g_bunny == NULL) {
+    std::cout << "Fatal: failed to load " << bunny_path << std::endl;
+    BkScene_Release(&g_scene);
+    BkUninitialize();
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    return EXIT_FAILURE;
+  }
+  BkScene_AddCloud(g_scene, g_bunny);
+
+  // Initialize Camera (bunny is ~0.15 units tall around y≈0.1)
   struct BkPoint3 const to =
-      BkPoint3_FromXYZ(BK_REAL(0.0), BK_REAL(0.0), BK_REAL(0.0));
+      BkPoint3_FromXYZ(BK_REAL(0.0), BK_REAL(0.1), BK_REAL(0.0));
   BkOrbitalCamera_Initialize(&g_camera);
   BkOrbitalCamera_SetTarget(&g_camera, &to);
-  BkOrbitalCamera_SetRadius(&g_camera, BK_REAL(5));
+  BkOrbitalCamera_SetRadius(&g_camera, BK_REAL(0.4));
 
   // ~~~~~ RENDER LOOP ~~~~~
 
@@ -111,13 +135,16 @@ int main() {
 
     glfwPollEvents();
 
-    BkRender(&(g_camera.base));
+    BkRender(g_scene, &(g_camera.base));
 
     glfwSwapBuffers(window);
   }
 
   // ~~~~~ BLACKHART UNINITIALIZATION ~~~~~
 
+  BkScene_RemoveCloud(g_scene, g_bunny);
+  BkPointCloud_Release(&g_bunny);
+  BkScene_Release(&g_scene);
   BkUninitialize();
 
   // ~~~~~ GLFW UNINITIALIZATION ~~~~~
