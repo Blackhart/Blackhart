@@ -78,8 +78,7 @@ extern BkGpuPointCloud* _BkGpuCache_GetOrUpload(BkGpuCache* cache,
  * @param cache GPU cache.
  * @param cloud CPU point cloud whose GPU entry should be unloaded later.
  */
-extern void _BkGpuCache_MarkDirty(BkGpuCache* cache,
-                                  BkPointCloud const* cloud);
+extern void _BkGpuCache_MarkDirty(BkGpuCache* cache, BkPointCloud const* cloud);
 
 /**
  * @brief Releases and removes all dirty GPU entries.
