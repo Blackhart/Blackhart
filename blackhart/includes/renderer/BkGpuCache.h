@@ -16,6 +16,10 @@
  * Internal only — created and owned by the renderer.
  */
 
+// ~~~~~ Blackhart Headers ~~~~~
+
+#include "foundation/BkAtomicDataType.h"
+
 // ~~~~~ Type Definitions ~~~~~
 
 /**
@@ -107,5 +111,19 @@ extern void _BkGpuCache_Remove(BkGpuCache* cache, BkPointCloud const* cloud);
  * @param cache GPU cache to clear.
  */
 extern void _BkGpuCache_Clear(BkGpuCache* cache);
+
+/**
+ * @brief Returns true if @p cloud has an entry in the cache.
+ */
+extern bool _BkGpuCache_HasEntry(BkGpuCache const* cache,
+                                 BkPointCloud const* cloud);
+
+/**
+ * @brief Returns true if the entry for @p cloud is marked dirty.
+ *
+ * Returns false if the cloud is not in the cache.
+ */
+extern bool _BkGpuCache_IsDirty(BkGpuCache const* cache,
+                                BkPointCloud const* cloud);
 
 #endif

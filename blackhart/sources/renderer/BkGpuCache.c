@@ -21,7 +21,7 @@ struct BkGpuCache {
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-static struct BkList* __BkGpuCache_FindLink(BkGpuCache* cache,
+static struct BkList* __BkGpuCache_FindLink(BkGpuCache const* cache,
                                             BkPointCloud const* cloud) {
   struct BkList* it = BkList_Front(cache->entries);
   while (!BkList_Empty(it)) {
@@ -188,4 +188,25 @@ void _BkGpuCache_Clear(BkGpuCache* cache) {
 
   BkList_Clear(cache->entries);
   cache->entries = NULL;
+}
+
+bool _BkGpuCache_HasEntry(BkGpuCache const* cache, BkPointCloud const* cloud) {
+  if (BK_ISNULL(cache) || BK_ISNULL(cloud)) {
+    return false;
+  }
+
+  return !BkList_Empty(__BkGpuCache_FindLink(cache, cloud));
+}
+
+bool _BkGpuCache_IsDirty(BkGpuCache const* cache, BkPointCloud const* cloud) {
+  if (BK_ISNULL(cache) || BK_ISNULL(cloud)) {
+    return false;
+  }
+
+  struct BkList* link = __BkGpuCache_FindLink(cache, cloud);
+  if (BkList_Empty(link)) {
+    return false;
+  }
+
+  return ((BkGpuCacheEntry*)BkList_Data(link))->dirty;
 }

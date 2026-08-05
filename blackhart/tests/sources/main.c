@@ -15,6 +15,9 @@
 #include "foundation/BkQueue_test.h"
 #include "foundation/BkString_test.h"
 #include "foundation/BkVector3_test.h"
+#include "renderer/BkGpuCache_test.h"
+#include "renderer/BkPointCloud_test.h"
+#include "renderer/BkScene_test.h"
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -36,6 +39,9 @@ int main(int argc, char** argv) {
   BkMatrix4x4_RunTests();
   BkPoint3_RunTests();
   BkPly_RunTests();
+  BkPointCloud_RunTests();
+  BkScene_RunTests();
+  BkGpuCache_RunTests();
   BkQueue_RunTests();
   BkVector3_RunTests();
   BkString_RunTests();
