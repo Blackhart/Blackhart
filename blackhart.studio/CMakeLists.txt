@@ -38,6 +38,11 @@ target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE GLFW::GLFW)
 # main.cpp uses OpenGL symbols directly.
 target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE OpenGL::GL)
 
+# ~~~~~ Dependency: Dear ImGui (studio UI only) ~~~~~
+
+include("${MAIN_PATH}/cmake/deps/imgui.cmake")
+target_link_libraries(${BLACKHART_STUDIO_PROJECT_NAME} PRIVATE imgui::imgui)
+
 # ~~~~~ Tests ~~~~~
 
 # Sets Blackhart-Tests directory

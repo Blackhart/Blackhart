@@ -6,7 +6,7 @@ Blackhart is a small OpenGL engine focused on **point clouds**, written in C/C++
 
 **Blackhart** (the library) handles math, data structures, and drawing with OpenGL. You load point clouds from PLY files, put them in a scene, move them around, and ask the renderer to draw.
 
-**Blackhart Studio** is a simple GLFW window that loads a colored indoor scan sample, places the camera so you can see the whole cloud, and lets you orbit around it.
+**Blackhart Studio** is a simple GLFW window with a small ImGui panel to pick a sample asset (bunny or colored fragment), inspect it, load it into the scene, and orbit the camera.
 
 The repo also ships unit tests and a few helper tools.
 
@@ -17,14 +17,6 @@ In short:
 1. You load a PLY file into a **point cloud** (points live on the CPU, with a bounding box, optional RGB colors, and a position/orientation).
 2. You add that cloud to a **scene**.
 3. You call **BkRender**. The engine uploads positions and colors as two separate GPU buffers the first time they are needed, then draws.
-
-A few practical rules:
-
-- The **scene only holds CPU data**. GPU buffers are managed internally by the renderer. You do not upload or unload anything yourself.
-- Each cloud can be **moved and rotated** (`SetPosition`, `SetOrientation`, or `GetTransform`). The points themselves stay in local space; the renderer applies the transform when drawing. Scaling is not supported yet.
-- **Colors are optional.** If the PLY has no `red`/`green`/`blue`, the cloud has no color array and the GPU draw uses white.
-- `GetAABB` gives the bounds in local space (computed when the file is loaded). `GetWorldAABB` gives the bounds after the transform — useful to frame the camera or, later, to cull.
-- When you remove a cloud from the scene, the GPU copy is marked for cleanup. Release the CPU cloud afterward; the next render pass frees the leftover GPU data.
 
 ## Structure
 

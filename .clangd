@@ -1,0 +1,4 @@
+# Point clangd / Cursor at the debug build database (includes FetchContent deps
+# such as Dear ImGui under _build/debug/_deps/).
+CompileFlags:
+  CompilationDatabase: _build/debug
