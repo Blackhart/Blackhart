@@ -59,9 +59,22 @@ BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
 
   pointCloud->points = points;
   pointCloud->colors = colors;
-  pointCloud->aabb = BkAABB_FromPoints((BkPoint3 const*)BkArray_Data(points),
-                                       BkArray_Size(points));
+
+  size_t const count = BkArray_Size(points);
+  BkPoint3* pts = (BkPoint3*)BkArray_Data(points);
+
+  BkAABB const file_aabb = BkAABB_FromPoints(pts, count);
+  struct BkPoint3 const center = BkAABB_Center(&file_aabb);
+
+  for (size_t i = 0; i < count; ++i) {
+    pts[i].x -= center.x;
+    pts[i].y -= center.y;
+    pts[i].z -= center.z;
+  }
+
+  pointCloud->aabb = BkAABB_FromPoints(pts, count);
   BkTransform_Initialize(&pointCloud->transform);
+  BkTransform_SetPosition(&pointCloud->transform, &center);
   return pointCloud;
 }
 

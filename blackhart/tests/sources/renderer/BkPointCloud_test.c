@@ -107,18 +107,24 @@ void BkPointCloud_GetPoints_Contents_test(void) {
   __BkPointCloud_RemoveFile(path);
   TEST_ASSERT_NOT_NULL(cloud);
 
+  /* File AABB center is (0, 2, 0.5); points are stored relative to it. */
   BkPoint3 const* points = BkPointCloud_GetPoints(cloud);
   TEST_ASSERT_NOT_NULL(points);
 
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[0].x, (float)0.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[0].y, (float)0.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[0].z, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[0].y, (float)-2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[0].z, (float)-0.5);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[1].x, (float)1.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[1].y, (float)2.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[1].z, (float)3.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[1].y, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[1].z, (float)2.5);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[2].x, (float)-1.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[2].y, (float)4.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[2].z, (float)-2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[2].y, (float)2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)points[2].z, (float)-2.5);
+
+  struct BkPoint3 const* pos = &BkPointCloud_GetTransform(cloud)->position;
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)pos->x, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)pos->y, (float)2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)pos->z, (float)0.5);
 
   BkPointCloud_Release(&cloud);
 }
@@ -133,16 +139,16 @@ void BkPointCloud_GetAABB_MatchesPoints_test(void) {
 
   BkAABB aabb = BkPointCloud_GetAABB(cloud);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.x, (float)-1.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.y, (float)0.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.z, (float)-2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.y, (float)-2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.z, (float)-2.5);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.x, (float)1.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.y, (float)4.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.z, (float)3.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.y, (float)2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.z, (float)2.5);
 
   struct BkPoint3 center = BkAABB_Center(&aabb);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.x, (float)0.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.y, (float)2.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.z, (float)0.5);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.y, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)center.z, (float)0.0);
 
   BkPointCloud_Release(&cloud);
 }
@@ -155,15 +161,14 @@ void BkPointCloud_GetWorldAABB_Identity_test(void) {
   __BkPointCloud_RemoveFile(path);
   TEST_ASSERT_NOT_NULL(cloud);
 
-  BkAABB const local = BkPointCloud_GetAABB(cloud);
+  /* World pose matches original file bounds despite local recenter. */
   BkAABB const world = BkPointCloud_GetWorldAABB(cloud);
-
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.x, (float)world.min.x);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.y, (float)world.min.y);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.z, (float)world.min.z);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.max.x, (float)world.max.x);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.max.y, (float)world.max.y);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.max.z, (float)world.max.z);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.x, (float)-1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.y, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.z, (float)-2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.x, (float)1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)4.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.z, (float)3.0);
 
   TEST_ASSERT_NOT_NULL(BkPointCloud_GetTransform(cloud));
 
@@ -184,11 +189,11 @@ void BkPointCloud_GetWorldAABB_AfterSetPosition_test(void) {
 
   BkAABB const world = BkPointCloud_GetWorldAABB(cloud);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.x, (float)4.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.y, (float)-1.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.z, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.y, (float)-3.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.z, (float)-0.5);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.x, (float)6.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)3.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.z, (float)5.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.z, (float)4.5);
 
   BkAABB const local = BkPointCloud_GetAABB(cloud);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)local.min.x, (float)-1.0);
@@ -220,13 +225,13 @@ void BkPointCloud_GetWorldAABB_AfterSetOrientation_test(void) {
   struct BkQuaternion const q = BkQuaternion_FromAngleAxis(&aa);
   BkPointCloud_SetOrientation(cloud, &q);
 
+  /* Local (-0.5,0,0)-(0.5,0,0), pivot at (0.5,0,0), rot 90° Z. */
   BkAABB const world = BkPointCloud_GetWorldAABB(cloud);
-  /* Local segment (0,0,0)-(1,0,0) rotated 90° around Z → (0,0,0)-(0,1,0) */
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.x, (float)0.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.y, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.x, (float)0.5);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.y, (float)-0.5);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.min.z, (float)0.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.x, (float)0.0);
-  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.x, (float)0.5);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)0.5);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.z, (float)0.0);
 
   BkPointCloud_Release(&cloud);

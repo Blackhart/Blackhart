@@ -10,16 +10,18 @@
  * from a PLY file), read them with getters if needed, and add the cloud to a
  * BkScene so the renderer can draw it.
  *
- * Each cloud owns a BkTransform (position + orientation, identity by default).
- * Points stay in local space; the renderer applies the model matrix at draw
- * time. GetAABB returns local bounds; GetWorldAABB applies the transform.
+ * On load, points are recentered so the local origin sits at the AABB center.
+ * The model transform's position is set to that center, so the cloud appears
+ * in the same place in world space as in the file. Orientation starts as
+ * identity. GetAABB returns local (centered) bounds; GetWorldAABB applies the
+ * transform.
  *
  * Colors are optional: PLY files without red/green/blue leave GetColors NULL.
  * The GPU upload then uses white for every point.
  *
  * The renderer uploads the cloud to the GPU automatically through its cache.
  * When you are done, remove the cloud from the scene first, then release it.
- * That way the GPU copy can be marked dirty and freed on the next BkRender.
+ * That way the GPU copy can be marked dirty and freed on the next DrawScene.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
@@ -66,10 +68,10 @@ typedef struct BkPointCloud BkPointCloud;
 /**
  * @brief Creates a point cloud from a PLY file.
  *
- * Loads vertex positions (and optional RGB colors) from the given PLY file and
- * computes the local AABB. The model transform is initialized to identity.
- * Returns NULL if the path is invalid, the file cannot be read, or the PLY
- * content is not usable. Does not abort the process on bad input.
+ * Loads vertex positions (and optional RGB colors), recenters points on the
+ * AABB center, and places the model transform at that center so the world
+ * pose matches the file. Returns NULL if the path is invalid, the file cannot
+ * be read, or the PLY content is not usable. Does not abort on bad input.
  *
  * @param filename Path to the PLY file to load.
  * @return New point cloud handle, or NULL on failure.
