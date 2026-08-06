@@ -15,12 +15,15 @@
 #include "foundation/BkTime.hpp"
 #include "ui/AssetBrowser.hpp"
 #include "ui/ImGuiLayer.hpp"
+#include "ui/StudioLayout.hpp"
 #include "ui/Toolbar.hpp"
+#include "ui/ViewportPanel.hpp"
 
 // Globales
 static struct BkOrbitalCamera g_camera;
 static BkScene* g_scene = NULL;
 static Studio::AssetBrowser g_assets;
+static Studio::ViewportPanelState g_viewport;
 static bool g_full_screen = false;
 
 // Constantes
@@ -37,6 +40,7 @@ static void MouseCallback(GLFWwindow* window, double posx, double posy);
 static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 static void ResizeCallback(GLFWwindow* window, int width, int height);
 static void ErrorCallback(int error, const char* msg);
+static void UpdateCameraProjection(int width, int height);
 
 // ~~~~~ Def(ALL) ~~~~~
 
@@ -104,7 +108,10 @@ int main() {
 
   int width = 0;
   int height = 0;
+  int fb_width = 0;
+  int fb_height = 0;
   glfwGetWindowSize(window, &width, &height);
+  glfwGetFramebufferSize(window, &fb_width, &fb_height);
   ResizeCallback(window, width, height);
 
   while (!glfwWindowShouldClose(window)) {
@@ -115,12 +122,35 @@ int main() {
 
     Studio::ImGuiLayer_BeginFrame();
     float const toolbar_h = Studio::Toolbar_Draw();
-    g_assets.Draw(toolbar_h);
+    g_assets.Draw();
+    Studio::ViewportPanel_Draw(toolbar_h, Studio::kSidebarWidth, &g_viewport);
 
-    BkRender(g_scene, &(g_camera.base));
+    // Chrome background for regions outside the 3D viewport.
+    glDisable(GL_SCISSOR_TEST);
+    glViewport(0, 0, fb_width, fb_height);
+    glClearColor(0.09f, 0.10f, 0.12f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    if (g_viewport.framebuffer.width > 0 && g_viewport.framebuffer.height > 0) {
+      UpdateCameraProjection(g_viewport.framebuffer.width,
+                             g_viewport.framebuffer.height);
+
+      glEnable(GL_SCISSOR_TEST);
+      glScissor(g_viewport.framebuffer.x, g_viewport.framebuffer.y,
+                g_viewport.framebuffer.width, g_viewport.framebuffer.height);
+      glViewport(g_viewport.framebuffer.x, g_viewport.framebuffer.y,
+                 g_viewport.framebuffer.width, g_viewport.framebuffer.height);
+
+      BkRender(g_scene, &(g_camera.base));
+
+      glDisable(GL_SCISSOR_TEST);
+    }
 
     Studio::ImGuiLayer_EndFrame();
     glfwSwapBuffers(window);
+
+    glfwGetWindowSize(window, &width, &height);
+    glfwGetFramebufferSize(window, &fb_width, &fb_height);
   }
 
   // ~~~~~ BLACKHART UNINITIALIZATION ~~~~~
@@ -158,12 +188,10 @@ void MouseCallback(GLFWwindow* window, double posx, double posy) {
   bool const left_down =
       glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
-  ImGuiIO const& io = ImGui::GetIO();
-
-  // Start orbit only over the viewport; keep it if the pointer crosses the UI.
+  // Orbit only when interacting with the Scene viewport panel.
   if (!left_down) {
     orbiting = false;
-  } else if (!io.WantCaptureMouse) {
+  } else if (g_viewport.hovered) {
     orbiting = true;
   }
 
@@ -183,14 +211,23 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
   (void)window;
   (void)xoffset;
 
-  if (ImGui::GetIO().WantCaptureMouse) {
+  if (!g_viewport.hovered) {
     return;
   }
 
-  // Wheel up → zoom in. Scale step with current radius for stable feel.
   real const zoom_factor = BK_REAL(0.1);
   BkOrbitalCamera_Zoom(&g_camera,
                        BK_REAL(-yoffset) * g_camera.radius * zoom_factor);
+}
+
+void UpdateCameraProjection(int width, int height) {
+  if (width <= 0 || height <= 0) {
+    return;
+  }
+
+  g_camera.base.projection = BkProjection_Perspective(
+      CAMERA_FOV_DEG, BK_REAL(width) / BK_REAL(height), BK_REAL(0.1),
+      BK_REAL(1000));
 }
 
 void ResizeCallback(GLFWwindow* window, int width, int height) {
@@ -200,10 +237,8 @@ void ResizeCallback(GLFWwindow* window, int width, int height) {
     return;
   }
 
-  glViewport(0, 0, width, height);
-  g_camera.base.projection =
-      BkProjection_Perspective(CAMERA_FOV_DEG, BK_REAL(width) / BK_REAL(height),
-                               BK_REAL(0.1), BK_REAL(1000));
+  // Projection is updated each frame from the Scene panel size.
+  UpdateCameraProjection(width, height);
 }
 
 void ErrorCallback(int error, const char* msg) {

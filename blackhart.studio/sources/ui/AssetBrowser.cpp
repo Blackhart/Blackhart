@@ -7,6 +7,7 @@
 #include <cstring>
 
 #include "../../blackhart/export/cpp/Blackhart.hpp"
+#include "ui/StudioLayout.hpp"
 
 namespace Studio {
 
@@ -137,23 +138,27 @@ void AssetBrowser::LoadSelected() {
                 kCatalog[loaded_index_].name);
 }
 
-void AssetBrowser::Draw(float const top_offset) {
+void AssetBrowser::Draw() {
   ImGuiViewport const* viewport = ImGui::GetMainViewport();
-  float const margin = 12.0f;
-  float const panel_w = 320.0f;
-  float const panel_h = viewport->WorkSize.y - top_offset - margin * 2.0f;
 
-  ImGui::SetNextWindowPos(ImVec2(viewport->WorkPos.x + margin,
-                                 viewport->WorkPos.y + top_offset + margin),
-                          ImGuiCond_Always);
-  ImGui::SetNextWindowSize(ImVec2(panel_w, panel_h), ImGuiCond_Always);
+  ImGui::SetNextWindowPos(
+      ImVec2(viewport->WorkPos.x, viewport->WorkPos.y + kToolbarHeight),
+      ImGuiCond_Always);
+  ImGui::SetNextWindowSize(
+      ImVec2(kSidebarWidth, viewport->WorkSize.y - kToolbarHeight),
+      ImGuiCond_Always);
 
-  ImGuiWindowFlags const flags = ImGuiWindowFlags_NoMove |
-                                 ImGuiWindowFlags_NoCollapse |
-                                 ImGuiWindowFlags_NoBringToFrontOnFocus;
+  ImGuiWindowFlags const flags =
+      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus |
+      ImGuiWindowFlags_NoSavedSettings;
+
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
   if (!ImGui::Begin("Assets", nullptr, flags)) {
     ImGui::End();
+    ImGui::PopStyleVar(2);
     return;
   }
 
@@ -233,6 +238,7 @@ void AssetBrowser::Draw(float const top_offset) {
   }
 
   ImGui::End();
+  ImGui::PopStyleVar(2);
 }
 
 }  // namespace Studio

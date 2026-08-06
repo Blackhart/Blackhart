@@ -17,8 +17,8 @@ class AssetBrowser {
                   real camera_frame_margin);
   void Shutdown();
 
-  /** @param top_offset Y offset below the toolbar (pixels). */
-  void Draw(float top_offset = 0.0f);
+  /** Draws the Assets panel in the left sidebar strip. */
+  void Draw();
 
   BkPointCloud* LoadedCloud() const { return loaded_; }
 

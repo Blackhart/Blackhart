@@ -6,6 +6,7 @@
 #include <cstdio>
 
 #include "../../blackhart/export/cpp/Blackhart.hpp"
+#include "ui/StudioLayout.hpp"
 
 namespace Studio {
 
@@ -16,7 +17,17 @@ int g_frame_count = 0;
 float g_fps = 0.0f;
 float g_ms_per_frame = 0.0f;
 
-float const kToolbarHeight = 48.0f;
+/** Vertical rule between toolbar control groups. */
+void Toolbar_VerticalSep() {
+  ImGui::SameLine(0.0f, 18.0f);
+  ImVec2 const p = ImGui::GetCursorScreenPos();
+  float const h = ImGui::GetFrameHeight();
+  ImGui::GetWindowDrawList()->AddLine(
+      ImVec2(p.x, p.y + 3.0f), ImVec2(p.x, p.y + h - 3.0f),
+      ImGui::GetColorU32(ImVec4(0.38f, 0.40f, 0.44f, 1.00f)), 1.0f);
+  ImGui::Dummy(ImVec2(1.0f, h));
+  ImGui::SameLine(0.0f, 18.0f);
+}
 
 }  // namespace
 
@@ -73,25 +84,49 @@ float Toolbar_Draw() {
   ImGui::TextUnformatted("Point Cloud Viewer");
   ImGui::PopStyleColor();
 
-  // Center — point size
+  // Center — point size + grid + gizmo
   float point_size = static_cast<float>(BkRender_GetPointSize());
-  bool changed = false;
-  float const center_block_w = 280.0f;
+  bool grid_visible = BkRender_IsGridVisible();
+  float cell_size = static_cast<float>(BkRender_GetGridCellSize());
+  bool gizmo_visible = BkRender_IsGizmoVisible();
+  bool point_changed = false;
+  bool helpers_changed = false;
+
+  float const center_block_w = 640.0f;
   float const center_x = (bar_w - center_block_w) * 0.5f;
   ImGui::SetCursorPos(ImVec2(center_x, row_y));
 
   ImGui::AlignTextToFramePadding();
   ImGui::TextUnformatted("Point size");
   ImGui::SameLine();
-  ImGui::SetNextItemWidth(130.0f);
-  changed |=
+  ImGui::SetNextItemWidth(110.0f);
+  point_changed |=
       ImGui::SliderFloat("##point_size_slider", &point_size, 1.0f, 32.0f, "");
   ImGui::SameLine();
-  ImGui::SetNextItemWidth(64.0f);
-  changed |=
+  ImGui::SetNextItemWidth(56.0f);
+  point_changed |=
       ImGui::InputFloat("##point_size_input", &point_size, 0.0f, 0.0f, "%.2f");
-  if (changed) {
+
+  Toolbar_VerticalSep();
+  helpers_changed |= ImGui::Checkbox("Grid", &grid_visible);
+  ImGui::SameLine();
+  ImGui::AlignTextToFramePadding();
+  ImGui::TextUnformatted("Cell");
+  ImGui::SameLine();
+  ImGui::SetNextItemWidth(56.0f);
+  helpers_changed |=
+      ImGui::InputFloat("##grid_cell_input", &cell_size, 0.0f, 0.0f, "%.2f");
+
+  Toolbar_VerticalSep();
+  helpers_changed |= ImGui::Checkbox("Axes", &gizmo_visible);
+
+  if (point_changed) {
     BkRender_SetPointSize(static_cast<real>(point_size));
+  }
+  if (helpers_changed) {
+    BkRender_SetGridVisible(grid_visible);
+    BkRender_SetGridCellSize(static_cast<real>(cell_size));
+    BkRender_SetGizmoVisible(gizmo_visible);
   }
 
   // Right — FPS

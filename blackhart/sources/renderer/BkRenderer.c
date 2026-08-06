@@ -12,6 +12,8 @@
 #include "foundation/BkString.h"
 #include "renderer/BkGpuCache.h"
 #include "renderer/BkGpuPointCloud.h"
+#include "renderer/BkGizmo.h"
+#include "renderer/BkGrid.h"
 #include "renderer/BkPointCloud.h"
 #include "renderer/BkRenderer.h"
 #include "renderer/BkScene.h"
@@ -72,12 +74,16 @@ void _BkRender_Initialize(void) {
   _BkShader_Release(&__BkPixelShader);
 
   __BkGpuCache = _BkGpuCache_Create();
+  _BkGrid_Initialize();
+  _BkGizmo_Initialize();
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 }
 
 void _BkRender_Uninitialize(void) {
+  _BkGizmo_Uninitialize();
+  _BkGrid_Uninitialize();
   _BkGpuCache_Destroy(&__BkGpuCache);
 
   // Release the shader program and his shaders
@@ -96,6 +102,20 @@ void BkRender_SetPointSize(real size) {
 }
 
 real BkRender_GetPointSize(void) { return __BkPointSize; }
+
+void BkRender_SetGridVisible(bool visible) { _BkGrid_SetVisible(visible); }
+
+bool BkRender_IsGridVisible(void) { return _BkGrid_IsVisible(); }
+
+void BkRender_SetGridCellSize(real cell_size) {
+  _BkGrid_SetCellSize(cell_size);
+}
+
+real BkRender_GetGridCellSize(void) { return _BkGrid_GetCellSize(); }
+
+void BkRender_SetGizmoVisible(bool visible) { _BkGizmo_SetVisible(visible); }
+
+bool BkRender_IsGizmoVisible(void) { return _BkGizmo_IsVisible(); }
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -124,6 +144,8 @@ void BkRender(BkScene* scene, BkCamera* camera) {
 
   GLint const uni_mvp = glGetUniformLocation(program, "uni_mvp");
 
+  _BkGrid_Draw(&pv, (int)uni_mvp);
+
   glPointSize((GLfloat)__BkPointSize);
 
   size_t const cloud_count = BkScene_GetCloudCount(scene);
@@ -140,4 +162,7 @@ void BkRender(BkScene* scene, BkCamera* camera) {
       _BkGpuPointCloud_Render(gpu);
     }
   }
+
+  // Corner orientation widget (after scene so it stays on top).
+  _BkGizmo_Draw(camera, (int)uni_mvp);
 }

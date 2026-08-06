@@ -69,6 +69,40 @@ extern BK_API void BkRender_SetPointSize(real size);
  */
 extern BK_API real BkRender_GetPointSize(void);
 
+/**
+ * @brief Shows or hides the world ground grid (XZ plane, Y-up). Default on.
+ */
+extern BK_API void BkRender_SetGridVisible(bool visible);
+
+/**
+ * @brief Returns whether the ground grid is drawn.
+ */
+extern BK_API bool BkRender_IsGridVisible(void);
+
+/**
+ * @brief Sets the grid cell size in world units.
+ *
+ * Values are clamped to a minimum of 0.01. Default is 1.
+ *
+ * @param cell_size Length of one grid square edge.
+ */
+extern BK_API void BkRender_SetGridCellSize(real cell_size);
+
+/**
+ * @brief Returns the current grid cell size in world units.
+ */
+extern BK_API real BkRender_GetGridCellSize(void);
+
+/**
+ * @brief Shows or hides the corner orientation gizmo (Unity-style). Default on.
+ */
+extern BK_API void BkRender_SetGizmoVisible(bool visible);
+
+/**
+ * @brief Returns whether the corner orientation gizmo is drawn.
+ */
+extern BK_API bool BkRender_IsGizmoVisible(void);
+
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
 /**
