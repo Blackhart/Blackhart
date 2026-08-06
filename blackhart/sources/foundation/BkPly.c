@@ -28,8 +28,7 @@ static int __BkPly_VertexCallback(p_ply_argument argument) {
   ply_get_argument_user_data(argument, (void**)&points, &axis);
   ply_get_argument_element(argument, NULL, &index);
 
-  struct BkPoint3* point =
-      &((struct BkPoint3*)BkArray_Data(points))[index];
+  struct BkPoint3* point = &((struct BkPoint3*)BkArray_Data(points))[index];
   real const value = BK_REAL(ply_get_argument_value(argument));
 
   if (axis == 0)
@@ -50,8 +49,7 @@ static int __BkPly_ColorCallback(p_ply_argument argument) {
   ply_get_argument_user_data(argument, (void**)&colors, &channel);
   ply_get_argument_element(argument, NULL, &index);
 
-  struct BkColor3* color =
-      &((struct BkColor3*)BkArray_Data(colors))[index];
+  struct BkColor3* color = &((struct BkColor3*)BkArray_Data(colors))[index];
   uint8 const value = (uint8)ply_get_argument_value(argument);
 
   if (channel == 0)

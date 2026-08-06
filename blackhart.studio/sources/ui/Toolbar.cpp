@@ -1,0 +1,113 @@
+#include "ui/Toolbar.hpp"
+
+#include <GLFW/glfw3.h>
+#include <imgui.h>
+
+#include <cstdio>
+
+#include "../../blackhart/export/cpp/Blackhart.hpp"
+
+namespace Studio {
+
+namespace {
+
+double g_previous_seconds = 0.0;
+int g_frame_count = 0;
+float g_fps = 0.0f;
+float g_ms_per_frame = 0.0f;
+
+float const kToolbarHeight = 48.0f;
+
+}  // namespace
+
+void Toolbar_Update() {
+  double const now = glfwGetTime();
+  if (g_previous_seconds == 0.0) {
+    g_previous_seconds = now;
+  }
+
+  ++g_frame_count;
+
+  double const elapsed = now - g_previous_seconds;
+  if (elapsed > 0.25) {
+    g_fps = static_cast<float>(g_frame_count / elapsed);
+    g_ms_per_frame = (g_fps > 0.0f) ? (1000.0f / g_fps) : 0.0f;
+    g_previous_seconds = now;
+    g_frame_count = 0;
+  }
+}
+
+float Toolbar_Draw() {
+  ImGuiViewport const* viewport = ImGui::GetMainViewport();
+  ImGui::SetNextWindowPos(viewport->WorkPos);
+  ImGui::SetNextWindowSize(ImVec2(viewport->WorkSize.x, kToolbarHeight));
+
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(16.0f, 10.0f));
+  ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.09f, 0.10f, 0.12f, 1.00f));
+
+  ImGuiWindowFlags const flags =
+      ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
+      ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
+      ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+  if (!ImGui::Begin("##StudioToolbar", nullptr, flags)) {
+    ImGui::End();
+    ImGui::PopStyleColor();
+    ImGui::PopStyleVar(3);
+    return kToolbarHeight;
+  }
+
+  float const bar_w = ImGui::GetContentRegionAvail().x;
+  float const row_y = ImGui::GetCursorPosY();
+
+  // Left — brand
+  ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), row_y + 2.0f));
+  ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.95f, 0.96f, 0.97f, 1.00f));
+  ImGui::TextUnformatted("Blackhart Studio");
+  ImGui::PopStyleColor();
+  ImGui::SameLine(0.0f, 10.0f);
+  ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.50f, 0.52f, 0.55f, 1.00f));
+  ImGui::TextUnformatted("Point Cloud Viewer");
+  ImGui::PopStyleColor();
+
+  // Center — point size
+  float point_size = static_cast<float>(BkRender_GetPointSize());
+  bool changed = false;
+  float const center_block_w = 280.0f;
+  float const center_x = (bar_w - center_block_w) * 0.5f;
+  ImGui::SetCursorPos(ImVec2(center_x, row_y));
+
+  ImGui::AlignTextToFramePadding();
+  ImGui::TextUnformatted("Point size");
+  ImGui::SameLine();
+  ImGui::SetNextItemWidth(130.0f);
+  changed |=
+      ImGui::SliderFloat("##point_size_slider", &point_size, 1.0f, 32.0f, "");
+  ImGui::SameLine();
+  ImGui::SetNextItemWidth(64.0f);
+  changed |=
+      ImGui::InputFloat("##point_size_input", &point_size, 0.0f, 0.0f, "%.2f");
+  if (changed) {
+    BkRender_SetPointSize(static_cast<real>(point_size));
+  }
+
+  // Right — FPS
+  char fps_buf[48];
+  std::snprintf(fps_buf, sizeof(fps_buf), "FPS %.0f", g_fps);
+  float const fps_w = ImGui::CalcTextSize(fps_buf).x;
+  ImGui::SetCursorPos(
+      ImVec2(bar_w - fps_w - ImGui::GetStyle().WindowPadding.x, row_y + 4.0f));
+  ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.45f, 0.82f, 0.86f, 1.00f));
+  ImGui::TextUnformatted(fps_buf);
+  ImGui::PopStyleColor();
+
+  ImGui::End();
+  ImGui::PopStyleColor();
+  ImGui::PopStyleVar(3);
+  return kToolbarHeight;
+}
+
+}  // namespace Studio

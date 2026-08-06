@@ -137,17 +137,31 @@ void AssetBrowser::LoadSelected() {
                 kCatalog[loaded_index_].name);
 }
 
-void AssetBrowser::Draw() {
-  ImGui::SetNextWindowPos(ImVec2(12.0f, 12.0f), ImGuiCond_FirstUseEver);
-  ImGui::SetNextWindowSize(ImVec2(340.0f, 360.0f), ImGuiCond_FirstUseEver);
+void AssetBrowser::Draw(float const top_offset) {
+  ImGuiViewport const* viewport = ImGui::GetMainViewport();
+  float const margin = 12.0f;
+  float const panel_w = 320.0f;
+  float const panel_h = viewport->WorkSize.y - top_offset - margin * 2.0f;
 
-  if (!ImGui::Begin("Assets")) {
+  ImGui::SetNextWindowPos(ImVec2(viewport->WorkPos.x + margin,
+                                 viewport->WorkPos.y + top_offset + margin),
+                          ImGuiCond_Always);
+  ImGui::SetNextWindowSize(ImVec2(panel_w, panel_h), ImGuiCond_Always);
+
+  ImGuiWindowFlags const flags = ImGuiWindowFlags_NoMove |
+                                 ImGuiWindowFlags_NoCollapse |
+                                 ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+  if (!ImGui::Begin("Assets", nullptr, flags)) {
     ImGui::End();
     return;
   }
 
-  ImGui::TextUnformatted("Catalog");
+  ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.55f, 0.57f, 0.60f, 1.00f));
+  ImGui::TextUnformatted("CATALOG");
+  ImGui::PopStyleColor();
   ImGui::Separator();
+  ImGui::Spacing();
 
   for (int i = 0; i < kCatalogCount; ++i) {
     bool const selected = (i == selected_index_);
@@ -156,20 +170,24 @@ void AssetBrowser::Draw() {
     }
     if (i == loaded_index_) {
       ImGui::SameLine();
-      ImGui::TextDisabled("(loaded)");
+      ImGui::TextDisabled("loaded");
     }
   }
 
   ImGui::Spacing();
-  ImGui::TextUnformatted("Details");
+  ImGui::Spacing();
+  ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.55f, 0.57f, 0.60f, 1.00f));
+  ImGui::TextUnformatted("DETAILS");
+  ImGui::PopStyleColor();
   ImGui::Separator();
+  ImGui::Spacing();
 
   if (selected_index_ < 0) {
     ImGui::TextDisabled("No asset selected");
   } else {
     CatalogEntry const& entry = kCatalog[selected_index_];
-    ImGui::Text("Name: %s", entry.name);
-    ImGui::TextWrapped("Path: %s", absolute_path_);
+    ImGui::Text("Name:  %s", entry.name);
+    ImGui::TextWrapped("Path:  %s", absolute_path_);
 
     BkPointCloud* details = inspected_;
     if (details == nullptr && selected_index_ == loaded_index_) {
@@ -181,16 +199,21 @@ void AssetBrowser::Draw() {
       ImGui::Text("Colors: %s", BkPointCloud_HasColors(details) ? "yes" : "no");
 
       struct BkAABB const aabb = BkPointCloud_GetAABB(details);
-      ImGui::Text("AABB min: (%.3f, %.3f, %.3f)", (float)aabb.min.x,
+      ImGui::Spacing();
+      ImGui::Text("Bounds");
+      ImGui::Text("  min  %.3f  %.3f  %.3f", (float)aabb.min.x,
                   (float)aabb.min.y, (float)aabb.min.z);
-      ImGui::Text("AABB max: (%.3f, %.3f, %.3f)", (float)aabb.max.x,
+      ImGui::Text("  max  %.3f  %.3f  %.3f", (float)aabb.max.x,
                   (float)aabb.max.y, (float)aabb.max.z);
     } else {
-      ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "Inspect failed");
+      ImGui::TextColored(ImVec4(1.0f, 0.45f, 0.40f, 1.0f), "Inspect failed");
     }
   }
 
   ImGui::Spacing();
+  ImGui::Separator();
+  ImGui::Spacing();
+
   bool const already_loaded =
       selected_index_ == loaded_index_ && loaded_ != nullptr;
   bool const can_load = inspected_ != nullptr && !already_loaded;

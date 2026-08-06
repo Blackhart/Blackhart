@@ -23,6 +23,10 @@ static BkShaderProgram* __BkShaderProgram = NULL;
 static BkShader* __BkVertexShader = NULL;
 static BkShader* __BkPixelShader = NULL;
 static BkGpuCache* __BkGpuCache = NULL;
+static real __BkPointSize = BK_REAL(2);
+
+static real const __BK_POINT_SIZE_MIN = BK_REAL(1);
+static real const __BK_POINT_SIZE_MAX = BK_REAL(32);
 
 void _BkRender_Initialize(void) {
   // Initialize GLEW
@@ -82,6 +86,17 @@ void _BkRender_Uninitialize(void) {
 
 BkGpuCache* _BkRender_GetGpuCache(void) { return __BkGpuCache; }
 
+void BkRender_SetPointSize(real size) {
+  if (size < __BK_POINT_SIZE_MIN) {
+    size = __BK_POINT_SIZE_MIN;
+  } else if (size > __BK_POINT_SIZE_MAX) {
+    size = __BK_POINT_SIZE_MAX;
+  }
+  __BkPointSize = size;
+}
+
+real BkRender_GetPointSize(void) { return __BkPointSize; }
+
 // ~~~~~ Def(PUBLIC) ~~~~~
 
 void BkRender(BkScene* scene, BkCamera* camera) {
@@ -109,7 +124,7 @@ void BkRender(BkScene* scene, BkCamera* camera) {
 
   GLint const uni_mvp = glGetUniformLocation(program, "uni_mvp");
 
-  glPointSize(2.0f);
+  glPointSize((GLfloat)__BkPointSize);
 
   size_t const cloud_count = BkScene_GetCloudCount(scene);
   for (size_t i = 0; i < cloud_count; ++i) {

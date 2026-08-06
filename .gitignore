@@ -34,6 +34,9 @@ Log.txt
 # Local backlog (not tracked)
 TODO.md
 
+# Local UI mockups (not tracked)
+_mockups/
+
 # Documentation générée par doxygen
 doc/html/
 doc/latex/

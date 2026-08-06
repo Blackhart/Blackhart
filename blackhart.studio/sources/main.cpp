@@ -15,7 +15,7 @@
 #include "foundation/BkTime.hpp"
 #include "ui/AssetBrowser.hpp"
 #include "ui/ImGuiLayer.hpp"
-#include "ui/PerformancePanel.hpp"
+#include "ui/Toolbar.hpp"
 
 // Globales
 static struct BkOrbitalCamera g_camera;
@@ -34,6 +34,7 @@ static real const CAMERA_FRAME_MARGIN = BK_REAL(1.25);
 static void InputCallback(GLFWwindow* window, int key, int scancode, int action,
                           int mods);
 static void MouseCallback(GLFWwindow* window, double posx, double posy);
+static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 static void ResizeCallback(GLFWwindow* window, int width, int height);
 static void ErrorCallback(int error, const char* msg);
 
@@ -76,6 +77,7 @@ int main() {
   // Install studio callbacks before ImGui so ImGui can chain to them.
   glfwSetKeyCallback(window, InputCallback);
   glfwSetCursorPosCallback(window, MouseCallback);
+  glfwSetScrollCallback(window, ScrollCallback);
   glfwSetWindowSizeCallback(window, ResizeCallback);
 
   glfwSwapInterval(1);
@@ -107,13 +109,13 @@ int main() {
 
   while (!glfwWindowShouldClose(window)) {
     BkTime_Update();
-    Studio::PerformancePanel_Update();
+    Studio::Toolbar_Update();
 
     glfwPollEvents();
 
     Studio::ImGuiLayer_BeginFrame();
-    g_assets.Draw();
-    Studio::PerformancePanel_Draw();
+    float const toolbar_h = Studio::Toolbar_Draw();
+    g_assets.Draw(toolbar_h);
 
     BkRender(g_scene, &(g_camera.base));
 
@@ -151,28 +153,44 @@ void InputCallback(GLFWwindow* window, int key, int scancode, int action,
 void MouseCallback(GLFWwindow* window, double posx, double posy) {
   static double last_mouse_pos[2] = {0.0, 0.0};
   static double rotation_speed = 20.0;
-  static double zoom_speed = 3.0;
+  static bool orbiting = false;
+
+  bool const left_down =
+      glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
   ImGuiIO const& io = ImGui::GetIO();
-  if (!io.WantCaptureMouse) {
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1) {
-      double yaw =
-          (posx - last_mouse_pos[0]) * rotation_speed * BkTime_DeltaTime();
-      double pitch =
-          (posy - last_mouse_pos[1]) * rotation_speed * BkTime_DeltaTime();
-      BkOrbitalCamera_Rotate(&g_camera, BK_REAL(yaw), BK_REAL(pitch));
-    }
 
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT)) {
-      double dx = (posx - last_mouse_pos[0]) * zoom_speed * BkTime_DeltaTime();
-      double dy = (posy - last_mouse_pos[1]) * zoom_speed * BkTime_DeltaTime();
-      double radius = dx - dy;
-      BkOrbitalCamera_Zoom(&g_camera, BK_REAL(radius));
-    }
+  // Start orbit only over the viewport; keep it if the pointer crosses the UI.
+  if (!left_down) {
+    orbiting = false;
+  } else if (!io.WantCaptureMouse) {
+    orbiting = true;
+  }
+
+  if (orbiting) {
+    double yaw =
+        (posx - last_mouse_pos[0]) * rotation_speed * BkTime_DeltaTime();
+    double pitch =
+        (posy - last_mouse_pos[1]) * rotation_speed * BkTime_DeltaTime();
+    BkOrbitalCamera_Rotate(&g_camera, BK_REAL(yaw), BK_REAL(pitch));
   }
 
   last_mouse_pos[0] = posx;
   last_mouse_pos[1] = posy;
+}
+
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+  (void)window;
+  (void)xoffset;
+
+  if (ImGui::GetIO().WantCaptureMouse) {
+    return;
+  }
+
+  // Wheel up → zoom in. Scale step with current radius for stable feel.
+  real const zoom_factor = BK_REAL(0.1);
+  BkOrbitalCamera_Zoom(&g_camera,
+                       BK_REAL(-yoffset) * g_camera.radius * zoom_factor);
 }
 
 void ResizeCallback(GLFWwindow* window, int width, int height) {

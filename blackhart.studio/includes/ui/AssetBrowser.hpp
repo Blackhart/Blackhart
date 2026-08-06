@@ -17,7 +17,8 @@ class AssetBrowser {
                   real camera_frame_margin);
   void Shutdown();
 
-  void Draw();
+  /** @param top_offset Y offset below the toolbar (pixels). */
+  void Draw(float top_offset = 0.0f);
 
   BkPointCloud* LoadedCloud() const { return loaded_; }
 

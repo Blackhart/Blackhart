@@ -59,8 +59,8 @@ BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
 
   pointCloud->points = points;
   pointCloud->colors = colors;
-  pointCloud->aabb = BkAABB_FromPoints(
-      (BkPoint3 const*)BkArray_Data(points), BkArray_Size(points));
+  pointCloud->aabb = BkAABB_FromPoints((BkPoint3 const*)BkArray_Data(points),
+                                       BkArray_Size(points));
   BkTransform_Initialize(&pointCloud->transform);
   return pointCloud;
 }

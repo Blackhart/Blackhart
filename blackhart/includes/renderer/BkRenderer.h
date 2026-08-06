@@ -19,6 +19,7 @@
 
 // ~~~~~ Blackhart Headers ~~~~~
 
+#include "foundation/BkAtomicDataType.h"
 #include "foundation/BkExport.h"
 
 // ~~~~~ Type Definitions ~~~~~
@@ -53,6 +54,20 @@ typedef struct BkScene BkScene;
  * @param camera Camera to use for rendering. Must not be NULL.
  */
 extern BK_API void BkRender(BkScene* scene, BkCamera* camera);
+
+/**
+ * @brief Sets the OpenGL point size used when drawing clouds (pixels).
+ *
+ * Values are clamped to a practical range. Default is 2.
+ *
+ * @param size Desired point diameter in pixels.
+ */
+extern BK_API void BkRender_SetPointSize(real size);
+
+/**
+ * @brief Returns the current point size in pixels.
+ */
+extern BK_API real BkRender_GetPointSize(void);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
