@@ -51,4 +51,19 @@ void ScenePanel_Draw(BkScene* scene) {
   }
 }
 
+int ScenePanel_GetSelectedIndex(void) { return g_selected_index; }
+
+BkPointCloud* ScenePanel_GetSelectedCloud(BkScene* scene) {
+  if (scene == nullptr || g_selected_index < 0) {
+    return nullptr;
+  }
+
+  size_t const count = BkScene_GetCloudCount(scene);
+  if (static_cast<size_t>(g_selected_index) >= count) {
+    return nullptr;
+  }
+
+  return BkScene_GetCloud(scene, static_cast<size_t>(g_selected_index));
+}
+
 }  // namespace Studio

@@ -19,8 +19,8 @@ struct ViewportPanelState {
  * Draws the Scene host panel and fills @p out with its OpenGL framebuffer
  * rectangle (bottom-left origin) plus hover state for camera input.
  */
-void ViewportPanel_Draw(float toolbar_h, float sidebar_w,
-                        ViewportPanelState* out);
+void ViewportPanel_Draw(float toolbar_h, float left_sidebar_w,
+                        float right_sidebar_w, ViewportPanelState* out);
 
 }  // namespace Studio
 

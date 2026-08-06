@@ -9,6 +9,9 @@ inline constexpr float kToolbarHeight = 48.0f;
 /** Fixed left Assets panel width in logical pixels. */
 inline constexpr float kSidebarWidth = 320.0f;
 
+/** Fixed right Properties panel width in logical pixels. */
+inline constexpr float kRightSidebarWidth = 320.0f;
+
 }  // namespace Studio
 
 #endif

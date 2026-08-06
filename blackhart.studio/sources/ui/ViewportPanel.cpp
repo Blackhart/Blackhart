@@ -4,14 +4,14 @@
 
 namespace Studio {
 
-void ViewportPanel_Draw(float const toolbar_h, float const sidebar_w,
-                        ViewportPanelState* out) {
+void ViewportPanel_Draw(float const toolbar_h, float const left_sidebar_w,
+                        float const right_sidebar_w, ViewportPanelState* out) {
   ImGuiViewport const* main = ImGui::GetMainViewport();
   ImGuiIO const& io = ImGui::GetIO();
 
-  float const x = main->WorkPos.x + sidebar_w;
+  float const x = main->WorkPos.x + left_sidebar_w;
   float const y = main->WorkPos.y + toolbar_h;
-  float const w = main->WorkSize.x - sidebar_w;
+  float const w = main->WorkSize.x - left_sidebar_w - right_sidebar_w;
   float const h = main->WorkSize.y - toolbar_h;
 
   if (out != nullptr) {

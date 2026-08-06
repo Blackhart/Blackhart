@@ -15,6 +15,8 @@
 #include "foundation/BkTime.hpp"
 #include "ui/AssetBrowser.hpp"
 #include "ui/ImGuiLayer.hpp"
+#include "ui/PropertiesPanel.hpp"
+#include "ui/ScenePanel.hpp"
 #include "ui/StudioLayout.hpp"
 #include "ui/Toolbar.hpp"
 #include "ui/ViewportPanel.hpp"
@@ -123,7 +125,10 @@ int main() {
     Studio::ImGuiLayer_BeginFrame();
     float const toolbar_h = Studio::Toolbar_Draw();
     g_assets.Draw();
-    Studio::ViewportPanel_Draw(toolbar_h, Studio::kSidebarWidth, &g_viewport);
+    BkPointCloud* const selected = Studio::ScenePanel_GetSelectedCloud(g_scene);
+    bool const aabb_draw = Studio::PropertiesPanel_Draw(selected);
+    Studio::ViewportPanel_Draw(toolbar_h, Studio::kSidebarWidth,
+                               Studio::kRightSidebarWidth, &g_viewport);
 
     // Chrome background for regions outside the 3D viewport.
     glDisable(GL_SCISSOR_TEST);
@@ -142,6 +147,20 @@ int main() {
                  g_viewport.framebuffer.width, g_viewport.framebuffer.height);
 
       BkRender(g_scene, &(g_camera.base));
+
+      if (selected != nullptr) {
+        struct BkAABB const world = BkPointCloud_GetWorldAABB(selected);
+        struct BkVector3 const size = BkAABB_Size(&world);
+        real axis_len = BkVector3_Magnitude(&size) * BK_REAL(0.25);
+        if (axis_len < BK_REAL(0.05)) {
+          axis_len = BK_REAL(0.05);
+        }
+        BkRender_DrawAxes(&(g_camera.base), BkPointCloud_GetTransform(selected),
+                          axis_len);
+        if (aabb_draw) {
+          BkRender_DrawAabb(&(g_camera.base), &world);
+        }
+      }
 
       glDisable(GL_SCISSOR_TEST);
     }

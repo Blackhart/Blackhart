@@ -42,6 +42,18 @@ typedef struct BkGpuCache BkGpuCache;
  */
 typedef struct BkScene BkScene;
 
+/**
+ * @typedef BkAABB
+ * @brief Axis-aligned bounding box (see BkAABB.h).
+ */
+typedef struct BkAABB BkAABB;
+
+/**
+ * @typedef BkTransform
+ * @brief Position + orientation transform (see BkTransform.h).
+ */
+typedef struct BkTransform BkTransform;
+
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /**
@@ -102,6 +114,30 @@ extern BK_API void BkRender_SetGizmoVisible(bool visible);
  * @brief Returns whether the corner orientation gizmo is drawn.
  */
 extern BK_API bool BkRender_IsGizmoVisible(void);
+
+/**
+ * @brief Draws RGB object axes for @p transform (immediate overlay).
+ *
+ * Does not store selection state: call when you want axes drawn. Uses the
+ * default renderer shader. Prefer calling after BkRender inside the same
+ * viewport/scissor.
+ *
+ * @param camera Active camera. Must not be NULL.
+ * @param transform Object transform. Must not be NULL.
+ * @param length Axis length in local units.
+ */
+extern BK_API void BkRender_DrawAxes(BkCamera* camera,
+                                     struct BkTransform* transform,
+                                     real length);
+
+/**
+ * @brief Draws a world-space AABB wireframe (immediate overlay).
+ *
+ * @param camera Active camera. Must not be NULL.
+ * @param aabb World AABB. Must not be NULL.
+ */
+extern BK_API void BkRender_DrawAabb(BkCamera* camera,
+                                     struct BkAABB const* aabb);
 
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 

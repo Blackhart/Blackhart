@@ -10,6 +10,7 @@
 #include "foundation/BkError.h"
 #include "foundation/BkFileSystem.h"
 #include "foundation/BkString.h"
+#include "renderer/BkDebugDraw.h"
 #include "renderer/BkGizmo.h"
 #include "renderer/BkGpuCache.h"
 #include "renderer/BkGpuPointCloud.h"
@@ -76,12 +77,14 @@ void _BkRender_Initialize(void) {
   __BkGpuCache = _BkGpuCache_Create();
   _BkGrid_Initialize();
   _BkGizmo_Initialize();
+  _BkDebugDraw_Initialize();
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 }
 
 void _BkRender_Uninitialize(void) {
+  _BkDebugDraw_Uninitialize();
   _BkGizmo_Uninitialize();
   _BkGrid_Uninitialize();
   _BkGpuCache_Destroy(&__BkGpuCache);
@@ -116,6 +119,46 @@ real BkRender_GetGridCellSize(void) { return _BkGrid_GetCellSize(); }
 void BkRender_SetGizmoVisible(bool visible) { _BkGizmo_SetVisible(visible); }
 
 bool BkRender_IsGizmoVisible(void) { return _BkGizmo_IsVisible(); }
+
+static void __BkRender_BindDefaultProgram(GLint* out_uni_mvp,
+                                          struct BkMatrix4x4* out_pv,
+                                          BkCamera* camera) {
+  GLuint const program = (GLuint)_BkShaderProgram_GetId(__BkShaderProgram);
+  glUseProgram(program);
+
+  struct BkMatrix4x4 const v = BkCamera_ViewMatrix(camera);
+  *out_pv = BkMatrix4x4_Mul_BkMatrix4x4(BkCamera_Projection(camera), &v);
+  *out_uni_mvp = glGetUniformLocation(program, "uni_mvp");
+}
+
+void BkRender_DrawAxes(BkCamera* camera, struct BkTransform* transform,
+                       real length) {
+  BK_ASSERT(BK_ISNULL(camera));
+  BK_ASSERT(BK_ISNULL(transform));
+
+  if (BK_ISNULL(__BkShaderProgram)) {
+    return;
+  }
+
+  GLint uni_mvp = -1;
+  struct BkMatrix4x4 pv;
+  __BkRender_BindDefaultProgram(&uni_mvp, &pv, camera);
+  _BkDebugDraw_Axes(&pv, (int)uni_mvp, transform, length);
+}
+
+void BkRender_DrawAabb(BkCamera* camera, struct BkAABB const* aabb) {
+  BK_ASSERT(BK_ISNULL(camera));
+  BK_ASSERT(BK_ISNULL(aabb));
+
+  if (BK_ISNULL(__BkShaderProgram)) {
+    return;
+  }
+
+  GLint uni_mvp = -1;
+  struct BkMatrix4x4 pv;
+  __BkRender_BindDefaultProgram(&uni_mvp, &pv, camera);
+  _BkDebugDraw_Aabb(&pv, (int)uni_mvp, aabb);
+}
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
