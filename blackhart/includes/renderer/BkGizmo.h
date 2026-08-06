@@ -3,7 +3,7 @@
 
 /**
  * @file BkGizmo.h
- * @brief Internal orientation gizmo drawn in a viewport corner (Unity-style).
+ * @brief Internal orientation gizmo drawn in a viewport corner.
  *
  * Shows X (red), Y (green), Z (blue) axes that follow the camera orientation,
  * in a small overlay at the bottom-left of the framebuffer. Not a user-facing

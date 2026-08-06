@@ -225,9 +225,9 @@ void UpdateCameraProjection(int width, int height) {
     return;
   }
 
-  g_camera.base.projection = BkProjection_Perspective(
-      CAMERA_FOV_DEG, BK_REAL(width) / BK_REAL(height), BK_REAL(0.1),
-      BK_REAL(1000));
+  g_camera.base.projection =
+      BkProjection_Perspective(CAMERA_FOV_DEG, BK_REAL(width) / BK_REAL(height),
+                               BK_REAL(0.1), BK_REAL(1000));
 }
 
 void ResizeCallback(GLFWwindow* window, int width, int height) {

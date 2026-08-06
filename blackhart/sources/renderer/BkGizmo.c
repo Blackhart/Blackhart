@@ -120,9 +120,8 @@ void _BkGizmo_Draw(BkCamera* camera, int uni_mvp) {
   view.m24 = BK_REAL(0);
   view.m34 = BK_REAL(0);
 
-  struct BkMatrix4x4 const pull =
-      BkMatrix4x4_Translation_XYZ(BK_REAL(0), BK_REAL(0),
-                                  -__BK_GIZMO_CAMERA_DISTANCE);
+  struct BkMatrix4x4 const pull = BkMatrix4x4_Translation_XYZ(
+      BK_REAL(0), BK_REAL(0), -__BK_GIZMO_CAMERA_DISTANCE);
   struct BkMatrix4x4 const v = BkMatrix4x4_Mul_BkMatrix4x4(&pull, &view);
   struct BkMatrix4x4 const proj = BkProjection_Perspective(
       __BK_GIZMO_FOV_DEG, BK_REAL(1), BK_REAL(0.1), BK_REAL(10));

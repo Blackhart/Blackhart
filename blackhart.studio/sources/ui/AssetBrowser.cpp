@@ -7,6 +7,7 @@
 #include <cstring>
 
 #include "../../blackhart/export/cpp/Blackhart.hpp"
+#include "ui/ScenePanel.hpp"
 #include "ui/StudioLayout.hpp"
 
 namespace Studio {
@@ -138,30 +139,7 @@ void AssetBrowser::LoadSelected() {
                 kCatalog[loaded_index_].name);
 }
 
-void AssetBrowser::Draw() {
-  ImGuiViewport const* viewport = ImGui::GetMainViewport();
-
-  ImGui::SetNextWindowPos(
-      ImVec2(viewport->WorkPos.x, viewport->WorkPos.y + kToolbarHeight),
-      ImGuiCond_Always);
-  ImGui::SetNextWindowSize(
-      ImVec2(kSidebarWidth, viewport->WorkSize.y - kToolbarHeight),
-      ImGuiCond_Always);
-
-  ImGuiWindowFlags const flags =
-      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
-      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus |
-      ImGuiWindowFlags_NoSavedSettings;
-
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
-  if (!ImGui::Begin("Assets", nullptr, flags)) {
-    ImGui::End();
-    ImGui::PopStyleVar(2);
-    return;
-  }
-
+void AssetBrowser::DrawContents() {
   ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.55f, 0.57f, 0.60f, 1.00f));
   ImGui::TextUnformatted("CATALOG");
   ImGui::PopStyleColor();
@@ -235,6 +213,43 @@ void AssetBrowser::Draw() {
   if (status_[0] != '\0') {
     ImGui::Spacing();
     ImGui::TextWrapped("%s", status_);
+  }
+}
+
+void AssetBrowser::Draw() {
+  ImGuiViewport const* viewport = ImGui::GetMainViewport();
+
+  ImGui::SetNextWindowPos(
+      ImVec2(viewport->WorkPos.x, viewport->WorkPos.y + kToolbarHeight),
+      ImGuiCond_Always);
+  ImGui::SetNextWindowSize(
+      ImVec2(kSidebarWidth, viewport->WorkSize.y - kToolbarHeight),
+      ImGuiCond_Always);
+
+  ImGuiWindowFlags const flags =
+      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus |
+      ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar;
+
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+  if (!ImGui::Begin("##StudioSidebar", nullptr, flags)) {
+    ImGui::End();
+    ImGui::PopStyleVar(2);
+    return;
+  }
+
+  if (ImGui::BeginTabBar("##StudioSidebarTabs")) {
+    if (ImGui::BeginTabItem("Assets")) {
+      DrawContents();
+      ImGui::EndTabItem();
+    }
+    if (ImGui::BeginTabItem("Scene")) {
+      ScenePanel_Draw(scene_);
+      ImGui::EndTabItem();
+    }
+    ImGui::EndTabBar();
   }
 
   ImGui::End();

@@ -17,7 +17,7 @@ class AssetBrowser {
                   real camera_frame_margin);
   void Shutdown();
 
-  /** Draws the Assets panel in the left sidebar strip. */
+  /** Draws the left sidebar (Assets | Scene tabs). */
   void Draw();
 
   BkPointCloud* LoadedCloud() const { return loaded_; }
@@ -28,6 +28,7 @@ class AssetBrowser {
     char const* filename;
   };
 
+  void DrawContents();
   void Select(int index);
   void LoadSelected();
   void UnloadLoaded();
