@@ -3,12 +3,11 @@
 
 /**
  * @file BkList.h
- * @brief Defines the BkList structure and functions for doubly-linked list
- * operations.
+ * @brief Opaque doubly-linked list of void* elements.
  *
- * This file provides the definition of the BkList struct, a doubly-linked list
- * container that can store elements of any type. It includes macros and
- * functions for element access, insertion, deletion, and list traversal.
+ * BkList is a container handle: create with BkList_Create, free with
+ * BkList_Release. Nodes are opaque; use Begin/Next/NodeData for iteration and
+ * EraseNode when removing during a walk. Payload pointers are not freed.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
@@ -20,207 +19,129 @@
 
 /**
  * @def BkList_Empty(list)
- * @brief Checks if the BkList has no elements.
- * @param list Any BkList element (can be NULL).
- * @return TRUE if the BkList is empty (NULL), FALSE otherwise.
+ * @brief Checks if the list has no elements.
  */
-#define BkList_Empty(list) (BK_ISNULL(list))
-
-/**
- * @def BkList_Data(list)
- * @brief Gets the data stored in a BkList element.
- * @param list Pointer to a BkList element.
- * @return The element's data pointer, or NULL if list is NULL.
- */
-#define BkList_Data(list) (list->data)
-
-/**
- * @def BkList_Previous(list)
- * @brief Gets the previous element in the BkList.
- * @param list Pointer to a BkList element.
- * @return Pointer to the previous element, or NULL if there are no previous
- * elements.
- */
-#define BkList_Previous(list) (list->previous)
-
-/**
- * @def BkList_Next(list)
- * @brief Gets the next element in the BkList.
- * @param list Pointer to a BkList element.
- * @return Pointer to the next element, or NULL if there are no next elements.
- */
-#define BkList_Next(list) (list->next)
+#define BkList_Empty(list) (BkList_Size(list) == 0)
 
 // ~~~~~ Type Definitions ~~~~~
 
 /**
- * @struct BkList
- * @brief Structure representing a node in a doubly-linked list.
- *
- * Each node contains a pointer to data and pointers to the next and previous
- * nodes in the list. The list can be traversed in both directions.
+ * @typedef BkList
+ * @brief Opaque doubly-linked list handle.
  */
-struct BkList {
-  void* data; /**< Pointer to the data stored in this list node. */
-  struct BkList* next; /**< Pointer to the next element in the list. */
-  struct BkList* previous; /**< Pointer to the previous element in the list. */
-};
+typedef struct BkList BkList;
+
+/**
+ * @typedef BkListNode
+ * @brief Opaque list node (iterator) handle.
+ */
+typedef struct BkListNode BkListNode;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /**
- * @brief Gets the first element in a BkList.
+ * @brief Creates an empty list.
  *
- * Traverses backward from the given element to find the head of the list.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @return Pointer to the first element in the BkList, or NULL if the list is
- * empty.
+ * @return New list, or NULL on allocation failure.
  */
-extern BK_API struct BkList* BkList_Front(struct BkList* obj);
+extern BK_API BkList* BkList_Create(void);
 
 /**
- * @brief Gets the last element in a BkList.
+ * @brief Releases a list and all of its nodes.
  *
- * Traverses forward from the given element to find the tail of the list.
+ * Does not free payload pointers stored in the nodes. Safe if @p *obj is NULL.
  *
- * @param obj Any BkList element in the list (can be NULL).
- * @return Pointer to the last element in the BkList, or NULL if the list is
- * empty.
+ * @param obj Address of the list pointer; set to NULL on success.
  */
-extern BK_API struct BkList* BkList_Back(struct BkList* obj);
+extern BK_API void BkList_Release(BkList** obj);
 
 /**
- * @brief Gets the number of elements in a BkList.
+ * @brief Number of elements in the list.
  *
- * Counts all elements by traversing the entire list from the given element.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @return The number of elements in the BkList.
+ * @param obj List handle (must not be NULL).
  */
-extern BK_API uint32 BkList_Size(struct BkList* obj);
+extern BK_API uint32 BkList_Size(BkList const* obj);
 
 /**
- * @brief Frees all memory used by a BkList.
- *
- * Deallocates all list nodes but does not free the data pointed to by each
- * node. If list elements contain dynamically-allocated memory, you should
- * either use BkList_ClearFull() (if available) or free them manually first.
- *
- * @param obj Any BkList element in the list (can be NULL). After this call, all
- *            list nodes are deallocated and the pointer should not be used.
+ * @brief Data pointer of the first element, or NULL if empty.
  */
-extern BK_API void BkList_Clear(struct BkList* obj);
+extern BK_API void* BkList_Front(BkList const* obj);
 
 /**
- * @brief Gets the element at a given position (index) in a BkList.
- *
- * Traverses the list to find the element at the specified index position.
- * The first element is at index 0.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @param index The zero-based position of the element to retrieve.
- * @return Pointer to the element at the specified index, or NULL if the index
- * is beyond the end of the list.
+ * @brief Data pointer of the last element, or NULL if empty.
  */
-extern BK_API struct BkList* BkList_Get(struct BkList* obj, uint32 const index);
+extern BK_API void* BkList_Back(BkList const* obj);
 
 /**
- * @brief Inserts a new element into the list at the given position.
- *
- * Creates a new list node with the specified data and inserts it at the
- * specified index. If the index is larger than the number of elements in the
- * list, the new element is appended to the end of the list.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @param data Pointer to the data for the new element.
- * @param index The zero-based position where to insert the element.
- * @return Pointer to the head of the BkList (first element).
+ * @brief Data pointer at zero-based @p index, or NULL if out of range.
  */
-extern BK_API struct BkList* BkList_Insert(struct BkList* obj, void* data,
-                                           uint32 const index);
+extern BK_API void* BkList_Get(BkList const* obj, uint32 const index);
 
 /**
- * @brief Removes an element from a BkList by matching data pointer.
- *
- * Searches the list for an element containing the specified data pointer and
- * removes it. If multiple elements contain the same data pointer, only the
- * first matching element is removed. If no element contains the data pointer,
- * the list is unchanged.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @param data The data pointer to search for and remove.
- * @return Pointer to the head of the BkList (first element).
+ * @brief Removes all nodes. Does not free payloads. List handle stays valid.
  */
-extern BK_API struct BkList* BkList_Erase(struct BkList* obj, void* data);
+extern BK_API void BkList_Clear(BkList* obj);
 
 /**
- * @brief Removes a specific link (node) from a BkList.
- *
- * Removes the specified list node from the list. The node is deallocated and
- * the list is reconnected. This is more efficient than BkList_Erase when you
- * already have a pointer to the node to remove.
- *
- * @param link Pointer to the list node (link) to remove from the BkList.
- * @return Pointer to the head of the BkList (first element).
+ * @brief Inserts @p data at @p index (append if index >= size).
  */
-extern BK_API struct BkList* BkList_EraseLink(struct BkList* link);
+extern BK_API void BkList_Insert(BkList* obj, void* data, uint32 const index);
 
 /**
- * @brief Prepends a new element to the start of the list.
- *
- * Creates a new list node with the specified data and adds it to the front of
- * the list.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @param data Pointer to the data for the new element.
- * @return Pointer to the head of the BkList (the newly inserted first element).
+ * @brief Removes the first node whose data pointer equals @p data.
  */
-extern BK_API struct BkList* BkList_PushFront(struct BkList* obj, void* data);
+extern BK_API void BkList_Erase(BkList* obj, void* data);
 
 /**
- * @brief Appends a new element to the end of the list.
+ * @brief Removes @p node from @p obj and returns the following node (or NULL).
  *
- * Creates a new list node with the specified data and adds it to the back of
- * the list.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @param data Pointer to the data for the new element.
- * @return Pointer to the head of the BkList (first element).
+ * @p node must belong to @p obj. Payload is not freed.
  */
-extern BK_API struct BkList* BkList_PushBack(struct BkList* obj, void* data);
+extern BK_API BkListNode* BkList_EraseNode(BkList* obj, BkListNode* node);
 
 /**
- * @brief Removes the first element from a BkList.
- *
- * Removes and deallocates the head node of the list. The list is reconnected
- * so the second element becomes the new head.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @return Pointer to the new head of the BkList (second element, or NULL if the
- * list had only one element).
+ * @brief Prepends @p data.
  */
-extern BK_API struct BkList* BkList_PopFront(struct BkList* obj);
+extern BK_API void BkList_PushFront(BkList* obj, void* data);
 
 /**
- * @brief Removes the last element from a BkList.
- *
- * Removes and deallocates the tail node of the list.
- *
- * @param obj Any BkList element in the list (can be NULL).
- * @return Pointer to the head of the BkList (first element, unchanged).
+ * @brief Appends @p data.
  */
-extern BK_API struct BkList* BkList_PopBack(struct BkList* obj);
+extern BK_API void BkList_PushBack(BkList* obj, void* data);
 
 /**
- * @brief Allocates memory for one BkList element.
- *
- * Creates a new, uninitialized list node. The node's data, next, and previous
- * pointers are not initialized and should be set before use.
- *
- * @return Pointer to the newly-allocated BkList element, or NULL if allocation
- * fails.
+ * @brief Removes the first element (no-op if empty).
  */
-extern BK_API struct BkList* BkList_Alloc(void);
+extern BK_API void BkList_PopFront(BkList* obj);
+
+/**
+ * @brief Removes the last element (no-op if empty).
+ */
+extern BK_API void BkList_PopBack(BkList* obj);
+
+/**
+ * @brief First node, or NULL if empty.
+ */
+extern BK_API BkListNode* BkList_Begin(BkList* obj);
+
+/**
+ * @brief Next node after @p node, or NULL.
+ */
+extern BK_API BkListNode* BkList_Next(BkListNode* node);
+
+/**
+ * @brief Previous node before @p node, or NULL.
+ */
+extern BK_API BkListNode* BkList_Previous(BkListNode* node);
+
+/**
+ * @brief Payload stored in @p node.
+ */
+extern BK_API void* BkList_NodeData(BkListNode const* node);
+
+/**
+ * @brief Node at zero-based @p index, or NULL if out of range.
+ */
+extern BK_API BkListNode* BkList_GetNode(BkList* obj, uint32 const index);
 
 #endif

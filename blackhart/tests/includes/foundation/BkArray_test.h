@@ -5,11 +5,11 @@
 
 extern void BkArray_RunTests(void);
 
-extern void BkArray_Initialize_test(void);
+extern void BkArray_Create_test(void);
 extern void BkArray_Reserve_test(void);
 extern void BkArray_PushBack_test(void);
 extern void BkArray_Clear_test(void);
-extern void BkArray_Destroy_test(void);
+extern void BkArray_Release_test(void);
 extern void BkArray_Erase_test(void);
 extern void BkArray_PopBack_test(void);
 extern void BkArray_Insert_test(void);

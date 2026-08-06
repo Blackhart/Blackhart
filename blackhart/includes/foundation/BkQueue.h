@@ -3,145 +3,79 @@
 
 /**
  * @file BkQueue.h
- * @brief Defines the BkQueue structure and functions for queue operations.
+ * @brief Opaque FIFO queue of void* elements.
  *
- * This file provides the definition of the BkQueue struct, a first-in-first-out
- * (FIFO) container implemented using a linked list. Elements are inserted at
- * the back and removed from the front.
+ * Create with BkQueue_Create, free with BkQueue_Release. Payload pointers are
+ * not freed by the queue.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
 
-#include "foundation/BkError.h"
+#include "foundation/BkAtomicDataType.h"
 #include "foundation/BkExport.h"
-#include "foundation/BkList.h"
+
+// ~~~~~ Macros Definitions ~~~~~
+
+/**
+ * @def BkQueue_Empty(queue)
+ * @brief Checks if the queue has no elements.
+ */
+#define BkQueue_Empty(queue) (BkQueue_Size(queue) == 0)
 
 // ~~~~~ Type Definitions ~~~~~
 
 /**
- * @struct BkQueue
- * @brief Structure representing a queue (FIFO container).
- *
- * The queue is implemented using a linked list (BkList) and maintains a count
- * of elements. Elements are added to the back and removed from the front.
+ * @typedef BkQueue
+ * @brief Opaque FIFO queue handle.
  */
-struct BkQueue {
-  struct BkList*
-      list; /**< Internal linked list used to store queue elements. */
-  size_t size; /**< The number of elements currently in the queue. */
-};
+typedef struct BkQueue BkQueue;
 
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /**
- * @brief Initializes the queue.
+ * @brief Creates an empty queue.
  *
- * Must be called before using the container. Sets the list to NULL and size to
- * 0.
- *
- * @param obj Pointer to the BkQueue object to initialize.
+ * @return New queue, or NULL on allocation failure.
  */
-static inline void BkQueue_Initialize(struct BkQueue* obj) {
-  BK_ASSERT(BK_ISNULL(obj));
-
-  obj->list = NULL;
-  obj->size = 0;
-}
+extern BK_API BkQueue* BkQueue_Create(void);
 
 /**
- * @brief Returns whether the queue is empty.
+ * @brief Releases a queue and its nodes.
  *
- * Checks if the queue contains no elements (size is zero).
+ * Does not free payload pointers. Safe if @p *obj is NULL.
  *
- * @param obj Pointer to the queue to evaluate.
- * @return true if the queue's size is 0, false otherwise.
+ * @param obj Address of the queue pointer; set to NULL on success.
  */
-static inline bool BkQueue_Empty(struct BkQueue const* obj) {
-  BK_ASSERT(BK_ISNULL(obj));
-
-  return obj->size == 0;
-}
+extern BK_API void BkQueue_Release(BkQueue** obj);
 
 /**
- * @brief Returns the number of elements in the queue.
- *
- * @param obj Pointer to the queue.
- * @return The number of elements in the queue.
+ * @brief Number of elements in the queue.
  */
-static inline size_t BkQueue_Size(struct BkQueue const* obj) {
-  BK_ASSERT(BK_ISNULL(obj));
-
-  return obj->size;
-}
+extern BK_API size_t BkQueue_Size(BkQueue const* obj);
 
 /**
- * @brief Returns a pointer to the first element in the queue.
- *
- * The first element is the oldest element in the queue (next to be removed).
- *
- * @param obj Pointer to the queue.
- * @return A pointer to the first element in the queue, or NULL if the queue is
- * empty.
+ * @brief Oldest element, or NULL if empty.
  */
-extern BK_API void* BkQueue_Front(struct BkQueue* obj);
+extern BK_API void* BkQueue_Front(BkQueue const* obj);
 
 /**
- * @brief Returns a pointer to the last element in the queue.
- *
- * The last element is the newest element in the queue (most recently added).
- *
- * @param obj Pointer to the queue.
- * @return A pointer to the last element in the queue, or NULL if the queue is
- * empty.
+ * @brief Newest element, or NULL if empty.
  */
-extern BK_API void* BkQueue_Back(struct BkQueue* obj);
+extern BK_API void* BkQueue_Back(BkQueue const* obj);
 
 /**
- * @brief Inserts a new element at the end of the queue.
- *
- * Adds the data to the back of the queue. The queue size is increased by one.
- *
- * @param obj Pointer to the queue.
- * @param data Pointer to the element to insert.
+ * @brief Appends @p data (no-op effect on ownership of the payload).
  */
-static inline void BkQueue_Push(struct BkQueue* obj, void* data) {
-  BK_ASSERT(BK_ISNULL(obj));
-
-  obj->list = BkList_PushBack(obj->list, data);
-  obj->size++;
-}
+extern BK_API void BkQueue_Push(BkQueue* obj, void* data);
 
 /**
- * @brief Removes the first element in the queue.
- *
- * The element removed is the oldest element in the queue (first to be removed).
- * The queue size is decreased by one. If the queue is empty, this function has
- * no effect.
- *
- * @param obj Pointer to the queue.
+ * @brief Removes the oldest element (no-op if empty).
  */
-static inline void BkQueue_Pop(struct BkQueue* obj) {
-  BK_ASSERT(BK_ISNULL(obj));
-
-  if (!(BK_ISTRUE(BkQueue_Empty(obj)))) {
-    obj->list = BkList_PopFront(obj->list);
-    obj->size--;
-  }
-}
+extern BK_API void BkQueue_Pop(BkQueue* obj);
 
 /**
- * @brief Clears the queue, removing all elements.
- *
- * Removes all elements from the queue and resets the size to zero.
- * The internal list is cleared but may retain allocated memory.
- *
- * @param obj Pointer to the queue.
+ * @brief Removes all elements; the queue handle stays valid.
  */
-static inline void BkQueue_Clear(struct BkQueue* obj) {
-  BK_ASSERT(BK_ISNULL(obj));
-
-  BkList_Clear(obj->list);
-  obj->size = 0;
-}
+extern BK_API void BkQueue_Clear(BkQueue* obj);
 
 #endif

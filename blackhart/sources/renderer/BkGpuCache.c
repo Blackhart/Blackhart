@@ -16,16 +16,16 @@ typedef struct BkGpuCacheEntry {
 } BkGpuCacheEntry;
 
 struct BkGpuCache {
-  struct BkList* entries;
+  BkList* entries;
 };
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-static struct BkList* __BkGpuCache_FindLink(BkGpuCache const* cache,
-                                            BkPointCloud const* cloud) {
-  struct BkList* it = BkList_Front(cache->entries);
-  while (!BkList_Empty(it)) {
-    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_Data(it);
+static BkListNode* __BkGpuCache_FindNode(BkGpuCache const* cache,
+                                         BkPointCloud const* cloud) {
+  BkListNode* it = BkList_Begin((BkList*)cache->entries);
+  while (it != NULL) {
+    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_NodeData(it);
     if (entry->cloud == cloud) {
       return it;
     }
@@ -57,7 +57,12 @@ BkGpuCache* _BkGpuCache_Create(void) {
            }),
            NULL);
 
-  cache->entries = NULL;
+  cache->entries = BkList_Create();
+  if (BK_ISNULL(cache->entries)) {
+    free(cache);
+    return NULL;
+  }
+
   return cache;
 }
 
@@ -66,6 +71,7 @@ void _BkGpuCache_Destroy(BkGpuCache** cache) {
   BK_ASSERT(BK_ISNULL(*cache));
 
   _BkGpuCache_Clear(*cache);
+  BkList_Release(&(*cache)->entries);
   free(*cache);
   *cache = NULL;
 }
@@ -90,9 +96,9 @@ BkGpuPointCloud* _BkGpuCache_GetOrUpload(BkGpuCache* cache,
            }),
            NULL);
 
-  struct BkList* link = __BkGpuCache_FindLink(cache, cloud);
-  if (!BkList_Empty(link)) {
-    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_Data(link);
+  BkListNode* link = __BkGpuCache_FindNode(cache, cloud);
+  if (link != NULL) {
+    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_NodeData(link);
     entry->dirty = false;
     return entry->gpu;
   }
@@ -123,7 +129,7 @@ BkGpuPointCloud* _BkGpuCache_GetOrUpload(BkGpuCache* cache,
   entry->cloud = cloud;
   entry->gpu = gpu;
   entry->dirty = false;
-  cache->entries = BkList_PushBack(cache->entries, entry);
+  BkList_PushBack(cache->entries, entry);
   return gpu;
 }
 
@@ -132,29 +138,28 @@ void _BkGpuCache_MarkDirty(BkGpuCache* cache, BkPointCloud const* cloud) {
     return;
   }
 
-  struct BkList* link = __BkGpuCache_FindLink(cache, cloud);
-  if (BkList_Empty(link)) {
+  BkListNode* link = __BkGpuCache_FindNode(cache, cloud);
+  if (link == NULL) {
     return;
   }
 
-  BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_Data(link);
+  BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_NodeData(link);
   entry->dirty = true;
 }
 
 void _BkGpuCache_FlushDirty(BkGpuCache* cache) {
   BK_ASSERT(BK_ISNULL(cache));
 
-  struct BkList* it = BkList_Front(cache->entries);
-  while (!BkList_Empty(it)) {
-    struct BkList* next = BkList_Next(it);
-    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_Data(it);
+  BkListNode* it = BkList_Begin(cache->entries);
+  while (it != NULL) {
+    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_NodeData(it);
 
     if (entry->dirty) {
       __BkGpuCache_ReleaseEntry(entry);
-      cache->entries = BkList_EraseLink(it);
+      it = BkList_EraseNode(cache->entries, it);
+    } else {
+      it = BkList_Next(it);
     }
-
-    it = next;
   }
 }
 
@@ -165,29 +170,28 @@ void _BkGpuCache_Remove(BkGpuCache* cache, BkPointCloud const* cloud) {
     return;
   }
 
-  struct BkList* link = __BkGpuCache_FindLink(cache, cloud);
-  if (BkList_Empty(link)) {
+  BkListNode* link = __BkGpuCache_FindNode(cache, cloud);
+  if (link == NULL) {
     return;
   }
 
-  BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_Data(link);
+  BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_NodeData(link);
   __BkGpuCache_ReleaseEntry(entry);
-  cache->entries = BkList_EraseLink(link);
+  BkList_EraseNode(cache->entries, link);
 }
 
 void _BkGpuCache_Clear(BkGpuCache* cache) {
   BK_ASSERT(BK_ISNULL(cache));
 
-  struct BkList* it = BkList_Front(cache->entries);
-  while (!BkList_Empty(it)) {
-    struct BkList* next = BkList_Next(it);
-    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_Data(it);
+  BkListNode* it = BkList_Begin(cache->entries);
+  while (it != NULL) {
+    BkListNode* next = BkList_Next(it);
+    BkGpuCacheEntry* entry = (BkGpuCacheEntry*)BkList_NodeData(it);
     __BkGpuCache_ReleaseEntry(entry);
     it = next;
   }
 
   BkList_Clear(cache->entries);
-  cache->entries = NULL;
 }
 
 bool _BkGpuCache_HasEntry(BkGpuCache const* cache, BkPointCloud const* cloud) {
@@ -195,7 +199,7 @@ bool _BkGpuCache_HasEntry(BkGpuCache const* cache, BkPointCloud const* cloud) {
     return false;
   }
 
-  return !BkList_Empty(__BkGpuCache_FindLink(cache, cloud));
+  return __BkGpuCache_FindNode(cache, cloud) != NULL;
 }
 
 bool _BkGpuCache_IsDirty(BkGpuCache const* cache, BkPointCloud const* cloud) {
@@ -203,10 +207,10 @@ bool _BkGpuCache_IsDirty(BkGpuCache const* cache, BkPointCloud const* cloud) {
     return false;
   }
 
-  struct BkList* link = __BkGpuCache_FindLink(cache, cloud);
-  if (BkList_Empty(link)) {
+  BkListNode* link = __BkGpuCache_FindNode(cache, cloud);
+  if (link == NULL) {
     return false;
   }
 
-  return ((BkGpuCacheEntry*)BkList_Data(link))->dirty;
+  return ((BkGpuCacheEntry*)BkList_NodeData(link))->dirty;
 }

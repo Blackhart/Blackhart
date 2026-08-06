@@ -35,11 +35,9 @@ static void __BkPly_RemoveFile(char const* path) {
   if (path != NULL) remove(path);
 }
 
-static void __BkPly_ReleaseLoadedArray(struct BkArray* array) {
+static void __BkPly_ReleaseLoadedArray(BkArray** array) {
   if (array == NULL) return;
-
-  BkArray_Destroy(array);
-  free(array);
+  BkArray_Release(array);
 }
 
 // ~~~~~ Def(PUBLIC) ~~~~~
@@ -121,7 +119,7 @@ void BkPly_LoadPoints_NoVertices_test(void) {
   struct BkArray* points = _BkPly_LoadPoints(path);
 
   __BkPly_RemoveFile(path);
-  __BkPly_ReleaseLoadedArray(points);
+  __BkPly_ReleaseLoadedArray(&points);
 
   TEST_ASSERT_NULL(points);
 }
@@ -164,11 +162,11 @@ void BkPly_LoadColors_Present_test(void) {
 
   TEST_ASSERT_NOT_NULL(points);
   TEST_ASSERT_NOT_NULL(colors);
-  TEST_ASSERT_EQUAL_UINT(2, (unsigned)BkArray_Size((*points)));
-  TEST_ASSERT_EQUAL_UINT(2, (unsigned)BkArray_Size((*colors)));
+  TEST_ASSERT_EQUAL_UINT(2, (unsigned)BkArray_Size(points));
+  TEST_ASSERT_EQUAL_UINT(2, (unsigned)BkArray_Size(colors));
 
-  struct BkPoint3 const* pts = (struct BkPoint3 const*)points->data;
-  struct BkColor3 const* cols = (struct BkColor3 const*)colors->data;
+  struct BkPoint3 const* pts = (struct BkPoint3 const*)BkArray_Data(points);
+  struct BkColor3 const* cols = (struct BkColor3 const*)BkArray_Data(colors);
 
   TEST_ASSERT_EQUAL_UINT(255, cols[0].r);
   TEST_ASSERT_EQUAL_UINT(0, cols[0].g);
@@ -178,6 +176,6 @@ void BkPly_LoadColors_Present_test(void) {
   TEST_ASSERT_EQUAL_UINT(255, cols[1].b);
   TEST_ASSERT_FLOAT_WITHIN(0.00001f, (float)pts[1].x, (float)1.0);
 
-  __BkPly_ReleaseLoadedArray(points);
-  __BkPly_ReleaseLoadedArray(colors);
+  __BkPly_ReleaseLoadedArray(&points);
+  __BkPly_ReleaseLoadedArray(&colors);
 }

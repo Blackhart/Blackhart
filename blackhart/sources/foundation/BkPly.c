@@ -6,6 +6,7 @@
 #include <rply.h>
 
 // Blackhart headers.
+#include "foundation/BkArray.h"
 #include "foundation/BkColor3.h"
 #include "foundation/BkError.h"
 #include "foundation/BkPly.h"
@@ -22,12 +23,13 @@ static char const* const __BkPly_LoadColorsAborted =
 static int __BkPly_VertexCallback(p_ply_argument argument) {
   long axis = 0;
   long index = 0;
-  struct BkArray* points = NULL;
+  BkArray* points = NULL;
 
   ply_get_argument_user_data(argument, (void**)&points, &axis);
   ply_get_argument_element(argument, NULL, &index);
 
-  struct BkPoint3* point = &((struct BkPoint3*)points->data)[index];
+  struct BkPoint3* point =
+      &((struct BkPoint3*)BkArray_Data(points))[index];
   real const value = BK_REAL(ply_get_argument_value(argument));
 
   if (axis == 0)
@@ -43,12 +45,13 @@ static int __BkPly_VertexCallback(p_ply_argument argument) {
 static int __BkPly_ColorCallback(p_ply_argument argument) {
   long channel = 0;
   long index = 0;
-  struct BkArray* colors = NULL;
+  BkArray* colors = NULL;
 
   ply_get_argument_user_data(argument, (void**)&colors, &channel);
   ply_get_argument_element(argument, NULL, &index);
 
-  struct BkColor3* color = &((struct BkColor3*)colors->data)[index];
+  struct BkColor3* color =
+      &((struct BkColor3*)BkArray_Data(colors))[index];
   uint8 const value = (uint8)ply_get_argument_value(argument);
 
   if (channel == 0)
@@ -61,12 +64,9 @@ static int __BkPly_ColorCallback(p_ply_argument argument) {
   return 1;
 }
 
-static void __BkPly_ReleaseArray(struct BkArray** array) {
+static void __BkPly_ReleaseArray(BkArray** array) {
   if (BK_ISNULL(array) || BK_ISNULL(*array)) return;
-
-  BkArray_Destroy(*array);
-  free(*array);
-  *array = NULL;
+  BkArray_Release(array);
 }
 
 static bool __BkPly_HasVertexProperty(p_ply ply, char const* property_name) {
@@ -138,26 +138,17 @@ static p_ply __BkPly_OpenWithHeader(char const* filename,
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-struct BkArray* _BkPly_LoadPoints(char const* filename) {
+BkArray* _BkPly_LoadPoints(char const* filename) {
   p_ply ply = __BkPly_OpenWithHeader(filename, __BkPly_LoadPointsAborted);
   if (BK_ISNULL(ply)) {
     return NULL;
   }
 
-  struct BkArray* points = malloc(sizeof(struct BkArray));
+  BkArray* points = BkArray_Create((uint8)sizeof(struct BkPoint3));
   if (BK_ISNULL(points)) {
     ply_close(ply);
-    BK_ERROR(true,
-             ((struct BkErrorInfo){
-                 .what = "Cannot allocate point buffer",
-                 .why = "Out of memory while allocating BkArray for vertices",
-                 .where = filename,
-                 .how = "Free memory or reduce the size of the point cloud",
-                 .result = __BkPly_LoadPointsAborted,
-             }),
-             NULL);
+    return NULL;
   }
-  BkArray_Initialize(points, (uint8)sizeof(struct BkPoint3));
 
   long const nvertices =
       ply_set_read_cb(ply, "vertex", "x", __BkPly_VertexCallback, points, 0);
@@ -204,7 +195,7 @@ struct BkArray* _BkPly_LoadPoints(char const* filename) {
   return points;
 }
 
-struct BkArray* _BkPly_LoadColors(char const* filename) {
+BkArray* _BkPly_LoadColors(char const* filename) {
   p_ply ply = __BkPly_OpenWithHeader(filename, __BkPly_LoadColorsAborted);
   if (BK_ISNULL(ply)) {
     return NULL;
@@ -218,20 +209,11 @@ struct BkArray* _BkPly_LoadColors(char const* filename) {
     return NULL;
   }
 
-  struct BkArray* colors = malloc(sizeof(struct BkArray));
+  BkArray* colors = BkArray_Create((uint8)sizeof(struct BkColor3));
   if (BK_ISNULL(colors)) {
     ply_close(ply);
-    BK_ERROR(true,
-             ((struct BkErrorInfo){
-                 .what = "Cannot allocate color buffer",
-                 .why = "Out of memory while allocating BkArray for colors",
-                 .where = filename,
-                 .how = "Free memory or reduce the size of the point cloud",
-                 .result = __BkPly_LoadColorsAborted,
-             }),
-             NULL);
+    return NULL;
   }
-  BkArray_Initialize(colors, (uint8)sizeof(struct BkColor3));
 
   long const nvertices =
       ply_set_read_cb(ply, "vertex", "red", __BkPly_ColorCallback, colors, 0);

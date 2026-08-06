@@ -11,7 +11,7 @@
 // ~~~~~ Type Definitions ~~~~~
 
 struct BkScene {
-  struct BkList* clouds;
+  BkList* clouds;
 };
 
 // ~~~~~ Def(PUBLIC) ~~~~~
@@ -27,7 +27,12 @@ BkScene* BkScene_Create(void) {
            }),
            NULL);
 
-  scene->clouds = NULL;
+  scene->clouds = BkList_Create();
+  if (BK_ISNULL(scene->clouds)) {
+    free(scene);
+    return NULL;
+  }
+
   return scene;
 }
 
@@ -35,8 +40,7 @@ void BkScene_Release(BkScene** scene) {
   BK_ASSERT(BK_ISNULL(scene));
   BK_ASSERT(BK_ISNULL(*scene));
 
-  BkList_Clear((*scene)->clouds);
-  (*scene)->clouds = NULL;
+  BkList_Release(&(*scene)->clouds);
 
   free(*scene);
   *scene = NULL;
@@ -46,13 +50,13 @@ void BkScene_AddCloud(BkScene* scene, BkPointCloud* cloud) {
   BK_ASSERT(BK_ISNULL(scene));
   BK_ASSERT(BK_ISNULL(cloud));
 
-  scene->clouds = BkList_PushBack(scene->clouds, cloud);
+  BkList_PushBack(scene->clouds, cloud);
 }
 
 void BkScene_RemoveCloud(BkScene* scene, BkPointCloud* cloud) {
   BK_ASSERT(BK_ISNULL(scene));
 
-  scene->clouds = BkList_Erase(scene->clouds, cloud);
+  BkList_Erase(scene->clouds, cloud);
   _BkGpuCache_MarkDirty(_BkRender_GetGpuCache(), cloud);
 }
 
@@ -63,11 +67,5 @@ size_t BkScene_GetCloudCount(BkScene const* scene) {
 
 BkPointCloud* BkScene_GetCloud(BkScene const* scene, size_t const index) {
   BK_ASSERT(BK_ISNULL(scene));
-
-  struct BkList* link = BkList_Get(scene->clouds, (uint32)index);
-  if (BkList_Empty(link)) {
-    return NULL;
-  }
-
-  return (BkPointCloud*)BkList_Data(link);
+  return (BkPointCloud*)BkList_Get(scene->clouds, (uint32)index);
 }

@@ -9,46 +9,16 @@
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
-void BkList_RunTests(void) {
-  RUN_TEST(BkList_Empty_test);
-  RUN_TEST(BkList_Data_test);
-  RUN_TEST(BkList_Front_test);
-  RUN_TEST(BkList_Back_test);
-  RUN_TEST(BkList_Size_test);
-  RUN_TEST(BkList_Clear_test);
-  RUN_TEST(BkList_Get_test);
-  RUN_TEST(BkList_Insert_test);
-  RUN_TEST(BkList_Erase_test);
-  RUN_TEST(BkList_EraseLink_test);
-  RUN_TEST(BkList_PushFront_test);
-  RUN_TEST(BkList_PushBack_test);
-  RUN_TEST(BkList_PopFront_test);
-  RUN_TEST(BkList_PopBack_test);
-}
-
 void BkList_Empty_test(void) {
-  struct BkList* lpList = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  TEST_ASSERT_TRUE(BkList_Empty(lpList));
+  TEST_ASSERT_TRUE(BkList_Empty(list));
 
-  lpList = BkList_PushBack(lpList, NULL);
+  BkList_PushBack(list, NULL);
+  TEST_ASSERT_FALSE(BkList_Empty(list));
 
-  TEST_ASSERT_FALSE(BkList_Empty(lpList));
-
-  BkList_Clear(lpList);
-}
-
-void BkList_Data_test(void) {
-  struct BkList* lpList = NULL;
-  uint32 lNumber = 5;
-
-  lpList = BkList_PushBack(lpList, &lNumber);
-
-  uint32* lResult = (uint32*)BkList_Data(lpList);
-
-  TEST_ASSERT_EQUAL(*lResult, lNumber);
-
-  BkList_Clear(lpList);
+  BkList_Release(&list);
 }
 
 void BkList_Front_test(void) {
@@ -56,22 +26,17 @@ void BkList_Front_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
-  struct BkList* lpList2 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
+  TEST_ASSERT_NULL(BkList_Front(list));
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  lpList1 = BkList_Front(lpList1);
-  lpList2 = BkList_Front(lpList2);
+  TEST_ASSERT_EQUAL(lValue1, *(uint32*)BkList_Front(list));
 
-  uint32* lResult = (uint32*)BkList_Data(lpList1);
-
-  TEST_ASSERT_EQUAL(*lResult, lValue1);
-  TEST_ASSERT_NULL(lpList2);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_Back_test(void) {
@@ -79,22 +44,17 @@ void BkList_Back_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
-  struct BkList* lpList2 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
+  TEST_ASSERT_NULL(BkList_Back(list));
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  lpList1 = BkList_Back(lpList1);
-  lpList2 = BkList_Back(lpList2);
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Back(list));
 
-  uint32* lResult = (uint32*)BkList_Data(lpList1);
-
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-  TEST_ASSERT_NULL(lpList2);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_Size_test(void) {
@@ -102,15 +62,17 @@ void BkList_Size_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
+  TEST_ASSERT_EQUAL(0, BkList_Size(list));
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  TEST_ASSERT_EQUAL(BkList_Size(lpList1), 3);
+  TEST_ASSERT_EQUAL(3, BkList_Size(list));
 
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_Clear_test(void) {
@@ -118,16 +80,20 @@ void BkList_Clear_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  BkList_Clear(lpList1);
-  lpList1 = NULL;
+  BkList_Clear(list);
 
-  TEST_ASSERT_EQUAL(BkList_Size(lpList1), 0);
+  TEST_ASSERT_EQUAL(0, BkList_Size(list));
+  TEST_ASSERT_TRUE(BkList_Empty(list));
+  TEST_ASSERT_NULL(BkList_Front(list));
+
+  BkList_Release(&list);
 }
 
 void BkList_Get_test(void) {
@@ -135,29 +101,19 @@ void BkList_Get_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  uint32* lResult = NULL;
+  TEST_ASSERT_EQUAL(lValue1, *(uint32*)BkList_Get(list, 0));
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Get(list, 2));
+  TEST_ASSERT_EQUAL(lValue2, *(uint32*)BkList_Get(list, 1));
+  TEST_ASSERT_NULL(BkList_Get(list, 500));
 
-  lpList1 = BkList_Get(lpList1, 0);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue1);
-
-  lpList1 = BkList_Get(lpList1, 2);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-
-  lpList1 = BkList_Get(lpList1, 1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue2);
-
-  TEST_ASSERT_EQUAL(BkList_Get(lpList1, 500), NULL);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_Insert_test(void) {
@@ -165,32 +121,20 @@ void BkList_Insert_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  lpList1 = BkList_Insert(lpList1, &lValue1, 0);
-  lpList1 = BkList_Insert(lpList1, &lValue2, 0);
-  lpList1 = BkList_Insert(lpList1, &lValue3, 1);
-  lpList1 = BkList_Insert(lpList1, &lValue3, 10);
+  BkList_Insert(list, &lValue1, 0);
+  BkList_Insert(list, &lValue2, 0);
+  BkList_Insert(list, &lValue3, 1);
+  BkList_Insert(list, &lValue3, 10);
 
-  uint32* lResult = NULL;
+  TEST_ASSERT_EQUAL(lValue2, *(uint32*)BkList_Get(list, 0));
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Get(list, 1));
+  TEST_ASSERT_EQUAL(lValue1, *(uint32*)BkList_Get(list, 2));
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Get(list, 3));
 
-  lpList1 = BkList_Get(lpList1, 0);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue2);
-
-  lpList1 = BkList_Get(lpList1, 1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-
-  lpList1 = BkList_Get(lpList1, 2);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue1);
-
-  lpList1 = BkList_Get(lpList1, 3);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_Erase_test(void) {
@@ -198,76 +142,56 @@ void BkList_Erase_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  uint32* lResult = NULL;
+  BkList_Erase(list, &lValue2);
+  TEST_ASSERT_EQUAL(lValue1, *(uint32*)BkList_Get(list, 0));
+  TEST_ASSERT_EQUAL(2, BkList_Size(list));
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Get(list, 1));
 
-  lpList1 = BkList_Erase(lpList1, &lValue2);
+  BkList_Erase(list, &lValue1);
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Get(list, 0));
+  TEST_ASSERT_EQUAL(1, BkList_Size(list));
 
-  lpList1 = BkList_Get(lpList1, 0);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue1);
-  TEST_ASSERT_EQUAL(BkList_Size(lpList1), 2);
+  BkList_Erase(list, &lValue3);
+  TEST_ASSERT_EQUAL(0, BkList_Size(list));
 
-  lpList1 = BkList_Get(lpList1, 1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-
-  lpList1 = BkList_Erase(lpList1, &lValue1);
-
-  lpList1 = BkList_Get(lpList1, 0);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-  TEST_ASSERT_EQUAL(BkList_Size(lpList1), 1);
-
-  lpList1 = BkList_Erase(lpList1, &lValue3);
-
-  TEST_ASSERT_NULL(lpList1);
-  TEST_ASSERT_EQUAL(BkList_Size(lpList1), 0);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
-void BkList_EraseLink_test(void) {
+void BkList_EraseNode_test(void) {
   uint32 lValue1 = 5;
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
   uint32 lValue4 = 20;
   uint32 lValue5 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
-  lpList1 = BkList_PushBack(lpList1, &lValue4);
-  lpList1 = BkList_PushBack(lpList1, &lValue5);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
+  BkList_PushBack(list, &lValue4);
+  BkList_PushBack(list, &lValue5);
 
-  struct BkList* node = BkList_Get(lpList1, 1);
+  BkListNode* node = BkList_GetNode(list, 1);
+  BkList_EraseNode(list, node);
 
-  lpList1 = BkList_EraseLink(node);
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Get(list, 1));
 
-  uint32* r = (uint32*)BkList_Data(BkList_Get(lpList1, 1));
-  TEST_ASSERT_NOT_NULL(r);
-  TEST_ASSERT_EQUAL(lValue3, *r);
+  node = BkList_GetNode(list, 1);
+  BkList_EraseNode(list, node);
 
-  node = BkList_Get(lpList1, 1);
+  TEST_ASSERT_EQUAL(lValue4, *(uint32*)BkList_Get(list, 1));
+  TEST_ASSERT_EQUAL(lValue5, *(uint32*)BkList_Get(list, 2));
 
-  lpList1 = BkList_EraseLink(node);
-
-  r = (uint32*)BkList_Data(BkList_Get(lpList1, 1));
-  TEST_ASSERT_NOT_NULL(r);
-  TEST_ASSERT_EQUAL(lValue4, *r);
-
-  r = (uint32*)BkList_Data(BkList_Get(lpList1, 2));
-  TEST_ASSERT_NOT_NULL(r);
-  TEST_ASSERT_EQUAL(lValue5, *r);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_PushFront_test(void) {
@@ -275,29 +199,19 @@ void BkList_PushFront_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  uint32* lResult = NULL;
+  BkList_PushFront(list, &lValue1);
+  TEST_ASSERT_EQUAL(lValue1, *(uint32*)BkList_Front(list));
 
-  lpList1 = BkList_PushFront(lpList1, &lValue1);
+  BkList_PushFront(list, &lValue2);
+  TEST_ASSERT_EQUAL(lValue2, *(uint32*)BkList_Front(list));
 
-  lpList1 = BkList_Front(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue1);
+  BkList_PushFront(list, &lValue3);
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Front(list));
 
-  lpList1 = BkList_PushFront(lpList1, &lValue2);
-
-  lpList1 = BkList_Front(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue2);
-
-  lpList1 = BkList_PushFront(lpList1, &lValue3);
-
-  lpList1 = BkList_Front(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_PushBack_test(void) {
@@ -305,29 +219,19 @@ void BkList_PushBack_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  uint32* lResult = NULL;
+  BkList_PushBack(list, &lValue1);
+  TEST_ASSERT_EQUAL(lValue1, *(uint32*)BkList_Back(list));
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  TEST_ASSERT_EQUAL(lValue2, *(uint32*)BkList_Back(list));
 
-  lpList1 = BkList_Back(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue1);
+  BkList_PushBack(list, &lValue3);
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Back(list));
 
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-
-  lpList1 = BkList_Back(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue2);
-
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
-
-  lpList1 = BkList_Back(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_PopFront_test(void) {
@@ -335,31 +239,24 @@ void BkList_PopFront_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  uint32* lResult = NULL;
+  BkList_PopFront(list);
+  TEST_ASSERT_EQUAL(lValue2, *(uint32*)BkList_Front(list));
 
-  lpList1 = BkList_PopFront(lpList1);
+  BkList_PopFront(list);
+  TEST_ASSERT_EQUAL(lValue3, *(uint32*)BkList_Front(list));
 
-  lpList1 = BkList_Front(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue2);
+  BkList_PopFront(list);
+  TEST_ASSERT_TRUE(BkList_Empty(list));
+  TEST_ASSERT_NULL(BkList_Front(list));
 
-  lpList1 = BkList_PopFront(lpList1);
-
-  lpList1 = BkList_Front(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue3);
-
-  lpList1 = BkList_PopFront(lpList1);
-
-  TEST_ASSERT_NULL(lpList1);
-
-  BkList_Clear(lpList1);
+  BkList_Release(&list);
 }
 
 void BkList_PopBack_test(void) {
@@ -367,29 +264,38 @@ void BkList_PopBack_test(void) {
   uint32 lValue2 = 10;
   uint32 lValue3 = 15;
 
-  struct BkList* lpList1 = NULL;
+  BkList* list = BkList_Create();
+  TEST_ASSERT_NOT_NULL(list);
 
-  lpList1 = BkList_PushBack(lpList1, &lValue1);
-  lpList1 = BkList_PushBack(lpList1, &lValue2);
-  lpList1 = BkList_PushBack(lpList1, &lValue3);
+  BkList_PushBack(list, &lValue1);
+  BkList_PushBack(list, &lValue2);
+  BkList_PushBack(list, &lValue3);
 
-  uint32* lResult = NULL;
+  BkList_PopBack(list);
+  TEST_ASSERT_EQUAL(lValue2, *(uint32*)BkList_Back(list));
 
-  lpList1 = BkList_PopBack(lpList1);
+  BkList_PopBack(list);
+  TEST_ASSERT_EQUAL(lValue1, *(uint32*)BkList_Back(list));
 
-  lpList1 = BkList_Back(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue2);
+  BkList_PopBack(list);
+  TEST_ASSERT_TRUE(BkList_Empty(list));
+  TEST_ASSERT_NULL(BkList_Back(list));
 
-  lpList1 = BkList_PopBack(lpList1);
+  BkList_Release(&list);
+}
 
-  lpList1 = BkList_Back(lpList1);
-  lResult = (uint32*)BkList_Data(lpList1);
-  TEST_ASSERT_EQUAL(*lResult, lValue1);
-
-  lpList1 = BkList_PopBack(lpList1);
-
-  TEST_ASSERT_NULL(lpList1);
-
-  BkList_Clear(lpList1);
+void BkList_RunTests(void) {
+  RUN_TEST(BkList_Empty_test);
+  RUN_TEST(BkList_Front_test);
+  RUN_TEST(BkList_Back_test);
+  RUN_TEST(BkList_Size_test);
+  RUN_TEST(BkList_Clear_test);
+  RUN_TEST(BkList_Get_test);
+  RUN_TEST(BkList_Insert_test);
+  RUN_TEST(BkList_Erase_test);
+  RUN_TEST(BkList_EraseNode_test);
+  RUN_TEST(BkList_PushFront_test);
+  RUN_TEST(BkList_PushBack_test);
+  RUN_TEST(BkList_PopFront_test);
+  RUN_TEST(BkList_PopBack_test);
 }
