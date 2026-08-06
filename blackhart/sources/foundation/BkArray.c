@@ -9,7 +9,7 @@
 // ~~~~~ Type Definitions ~~~~~
 
 struct BkArray {
-  char* data;
+  void* data;
   size_t size;
   size_t capacity;
   uint8 data_size;
@@ -112,11 +112,12 @@ void BkArray_Erase(BkArray* obj, size_t const index) {
 
   size_t offset = index * obj->data_size;
   size_t start = obj->size * obj->data_size;
+  char* bytes = (char*)obj->data;
 
-  memcpy(obj->data + offset, obj->data + start, obj->data_size);
+  memcpy(bytes + offset, bytes + start, obj->data_size);
 }
 
-void BkArray_PushBack_t(BkArray* obj, char const* data) {
+void BkArray_PushBack_t(BkArray* obj, void const* data) {
   BK_ASSERT(BK_ISNULL(obj));
   BK_ASSERT(BK_ISNULL(data));
 
@@ -124,7 +125,8 @@ void BkArray_PushBack_t(BkArray* obj, char const* data) {
     BkArray_Reserve(obj, obj->capacity + 4);
   }
 
-  memcpy(obj->data + (obj->size * obj->data_size), data, obj->data_size);
+  char* bytes = (char*)obj->data;
+  memcpy(bytes + (obj->size * obj->data_size), data, obj->data_size);
 
   obj->size += 1;
 }
@@ -135,7 +137,7 @@ void BkArray_PopBack(BkArray* obj) {
   obj->size -= 1;
 }
 
-void BkArray_Insert_t(BkArray* obj, size_t const index, char const* data) {
+void BkArray_Insert_t(BkArray* obj, size_t const index, void const* data) {
   BK_ASSERT(BK_ISNULL(obj));
   BK_ASSERT(BK_ISNULL(data));
   BK_ASSERT(index > obj->size);
@@ -151,14 +153,15 @@ void BkArray_Insert_t(BkArray* obj, size_t const index, char const* data) {
 
   size_t offset = index * obj->data_size;
   size_t start = obj->size * obj->data_size;
+  char* bytes = (char*)obj->data;
 
-  memcpy(obj->data + start, obj->data + offset, obj->data_size);
-  memcpy(obj->data + offset, data, obj->data_size);
+  memcpy(bytes + start, bytes + offset, obj->data_size);
+  memcpy(bytes + offset, data, obj->data_size);
 
   obj->size += 1;
 }
 
-void BkArray_Resize_t(BkArray* obj, size_t const size, char const* data) {
+void BkArray_Resize_t(BkArray* obj, size_t const size, void const* data) {
   BK_ASSERT(BK_ISNULL(obj));
   BK_ASSERT(BK_ISNULL(data));
 
@@ -168,9 +171,10 @@ void BkArray_Resize_t(BkArray* obj, size_t const size, char const* data) {
     if (size > obj->capacity) BkArray_Reserve(obj, obj->capacity + size + 4);
 
     size_t offset = obj->size * obj->data_size;
+    char* bytes = (char*)obj->data;
 
     for (size_t i = obj->size; i < size; i++) {
-      memcpy(obj->data + offset, data, obj->data_size);
+      memcpy(bytes + offset, data, obj->data_size);
 
       offset += obj->data_size;
     }

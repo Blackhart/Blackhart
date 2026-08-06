@@ -45,21 +45,21 @@
  * @def BkArray_PushBack(arr, d)
  * @brief Appends a copy of d (lvalue) to the array.
  */
-#define BkArray_PushBack(arr, d) BkArray_PushBack_t((arr), (char const*)&(d))
+#define BkArray_PushBack(arr, d) BkArray_PushBack_t((arr), (void const*)&(d))
 
 /**
  * @def BkArray_Insert(arr, i, d)
  * @brief Inserts a copy of d at index i.
  */
 #define BkArray_Insert(arr, i, d) \
-  BkArray_Insert_t((arr), (i), (char const*)&(d))
+  BkArray_Insert_t((arr), (i), (void const*)&(d))
 
 /**
  * @def BkArray_Resize(arr, s, d)
  * @brief Resizes to s elements; new slots filled with d.
  */
 #define BkArray_Resize(arr, s, d) \
-  BkArray_Resize_t((arr), (s), (char const*)&(d))
+  BkArray_Resize_t((arr), (s), (void const*)&(d))
 
 // ~~~~~ Type Definitions ~~~~~
 
@@ -121,7 +121,7 @@ extern BK_API void BkArray_Erase(BkArray* obj, size_t const index);
 /**
  * @brief Appends @p data_size bytes from @p data.
  */
-extern BK_API void BkArray_PushBack_t(BkArray* obj, char const* data);
+extern BK_API void BkArray_PushBack_t(BkArray* obj, void const* data);
 
 /**
  * @brief Removes the last element.
@@ -132,12 +132,12 @@ extern BK_API void BkArray_PopBack(BkArray* obj);
  * @brief Inserts @p data_size bytes from @p data at @p index.
  */
 extern BK_API void BkArray_Insert_t(BkArray* obj, size_t const index,
-                                    char const* data);
+                                    void const* data);
 
 /**
  * @brief Resizes to @p size; new elements filled from @p data.
  */
 extern BK_API void BkArray_Resize_t(BkArray* obj, size_t const size,
-                                    char const* data);
+                                    void const* data);
 
 #endif
