@@ -15,7 +15,7 @@
 // Globales
 static struct BkOrbitalCamera g_camera;
 static BkScene* g_scene = NULL;
-static BkPointCloud* g_bunny = NULL;
+static BkPointCloud* g_cloud = NULL;
 static bool g_full_screen = false;
 
 // Constantes
@@ -101,21 +101,22 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  char bunny_path[1024];
-  BkFileSystem_CombinePath(bunny_path, BK_DEFAULT_ASSET_PATH, "bunny.ply");
-  g_bunny = BkPointCloud_CreateFromPlyFile(bunny_path);
-  if (g_bunny == NULL) {
-    std::cout << "Fatal: failed to load " << bunny_path << std::endl;
+  char cloud_path[1024];
+  BkFileSystem_CombinePath(cloud_path, BK_DEFAULT_ASSET_PATH,
+                           "frag_colored.ply");
+  g_cloud = BkPointCloud_CreateFromPlyFile(cloud_path);
+  if (g_cloud == NULL) {
+    std::cout << "Fatal: failed to load " << cloud_path << std::endl;
     BkScene_Release(&g_scene);
     BkUninitialize();
     glfwDestroyWindow(window);
     glfwTerminate();
     return EXIT_FAILURE;
   }
-  BkScene_AddCloud(g_scene, g_bunny);
+  BkScene_AddCloud(g_scene, g_cloud);
 
   // Frame camera so the whole world AABB stays in view while orbiting
-  struct BkAABB const aabb = BkPointCloud_GetWorldAABB(g_bunny);
+  struct BkAABB const aabb = BkPointCloud_GetWorldAABB(g_cloud);
   struct BkPoint3 const target = BkAABB_Center(&aabb);
   struct BkVector3 const size = BkAABB_Size(&aabb);
   real const bounding_sphere_radius = BkVector3_Magnitude(&size) * BK_REAL(0.5);
@@ -153,8 +154,8 @@ int main() {
 
   // ~~~~~ BLACKHART UNINITIALIZATION ~~~~~
 
-  BkScene_RemoveCloud(g_scene, g_bunny);
-  BkPointCloud_Release(&g_bunny);
+  BkScene_RemoveCloud(g_scene, g_cloud);
+  BkPointCloud_Release(&g_cloud);
   BkScene_Release(&g_scene);
   BkUninitialize();
 

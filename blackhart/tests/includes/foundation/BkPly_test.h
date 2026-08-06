@@ -11,5 +11,7 @@ extern void BkPly_LoadPoints_NoPermission_test(void);
 extern void BkPly_LoadPoints_NotAPly_test(void);
 extern void BkPly_LoadPoints_NoHeader_test(void);
 extern void BkPly_LoadPoints_NoVertices_test(void);
+extern void BkPly_LoadColors_Absent_test(void);
+extern void BkPly_LoadColors_Present_test(void);
 
 #endif

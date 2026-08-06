@@ -5,6 +5,7 @@
 #include "foundation/BkAABB_test.h"
 #include "foundation/BkAngleAxis_test.h"
 #include "foundation/BkArray_test.h"
+#include "foundation/BkColor3_test.h"
 #include "foundation/BkEulerAngles_test.h"
 #include "foundation/BkList_test.h"
 #include "foundation/BkMath_test.h"
@@ -34,6 +35,7 @@ int main(int argc, char** argv) {
 
   BkArray_RunTests();
   BkAABB_RunTests();
+  BkColor3_RunTests();
   BkList_RunTests();
   BkMath_RunTests();
   BkMatrix4x4_RunTests();

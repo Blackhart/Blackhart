@@ -8,6 +8,7 @@
 #include "foundation/BkArray.h"
 #include "foundation/BkAtomicDataType.h"
 #include "foundation/BkCamera.h"
+#include "foundation/BkColor3.h"
 #include "foundation/BkError.h"
 #include "foundation/BkEulerAngles.h"
 #include "foundation/BkFileSystem.h"

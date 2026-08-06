@@ -3,6 +3,7 @@
 
 // Blackhart headers.
 #include "foundation/BkArray.h"
+#include "foundation/BkColor3.h"
 #include "foundation/BkError.h"
 #include "foundation/BkMatrix4x4.h"
 #include "foundation/BkPly.h"
@@ -13,6 +14,7 @@
 
 struct BkPointCloud {
   struct BkArray* points;
+  struct BkArray* colors; /**< NULL when the PLY had no RGB. */
   BkAABB aabb;
   struct BkTransform transform;
 };
@@ -21,6 +23,14 @@ struct BkPointCloud {
 
 static char const* const __BkPointCloud_CreateAborted =
     "Point cloud was not created; BkPointCloud_CreateFromPlyFile returned NULL";
+
+static void __BkPointCloud_ReleaseArray(struct BkArray** array) {
+  if (BK_ISNULL(array) || BK_ISNULL(*array)) return;
+
+  BkArray_Destroy(*array);
+  free(*array);
+  *array = NULL;
+}
 
 // ~~~~~ Def(PUBLIC) ~~~~~
 
@@ -38,10 +48,12 @@ BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
       }),
       NULL);
 
+  struct BkArray* colors = _BkPly_LoadColors(filename);
+
   BkPointCloud* pointCloud = malloc(sizeof(BkPointCloud));
   if (BK_ISNULL(pointCloud)) {
-    BkArray_Destroy(points);
-    free(points);
+    __BkPointCloud_ReleaseArray(&points);
+    __BkPointCloud_ReleaseArray(&colors);
     BK_ERROR(true,
              ((struct BkErrorInfo){
                  .what = "Cannot allocate point cloud",
@@ -54,6 +66,7 @@ BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
   }
 
   pointCloud->points = points;
+  pointCloud->colors = colors;
   pointCloud->aabb =
       BkAABB_FromPoints((BkPoint3 const*)points->data, BkArray_Size((*points)));
   BkTransform_Initialize(&pointCloud->transform);
@@ -64,11 +77,8 @@ void BkPointCloud_Release(BkPointCloud** pointCloud) {
   BK_ASSERT(BK_ISNULL(pointCloud));
   BK_ASSERT(BK_ISNULL(*pointCloud));
 
-  if ((*pointCloud)->points != NULL) {
-    BkArray_Destroy((*pointCloud)->points);
-    free((*pointCloud)->points);
-    (*pointCloud)->points = NULL;
-  }
+  __BkPointCloud_ReleaseArray(&(*pointCloud)->points);
+  __BkPointCloud_ReleaseArray(&(*pointCloud)->colors);
 
   free(*pointCloud);
   *pointCloud = NULL;
@@ -92,6 +102,21 @@ BkPoint3 const* BkPointCloud_GetPoints(BkPointCloud const* pointCloud) {
   }
 
   return (BkPoint3 const*)pointCloud->points->data;
+}
+
+bool BkPointCloud_HasColors(BkPointCloud const* pointCloud) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+  return !BK_ISNULL(pointCloud->colors) && !BK_ISNULL(pointCloud->colors->data);
+}
+
+BkColor3 const* BkPointCloud_GetColors(BkPointCloud const* pointCloud) {
+  BK_ASSERT(BK_ISNULL(pointCloud));
+
+  if (!BkPointCloud_HasColors(pointCloud)) {
+    return NULL;
+  }
+
+  return (BkColor3 const*)pointCloud->colors->data;
 }
 
 BkAABB BkPointCloud_GetAABB(BkPointCloud const* pointCloud) {

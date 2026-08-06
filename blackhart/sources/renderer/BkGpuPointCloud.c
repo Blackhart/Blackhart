@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 
 // Blackhart headers.
+#include "foundation/BkColor3.h"
 #include "foundation/BkError.h"
 #include "foundation/BkPoint3.h"
 #include "renderer/BkBuffer.h"
@@ -15,7 +16,8 @@
 
 struct BkGpuPointCloud {
   GLuint vao;
-  BkBuffer* buffer;
+  BkBuffer* points;
+  BkBuffer* colors;
   size_t count;
 };
 
@@ -63,16 +65,60 @@ BkGpuPointCloud* _BkGpuPointCloud_Upload(BkPointCloud const* cloud) {
 
   gpu->count = count;
   gpu->vao = 0;
-  gpu->buffer = NULL;
+  gpu->points = NULL;
+  gpu->colors = NULL;
 
-  size_t const bytes = count * sizeof(BkPoint3);
-  gpu->buffer = _BkBuffer_Create(bytes, points);
-  if (BK_ISNULL(gpu->buffer)) {
+  size_t const point_bytes = count * sizeof(BkPoint3);
+  gpu->points = _BkBuffer_Create(point_bytes, points);
+  if (BK_ISNULL(gpu->points)) {
     free(gpu);
     BK_ERROR(true,
              ((struct BkErrorInfo){
-                 .what = "Cannot create point cloud VBO",
-                 .why = "_BkBuffer_Create failed",
+                 .what = "Cannot create point cloud points VBO",
+                 .why = "_BkBuffer_Create failed for points",
+                 .how = "Check OpenGL context and available GPU memory",
+                 .result = "_BkGpuPointCloud_Upload returned NULL",
+             }),
+             NULL);
+  }
+
+  BkColor3 const* src_colors = BkPointCloud_GetColors(cloud);
+  BkColor3* fallback_colors = NULL;
+  BkColor3 const* upload_colors = src_colors;
+
+  if (BK_ISNULL(upload_colors)) {
+    fallback_colors = malloc(count * sizeof(BkColor3));
+    if (BK_ISNULL(fallback_colors)) {
+      _BkBuffer_Release(&gpu->points);
+      free(gpu);
+      BK_ERROR(true,
+               ((struct BkErrorInfo){
+                   .what = "Cannot allocate fallback colors",
+                   .why = "Out of memory while filling white colors",
+                   .how = "Free memory and retry",
+                   .result = "_BkGpuPointCloud_Upload returned NULL",
+               }),
+               NULL);
+    }
+
+    struct BkColor3 const white = BkColor3_White();
+    for (size_t i = 0; i < count; ++i) {
+      fallback_colors[i] = white;
+    }
+    upload_colors = fallback_colors;
+  }
+
+  size_t const color_bytes = count * sizeof(BkColor3);
+  gpu->colors = _BkBuffer_Create(color_bytes, upload_colors);
+  free(fallback_colors);
+
+  if (BK_ISNULL(gpu->colors)) {
+    _BkBuffer_Release(&gpu->points);
+    free(gpu);
+    BK_ERROR(true,
+             ((struct BkErrorInfo){
+                 .what = "Cannot create point cloud color VBO",
+                 .why = "_BkBuffer_Create failed for colors",
                  .how = "Check OpenGL context and available GPU memory",
                  .result = "_BkGpuPointCloud_Upload returned NULL",
              }),
@@ -82,13 +128,18 @@ BkGpuPointCloud* _BkGpuPointCloud_Upload(BkPointCloud const* cloud) {
   glGenVertexArrays(1, &gpu->vao);
   glBindVertexArray(gpu->vao);
 
-  glBindBuffer(GL_ARRAY_BUFFER, (GLuint)_BkBuffer_GetId(gpu->buffer));
+  glBindBuffer(GL_ARRAY_BUFFER, (GLuint)_BkBuffer_GetId(gpu->points));
 #ifdef __BK_DOUBLE_PRECISION_FLOATING_POINT
   glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, sizeof(BkPoint3), NULL);
 #else
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BkPoint3), NULL);
 #endif
   glEnableVertexAttribArray(0);
+
+  glBindBuffer(GL_ARRAY_BUFFER, (GLuint)_BkBuffer_GetId(gpu->colors));
+  glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(BkColor3),
+                        NULL);
+  glEnableVertexAttribArray(1);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
@@ -105,8 +156,12 @@ void _BkGpuPointCloud_Release(BkGpuPointCloud** gpu) {
     (*gpu)->vao = 0;
   }
 
-  if ((*gpu)->buffer != NULL) {
-    _BkBuffer_Release(&(*gpu)->buffer);
+  if ((*gpu)->points != NULL) {
+    _BkBuffer_Release(&(*gpu)->points);
+  }
+
+  if ((*gpu)->colors != NULL) {
+    _BkBuffer_Release(&(*gpu)->colors);
   }
 
   free(*gpu);

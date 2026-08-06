@@ -60,6 +60,8 @@ void BkPointCloud_RunTests(void) {
   RUN_TEST(BkPointCloud_GetWorldAABB_Identity_test);
   RUN_TEST(BkPointCloud_GetWorldAABB_AfterSetPosition_test);
   RUN_TEST(BkPointCloud_GetWorldAABB_AfterSetOrientation_test);
+  RUN_TEST(BkPointCloud_Colors_Absent_test);
+  RUN_TEST(BkPointCloud_Colors_Present_test);
   RUN_TEST(BkPointCloud_Release_SetsNull_test);
 }
 
@@ -226,6 +228,53 @@ void BkPointCloud_GetWorldAABB_AfterSetOrientation_test(void) {
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.x, (float)0.0);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.y, (float)1.0);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)world.max.z, (float)0.0);
+
+  BkPointCloud_Release(&cloud);
+}
+
+void BkPointCloud_Colors_Absent_test(void) {
+  char const* path = __BkPointCloud_WriteTempPly(
+      "blackhart_pointcloud_nocolor.ply", __BkPointCloud_ValidPly);
+
+  BkPointCloud* cloud = BkPointCloud_CreateFromPlyFile(path);
+  __BkPointCloud_RemoveFile(path);
+  TEST_ASSERT_NOT_NULL(cloud);
+
+  TEST_ASSERT_FALSE(BkPointCloud_HasColors(cloud));
+  TEST_ASSERT_NULL(BkPointCloud_GetColors(cloud));
+
+  BkPointCloud_Release(&cloud);
+}
+
+void BkPointCloud_Colors_Present_test(void) {
+  char const* path =
+      __BkPointCloud_WriteTempPly("blackhart_pointcloud_color.ply",
+                                  "ply\n"
+                                  "format ascii 1.0\n"
+                                  "element vertex 2\n"
+                                  "property float x\n"
+                                  "property float y\n"
+                                  "property float z\n"
+                                  "property uchar red\n"
+                                  "property uchar green\n"
+                                  "property uchar blue\n"
+                                  "end_header\n"
+                                  "0 0 0 10 20 30\n"
+                                  "1 0 0 40 50 60\n");
+
+  BkPointCloud* cloud = BkPointCloud_CreateFromPlyFile(path);
+  __BkPointCloud_RemoveFile(path);
+  TEST_ASSERT_NOT_NULL(cloud);
+
+  TEST_ASSERT_TRUE(BkPointCloud_HasColors(cloud));
+  BkColor3 const* colors = BkPointCloud_GetColors(cloud);
+  TEST_ASSERT_NOT_NULL(colors);
+  TEST_ASSERT_EQUAL_UINT(10, colors[0].r);
+  TEST_ASSERT_EQUAL_UINT(20, colors[0].g);
+  TEST_ASSERT_EQUAL_UINT(30, colors[0].b);
+  TEST_ASSERT_EQUAL_UINT(40, colors[1].r);
+  TEST_ASSERT_EQUAL_UINT(50, colors[1].g);
+  TEST_ASSERT_EQUAL_UINT(60, colors[1].b);
 
   BkPointCloud_Release(&cloud);
 }

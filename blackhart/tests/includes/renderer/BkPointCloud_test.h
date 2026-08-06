@@ -12,6 +12,8 @@ extern void BkPointCloud_GetAABB_MatchesPoints_test(void);
 extern void BkPointCloud_GetWorldAABB_Identity_test(void);
 extern void BkPointCloud_GetWorldAABB_AfterSetPosition_test(void);
 extern void BkPointCloud_GetWorldAABB_AfterSetOrientation_test(void);
+extern void BkPointCloud_Colors_Absent_test(void);
+extern void BkPointCloud_Colors_Present_test(void);
 extern void BkPointCloud_Release_SetsNull_test(void);
 
 #endif
