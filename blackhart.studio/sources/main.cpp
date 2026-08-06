@@ -146,7 +146,16 @@ int main() {
       glViewport(g_viewport.framebuffer.x, g_viewport.framebuffer.y,
                  g_viewport.framebuffer.width, g_viewport.framebuffer.height);
 
-      BkRender(g_scene, &(g_camera.base));
+      BkRender_Clear();
+
+      Studio::ToolbarViewportHelpers const& helpers =
+          Studio::Toolbar_GetViewportHelpers();
+      if (helpers.grid_visible) {
+        BkRender_DrawGrid(&(g_camera.base),
+                          static_cast<real>(helpers.grid_cell_size));
+      }
+
+      BkRender_DrawScene(g_scene, &(g_camera.base));
 
       if (selected != nullptr) {
         struct BkAABB const world = BkPointCloud_GetWorldAABB(selected);
@@ -160,6 +169,10 @@ int main() {
         if (aabb_draw) {
           BkRender_DrawAabb(&(g_camera.base), &world);
         }
+      }
+
+      if (helpers.orientation_gizmo_visible) {
+        BkRender_DrawOrientationGizmo(&(g_camera.base));
       }
 
       glDisable(GL_SCISSOR_TEST);

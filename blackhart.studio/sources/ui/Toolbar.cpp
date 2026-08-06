@@ -17,6 +17,8 @@ int g_frame_count = 0;
 float g_fps = 0.0f;
 float g_ms_per_frame = 0.0f;
 
+ToolbarViewportHelpers g_helpers = {};
+
 /** Vertical rule between toolbar control groups. */
 void Toolbar_VerticalSep() {
   ImGui::SameLine(0.0f, 18.0f);
@@ -84,13 +86,9 @@ float Toolbar_Draw() {
   ImGui::TextUnformatted("Point Cloud Viewer");
   ImGui::PopStyleColor();
 
-  // Center — point size + grid + gizmo
+  // Center — point size + grid + orientation gizmo
   float point_size = static_cast<float>(BkRender_GetPointSize());
-  bool grid_visible = BkRender_IsGridVisible();
-  float cell_size = static_cast<float>(BkRender_GetGridCellSize());
-  bool gizmo_visible = BkRender_IsGizmoVisible();
   bool point_changed = false;
-  bool helpers_changed = false;
 
   float const center_block_w = 640.0f;
   float const center_x = (bar_w - center_block_w) * 0.5f;
@@ -108,25 +106,23 @@ float Toolbar_Draw() {
       ImGui::InputFloat("##point_size_input", &point_size, 0.0f, 0.0f, "%.2f");
 
   Toolbar_VerticalSep();
-  helpers_changed |= ImGui::Checkbox("Grid", &grid_visible);
+  ImGui::Checkbox("Grid", &g_helpers.grid_visible);
   ImGui::SameLine();
   ImGui::AlignTextToFramePadding();
   ImGui::TextUnformatted("Cell");
   ImGui::SameLine();
   ImGui::SetNextItemWidth(56.0f);
-  helpers_changed |=
-      ImGui::InputFloat("##grid_cell_input", &cell_size, 0.0f, 0.0f, "%.2f");
+  ImGui::InputFloat("##grid_cell_input", &g_helpers.grid_cell_size, 0.0f, 0.0f,
+                    "%.2f");
+  if (g_helpers.grid_cell_size < 0.01f) {
+    g_helpers.grid_cell_size = 0.01f;
+  }
 
   Toolbar_VerticalSep();
-  helpers_changed |= ImGui::Checkbox("Axes", &gizmo_visible);
+  ImGui::Checkbox("Axes", &g_helpers.orientation_gizmo_visible);
 
   if (point_changed) {
     BkRender_SetPointSize(static_cast<real>(point_size));
-  }
-  if (helpers_changed) {
-    BkRender_SetGridVisible(grid_visible);
-    BkRender_SetGridCellSize(static_cast<real>(cell_size));
-    BkRender_SetGizmoVisible(gizmo_visible);
   }
 
   // Right — FPS
@@ -144,5 +140,7 @@ float Toolbar_Draw() {
   ImGui::PopStyleVar(3);
   return kToolbarHeight;
 }
+
+ToolbarViewportHelpers const& Toolbar_GetViewportHelpers() { return g_helpers; }
 
 }  // namespace Studio

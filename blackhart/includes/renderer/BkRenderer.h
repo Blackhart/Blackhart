@@ -3,18 +3,27 @@
 
 /**
  * @file BkRenderer.h
- * @brief Draws a scene through a camera.
+ * @brief Draws the scene and optional viewport helpers.
  *
- * Call BkRender every frame with your scene and camera. The renderer clears
- * the framebuffer, binds the default shader, asks the GPU cache for each
- * cloud (uploading if needed), and draws them as points.
+ * Blackhart does not decide for you what appears in the viewport. You compose
+ * a frame from small drawing calls: clear the view, optionally draw a ground
+ * grid, draw the point clouds in the scene, then any overlays you need
+ * (object axes, bounding box, corner orientation gizmo).
  *
- * At the start of each frame it also flushes dirty GPU cache entries, so
- * clouds removed from the scene are unloaded from the GPU automatically.
+ * Typical frame:
+ *
+ *   BkRender_Clear();
+ *   BkRender_DrawGrid(camera, cell_size);
+ *   BkRender_DrawScene(scene, camera);
+ *   BkRender_DrawAxes(camera, transform, length);
+ *   BkRender_DrawAabb(camera, &aabb);
+ *   BkRender_DrawOrientationGizmo(camera);
+ *
+ * Helpers (grid, gizmos, AABB) are not scene objects — call a draw function
+ * when you want them. Point size is the one shared setting for how large
+ * cloud points appear.
  *
  * Initialization runs inside BkInitialize once an OpenGL context exists.
- * Applications do not manage shaders or the cache — they only load clouds,
- * put them in a scene, and call BkRender.
  */
 
 // ~~~~~ Blackhart Headers ~~~~~
@@ -57,18 +66,25 @@ typedef struct BkTransform BkTransform;
 // ~~~~~ Dcl(PUBLIC) ~~~~~
 
 /**
- * @brief Renders the scene using the specified camera.
+ * @brief Clears the viewport to a black background (color and depth).
  *
- * Flushes dirty GPU cache entries, then draws each point cloud in the scene
- * (lazy GPU upload via the internal cache).
- *
- * @param scene Scene containing point clouds to draw. Must not be NULL.
- * @param camera Camera to use for rendering. Must not be NULL.
+ * Call once per frame for the active viewport before drawing.
  */
-extern BK_API void BkRender(BkScene* scene, BkCamera* camera);
+extern BK_API void BkRender_Clear(void);
 
 /**
- * @brief Sets the OpenGL point size used when drawing clouds (pixels).
+ * @brief Draws every point cloud currently in the scene.
+ *
+ * Uploads clouds to the GPU on first use and frees GPU data for clouds that
+ * left the scene since the last draw.
+ *
+ * @param scene Scene to draw. Must not be NULL.
+ * @param camera Camera to look through. Must not be NULL.
+ */
+extern BK_API void BkRender_DrawScene(BkScene* scene, BkCamera* camera);
+
+/**
+ * @brief Sets how large each point appears on screen (pixels).
  *
  * Values are clamped to a practical range. Default is 2.
  *
@@ -82,45 +98,29 @@ extern BK_API void BkRender_SetPointSize(real size);
 extern BK_API real BkRender_GetPointSize(void);
 
 /**
- * @brief Shows or hides the world ground grid (XZ plane, Y-up). Default on.
- */
-extern BK_API void BkRender_SetGridVisible(bool visible);
-
-/**
- * @brief Returns whether the ground grid is drawn.
- */
-extern BK_API bool BkRender_IsGridVisible(void);
-
-/**
- * @brief Sets the grid cell size in world units.
+ * @brief Draws a ground reference grid (XZ plane, Y-up).
  *
- * Values are clamped to a minimum of 0.01. Default is 1.
+ * Useful to judge scale and keep spatial context while navigating.
  *
- * @param cell_size Length of one grid square edge.
+ * @param camera Active camera. Must not be NULL.
+ * @param cell_size Length of one grid square in world units (min 0.01).
  */
-extern BK_API void BkRender_SetGridCellSize(real cell_size);
+extern BK_API void BkRender_DrawGrid(BkCamera* camera, real cell_size);
 
 /**
- * @brief Returns the current grid cell size in world units.
- */
-extern BK_API real BkRender_GetGridCellSize(void);
-
-/**
- * @brief Shows or hides the corner orientation gizmo (Unity-style). Default on.
- */
-extern BK_API void BkRender_SetGizmoVisible(bool visible);
-
-/**
- * @brief Returns whether the corner orientation gizmo is drawn.
- */
-extern BK_API bool BkRender_IsGizmoVisible(void);
-
-/**
- * @brief Draws RGB object axes for @p transform (immediate overlay).
+ * @brief Draws the corner orientation gizmo (camera axes).
  *
- * Does not store selection state: call when you want axes drawn. Uses the
- * default renderer shader. Prefer calling after BkRender inside the same
- * viewport/scissor.
+ * A small RGB triad in the corner of the viewport so you can read world
+ * orientation while orbiting.
+ *
+ * @param camera Active camera. Must not be NULL.
+ */
+extern BK_API void BkRender_DrawOrientationGizmo(BkCamera* camera);
+
+/**
+ * @brief Draws RGB object axes at a transform (X red, Y green, Z blue).
+ *
+ * Useful to show where an object sits and how it is oriented.
  *
  * @param camera Active camera. Must not be NULL.
  * @param transform Object transform. Must not be NULL.
@@ -131,7 +131,7 @@ extern BK_API void BkRender_DrawAxes(BkCamera* camera,
                                      real length);
 
 /**
- * @brief Draws a world-space AABB wireframe (immediate overlay).
+ * @brief Draws a world-space bounding box as a wireframe.
  *
  * @param camera Active camera. Must not be NULL.
  * @param aabb World AABB. Must not be NULL.
@@ -142,21 +142,16 @@ extern BK_API void BkRender_DrawAabb(BkCamera* camera,
 // ~~~~~ Dcl(INTERNAL) ~~~~~
 
 /**
- * @brief Initializes the render context.
+ * @brief Initializes the render context after an OpenGL context exists.
  *
- * Sets up the rendering infrastructure, including OpenGL context
- * initialization (GLEW), default shaders, and the GPU cache. This function
- * should be called during library initialization, after the OpenGL context
- * has been created.
+ * Called from BkInitialize.
  */
 extern void _BkRender_Initialize(void);
 
 /**
- * @brief Uninitializes the render context.
+ * @brief Shuts down the render context and releases its resources.
  *
- * Cleans up the rendering infrastructure and releases rendering resources
- * (GPU cache, shader program). This function should be called during library
- * cleanup, before destroying the OpenGL context.
+ * Called from BkUninitialize before the OpenGL context is destroyed.
  */
 extern void _BkRender_Uninitialize(void);
 

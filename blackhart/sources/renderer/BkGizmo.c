@@ -20,7 +20,6 @@ typedef struct __BkGizmoVertex {
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-static bool __BkGizmoVisible = true;
 static bool __BkGizmoDirty = true;
 static GLuint __BkGizmoVao = 0;
 static GLuint __BkGizmoVbo = 0;
@@ -81,16 +80,8 @@ void _BkGizmo_Initialize(void) { __BkGizmoDirty = true; }
 
 void _BkGizmo_Uninitialize(void) { __BkGizmo_DestroyMesh(); }
 
-void _BkGizmo_SetVisible(bool visible) { __BkGizmoVisible = visible; }
-
-bool _BkGizmo_IsVisible(void) { return __BkGizmoVisible; }
-
 void _BkGizmo_Draw(BkCamera* camera, int uni_mvp) {
   BK_ASSERT(BK_ISNULL(camera));
-
-  if (!__BkGizmoVisible) {
-    return;
-  }
 
   if (__BkGizmoDirty || __BkGizmoVao == 0) {
     __BkGizmo_BuildMesh();

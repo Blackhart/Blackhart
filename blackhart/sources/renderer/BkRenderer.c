@@ -31,6 +31,17 @@ static real __BkPointSize = BK_REAL(2);
 static real const __BK_POINT_SIZE_MIN = BK_REAL(1);
 static real const __BK_POINT_SIZE_MAX = BK_REAL(32);
 
+static void __BkRender_BindDefaultProgram(GLint* out_uni_mvp,
+                                          struct BkMatrix4x4* out_pv,
+                                          BkCamera* camera) {
+  GLuint const program = (GLuint)_BkShaderProgram_GetId(__BkShaderProgram);
+  glUseProgram(program);
+
+  struct BkMatrix4x4 const v = BkCamera_ViewMatrix(camera);
+  *out_pv = BkMatrix4x4_Mul_BkMatrix4x4(BkCamera_Projection(camera), &v);
+  *out_uni_mvp = glGetUniformLocation(program, "uni_mvp");
+}
+
 void _BkRender_Initialize(void) {
   // Initialize GLEW
   GLenum result = GLEW_OK;
@@ -106,29 +117,76 @@ void BkRender_SetPointSize(real size) {
 
 real BkRender_GetPointSize(void) { return __BkPointSize; }
 
-void BkRender_SetGridVisible(bool visible) { _BkGrid_SetVisible(visible); }
+// ~~~~~ Def(PUBLIC) ~~~~~
 
-bool BkRender_IsGridVisible(void) { return _BkGrid_IsVisible(); }
+void BkRender_Clear(void) {
+  static real const background[4] = {BK_REAL(0), BK_REAL(0), BK_REAL(0),
+                                     BK_REAL(1)};
+  static GLfloat const clear_depth = 1.0f;
 
-void BkRender_SetGridCellSize(real cell_size) {
-  _BkGrid_SetCellSize(cell_size);
+  glClearBufferfv(GL_COLOR, 0, background);
+  glClearBufferfv(GL_DEPTH, 0, &clear_depth);
 }
 
-real BkRender_GetGridCellSize(void) { return _BkGrid_GetCellSize(); }
+void BkRender_DrawScene(BkScene* scene, BkCamera* camera) {
+  BK_ASSERT(BK_ISNULL(scene));
+  BK_ASSERT(BK_ISNULL(camera));
 
-void BkRender_SetGizmoVisible(bool visible) { _BkGizmo_SetVisible(visible); }
+  if (BK_ISNULL(__BkShaderProgram)) {
+    return;
+  }
 
-bool BkRender_IsGizmoVisible(void) { return _BkGizmo_IsVisible(); }
+  if (!BK_ISNULL(__BkGpuCache)) {
+    _BkGpuCache_FlushDirty(__BkGpuCache);
+  }
 
-static void __BkRender_BindDefaultProgram(GLint* out_uni_mvp,
-                                          struct BkMatrix4x4* out_pv,
-                                          BkCamera* camera) {
-  GLuint const program = (GLuint)_BkShaderProgram_GetId(__BkShaderProgram);
-  glUseProgram(program);
+  GLint uni_mvp = -1;
+  struct BkMatrix4x4 pv;
+  __BkRender_BindDefaultProgram(&uni_mvp, &pv, camera);
 
-  struct BkMatrix4x4 const v = BkCamera_ViewMatrix(camera);
-  *out_pv = BkMatrix4x4_Mul_BkMatrix4x4(BkCamera_Projection(camera), &v);
-  *out_uni_mvp = glGetUniformLocation(program, "uni_mvp");
+  glPointSize((GLfloat)__BkPointSize);
+
+  size_t const cloud_count = BkScene_GetCloudCount(scene);
+  for (size_t i = 0; i < cloud_count; ++i) {
+    BkPointCloud* cloud = BkScene_GetCloud(scene, i);
+    struct BkMatrix4x4 const* model =
+        BkTransform_Matrix(BkPointCloud_GetTransform(cloud));
+    struct BkMatrix4x4 const pvm = BkMatrix4x4_Mul_BkMatrix4x4(&pv, model);
+
+    glUniformMatrix4fv(uni_mvp, 1, GL_TRUE, &(pvm.m11));
+
+    BkGpuPointCloud* gpu = _BkGpuCache_GetOrUpload(__BkGpuCache, cloud);
+    if (!BK_ISNULL(gpu)) {
+      _BkGpuPointCloud_Render(gpu);
+    }
+  }
+}
+
+void BkRender_DrawGrid(BkCamera* camera, real cell_size) {
+  BK_ASSERT(BK_ISNULL(camera));
+
+  if (BK_ISNULL(__BkShaderProgram)) {
+    return;
+  }
+
+  GLint uni_mvp = -1;
+  struct BkMatrix4x4 pv;
+  __BkRender_BindDefaultProgram(&uni_mvp, &pv, camera);
+  _BkGrid_Draw(&pv, (int)uni_mvp, cell_size);
+}
+
+void BkRender_DrawOrientationGizmo(BkCamera* camera) {
+  BK_ASSERT(BK_ISNULL(camera));
+
+  if (BK_ISNULL(__BkShaderProgram)) {
+    return;
+  }
+
+  GLint uni_mvp = -1;
+  struct BkMatrix4x4 pv;
+  __BkRender_BindDefaultProgram(&uni_mvp, &pv, camera);
+  (void)pv;
+  _BkGizmo_Draw(camera, (int)uni_mvp);
 }
 
 void BkRender_DrawAxes(BkCamera* camera, struct BkTransform* transform,
@@ -158,54 +216,4 @@ void BkRender_DrawAabb(BkCamera* camera, struct BkAABB const* aabb) {
   struct BkMatrix4x4 pv;
   __BkRender_BindDefaultProgram(&uni_mvp, &pv, camera);
   _BkDebugDraw_Aabb(&pv, (int)uni_mvp, aabb);
-}
-
-// ~~~~~ Def(PUBLIC) ~~~~~
-
-void BkRender(BkScene* scene, BkCamera* camera) {
-  static real const background[4] = {BK_REAL(0), BK_REAL(0), BK_REAL(0),
-                                     BK_REAL(1)};
-
-  BK_ASSERT(BK_ISNULL(scene));
-  BK_ASSERT(BK_ISNULL(camera));
-
-  if (!BK_ISNULL(__BkGpuCache)) {
-    _BkGpuCache_FlushDirty(__BkGpuCache);
-  }
-
-  static GLfloat const clear_depth = 1.0f;
-
-  glClearBufferfv(GL_COLOR, 0, background);
-  glClearBufferfv(GL_DEPTH, 0, &clear_depth);
-
-  GLuint const program = (GLuint)_BkShaderProgram_GetId(__BkShaderProgram);
-  glUseProgram(program);
-
-  struct BkMatrix4x4 const v = BkCamera_ViewMatrix(camera);
-  struct BkMatrix4x4 const pv =
-      BkMatrix4x4_Mul_BkMatrix4x4(BkCamera_Projection(camera), &v);
-
-  GLint const uni_mvp = glGetUniformLocation(program, "uni_mvp");
-
-  _BkGrid_Draw(&pv, (int)uni_mvp);
-
-  glPointSize((GLfloat)__BkPointSize);
-
-  size_t const cloud_count = BkScene_GetCloudCount(scene);
-  for (size_t i = 0; i < cloud_count; ++i) {
-    BkPointCloud* cloud = BkScene_GetCloud(scene, i);
-    struct BkMatrix4x4 const* model =
-        BkTransform_Matrix(BkPointCloud_GetTransform(cloud));
-    struct BkMatrix4x4 const pvm = BkMatrix4x4_Mul_BkMatrix4x4(&pv, model);
-
-    glUniformMatrix4fv(uni_mvp, 1, GL_TRUE, &(pvm.m11));
-
-    BkGpuPointCloud* gpu = _BkGpuCache_GetOrUpload(__BkGpuCache, cloud);
-    if (!BK_ISNULL(gpu)) {
-      _BkGpuPointCloud_Render(gpu);
-    }
-  }
-
-  // Corner orientation widget (after scene so it stays on top).
-  _BkGizmo_Draw(camera, (int)uni_mvp);
 }

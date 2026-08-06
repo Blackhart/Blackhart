@@ -10,7 +10,7 @@
  * that GPU copy.
  *
  * When a cloud leaves the scene, MarkDirty tags its GPU entry. The actual
- * free happens later in FlushDirty (usually at the start of BkRender), so
+ * free happens later in FlushDirty (usually at the start of DrawScene), so
  * it is safe to release the CPU cloud right after RemoveCloud.
  *
  * Internal only — created and owned by the renderer.

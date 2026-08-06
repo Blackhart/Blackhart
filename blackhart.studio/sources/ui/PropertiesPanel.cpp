@@ -11,11 +11,8 @@ namespace {
 
 bool g_aabb_draw = true;
 
-void DrawReadonlyFloat3(char const* label, float x, float y, float z) {
-  float v[3] = {x, y, z};
-  ImGui::BeginDisabled();
-  ImGui::InputFloat3(label, v, "%.3f");
-  ImGui::EndDisabled();
+void DrawXyzRow(float x, float y, float z) {
+  ImGui::Text("X: %.3f  Y: %.3f  Z: %.3f", x, y, z);
 }
 
 }  // namespace
@@ -62,10 +59,13 @@ bool PropertiesPanel_Draw(BkPointCloud* cloud) {
   ImGui::PopStyleColor();
   ImGui::Separator();
   ImGui::Spacing();
-  DrawReadonlyFloat3("Position", static_cast<float>(pos.x),
-                     static_cast<float>(pos.y), static_cast<float>(pos.z));
-  DrawReadonlyFloat3("Rotation", static_cast<float>(euler.x),
-                     static_cast<float>(euler.y), static_cast<float>(euler.z));
+  ImGui::TextUnformatted("Position:");
+  DrawXyzRow(static_cast<float>(pos.x), static_cast<float>(pos.y),
+             static_cast<float>(pos.z));
+  ImGui::Spacing();
+  ImGui::TextUnformatted("Orientation:");
+  DrawXyzRow(static_cast<float>(euler.x), static_cast<float>(euler.y),
+             static_cast<float>(euler.z));
 
   ImGui::Spacing();
   ImGui::Spacing();

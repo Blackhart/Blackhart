@@ -22,12 +22,11 @@ typedef struct __BkGridVertex {
 
 // ~~~~~ Def(INTERNAL) ~~~~~
 
-static bool __BkGridVisible = true;
-static real __BkGridCellSize = BK_REAL(1);
 static bool __BkGridDirty = true;
 static GLuint __BkGridVao = 0;
 static GLuint __BkGridVbo = 0;
 static GLsizei __BkGridVertexCount = 0;
+static real __BkGridCellSize = BK_REAL(1);
 
 static real const __BK_GRID_CELL_SIZE_MIN = BK_REAL(0.01);
 static real const __BK_GRID_EXTENT = BK_REAL(10);
@@ -132,27 +131,15 @@ void _BkGrid_Initialize(void) { __BkGridDirty = true; }
 
 void _BkGrid_Uninitialize(void) { __BkGrid_DestroyMesh(); }
 
-void _BkGrid_SetVisible(bool visible) { __BkGridVisible = visible; }
+void _BkGrid_Draw(struct BkMatrix4x4 const* pv, int uni_mvp, real cell_size) {
+  BK_ASSERT(BK_ISNULL(pv));
 
-bool _BkGrid_IsVisible(void) { return __BkGridVisible; }
-
-void _BkGrid_SetCellSize(real cell_size) {
   if (cell_size < __BK_GRID_CELL_SIZE_MIN) {
     cell_size = __BK_GRID_CELL_SIZE_MIN;
   }
   if (cell_size != __BkGridCellSize) {
     __BkGridCellSize = cell_size;
     __BkGridDirty = true;
-  }
-}
-
-real _BkGrid_GetCellSize(void) { return __BkGridCellSize; }
-
-void _BkGrid_Draw(struct BkMatrix4x4 const* pv, int uni_mvp) {
-  BK_ASSERT(BK_ISNULL(pv));
-
-  if (!__BkGridVisible) {
-    return;
   }
 
   if (__BkGridDirty || __BkGridVao == 0) {
