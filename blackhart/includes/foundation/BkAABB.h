@@ -58,6 +58,15 @@ extern BK_API struct BkAABB BkAABB_FromPoints(struct BkPoint3 const* points,
                                               size_t const count);
 
 /**
+ * @brief Expands @p aabb so that it contains @p point.
+ *
+ * @param aabb Box to expand. Must not be NULL.
+ * @param point Point to include. Must not be NULL.
+ */
+extern BK_API void BkAABB_IncludePoint(struct BkAABB* aabb,
+                                       struct BkPoint3 const* point);
+
+/**
  * @brief Returns the center of the box (midpoint of min and max).
  */
 extern BK_API struct BkPoint3 BkAABB_Center(struct BkAABB const* aabb);

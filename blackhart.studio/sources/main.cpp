@@ -86,7 +86,9 @@ int main() {
   glfwSetScrollCallback(window, ScrollCallback);
   glfwSetWindowSizeCallback(window, ResizeCallback);
 
-  glfwSwapInterval(1);
+  // Uncapped by default so large clouds show real cost (toolbar can re-enable
+  // VSync).
+  glfwSwapInterval(0);
 
   // ~~~~~ BLACKHART INITIALIZATION ~~~~~
 
@@ -126,7 +128,7 @@ int main() {
     float const toolbar_h = Studio::Toolbar_Draw();
     g_assets.Draw();
     BkPointCloud* const selected = Studio::ScenePanel_GetSelectedCloud(g_scene);
-    bool const aabb_draw = Studio::PropertiesPanel_Draw(selected);
+    bool const aabb_draw = Studio::PropertiesPanel_Draw(selected, &g_camera);
     Studio::ViewportPanel_Draw(toolbar_h, Studio::kSidebarWidth,
                                Studio::kRightSidebarWidth, &g_viewport);
 
@@ -158,7 +160,7 @@ int main() {
       BkRender_DrawScene(g_scene, &(g_camera.base));
 
       if (selected != nullptr) {
-        struct BkAABB const world = BkPointCloud_GetWorldAABB(selected);
+        struct BkAABB const world = BkPointCloud_GetAABB(selected);
         struct BkVector3 const size = BkAABB_Size(&world);
         real axis_len = BkVector3_Magnitude(&size) * BK_REAL(0.25);
         if (axis_len < BK_REAL(0.05)) {
@@ -214,7 +216,8 @@ void InputCallback(GLFWwindow* window, int key, int scancode, int action,
 
 void MouseCallback(GLFWwindow* window, double posx, double posy) {
   static double last_mouse_pos[2] = {0.0, 0.0};
-  static double rotation_speed = 20.0;
+  // Degrees per pixel (previously 20 * dt @ 60 Hz ≈ 0.33).
+  static double rotation_speed = 0.35;
   static bool orbiting = false;
 
   bool const left_down =
@@ -228,10 +231,10 @@ void MouseCallback(GLFWwindow* window, double posx, double posy) {
   }
 
   if (orbiting) {
-    double yaw =
-        (posx - last_mouse_pos[0]) * rotation_speed * BkTime_DeltaTime();
-    double pitch =
-        (posy - last_mouse_pos[1]) * rotation_speed * BkTime_DeltaTime();
+    // Mouse delta is already screen-space displacement; do not scale by
+    // DeltaTime (that made orbit feel weaker at high uncapped FPS).
+    double const yaw = (posx - last_mouse_pos[0]) * rotation_speed;
+    double const pitch = (posy - last_mouse_pos[1]) * rotation_speed;
     BkOrbitalCamera_Rotate(&g_camera, BK_REAL(yaw), BK_REAL(pitch));
   }
 

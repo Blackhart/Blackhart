@@ -71,6 +71,8 @@ void ImGuiLayer_Init(GLFWwindow* window) {
 
   ImGuiIO& io = ImGui::GetIO();
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+  // Click a DragFloat without moving → text input (drag still scrubs).
+  io.ConfigDragClickToInputText = true;
 
   // Chain with callbacks already installed by the studio (mouse / keys).
   ImGui_ImplGlfw_InitForOpenGL(window, true);

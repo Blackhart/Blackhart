@@ -15,7 +15,8 @@
 struct BkPointCloud {
   BkArray* points;
   BkArray* colors; /**< NULL when the PLY had no RGB. */
-  BkAABB aabb;
+  BkAABB aabb; /**< World-space AABB (cached). */
+  bool aabb_dirty;
   struct BkTransform transform;
 };
 
@@ -72,7 +73,7 @@ BkPointCloud* BkPointCloud_CreateFromPlyFile(char const* filename) {
     pts[i].z -= center.z;
   }
 
-  pointCloud->aabb = BkAABB_FromPoints(pts, count);
+  pointCloud->aabb_dirty = true;
   BkTransform_Initialize(&pointCloud->transform);
   BkTransform_SetPosition(&pointCloud->transform, &center);
   return pointCloud;
@@ -126,33 +127,33 @@ BkColor3 const* BkPointCloud_GetColors(BkPointCloud const* pointCloud) {
   return (BkColor3 const*)BkArray_Data(pointCloud->colors);
 }
 
-BkAABB BkPointCloud_GetAABB(BkPointCloud const* pointCloud) {
-  BK_ASSERT(BK_ISNULL(pointCloud));
-  return pointCloud->aabb;
-}
-
-BkAABB BkPointCloud_GetWorldAABB(BkPointCloud* pointCloud) {
+BkAABB BkPointCloud_GetAABB(BkPointCloud* pointCloud) {
   BK_ASSERT(BK_ISNULL(pointCloud));
 
-  struct BkMatrix4x4 const* model = BkTransform_Matrix(&pointCloud->transform);
-  BkAABB const* local = &pointCloud->aabb;
-
-  struct BkPoint3 corners[8] = {
-      {local->min.x, local->min.y, local->min.z},
-      {local->max.x, local->min.y, local->min.z},
-      {local->min.x, local->max.y, local->min.z},
-      {local->max.x, local->max.y, local->min.z},
-      {local->min.x, local->min.y, local->max.z},
-      {local->max.x, local->min.y, local->max.z},
-      {local->min.x, local->max.y, local->max.z},
-      {local->max.x, local->max.y, local->max.z},
-  };
-
-  for (size_t i = 0; i < 8; ++i) {
-    corners[i] = BkMatrix4x4_Mul_BkPoint3(model, &corners[i]);
+  if (!pointCloud->aabb_dirty) {
+    return pointCloud->aabb;
   }
 
-  return BkAABB_FromPoints(corners, 8);
+  size_t const count = BkPointCloud_GetCount(pointCloud);
+  BkPoint3 const* points = BkPointCloud_GetPoints(pointCloud);
+  if (count == 0 || BK_ISNULL(points)) {
+    pointCloud->aabb = BkAABB_Zero();
+    pointCloud->aabb_dirty = false;
+    return pointCloud->aabb;
+  }
+
+  struct BkMatrix4x4 const* model = BkTransform_Matrix(&pointCloud->transform);
+  struct BkPoint3 world = BkMatrix4x4_Mul_BkPoint3(model, &points[0]);
+  struct BkAABB aabb = BkAABB_FromMinMax(&world, &world);
+
+  for (size_t i = 1; i < count; ++i) {
+    world = BkMatrix4x4_Mul_BkPoint3(model, &points[i]);
+    BkAABB_IncludePoint(&aabb, &world);
+  }
+
+  pointCloud->aabb = aabb;
+  pointCloud->aabb_dirty = false;
+  return pointCloud->aabb;
 }
 
 struct BkTransform* BkPointCloud_GetTransform(BkPointCloud* pointCloud) {
@@ -165,6 +166,7 @@ void BkPointCloud_SetPosition(BkPointCloud* pointCloud,
   BK_ASSERT(BK_ISNULL(pointCloud));
   BK_ASSERT(BK_ISNULL(position));
   BkTransform_SetPosition(&pointCloud->transform, position);
+  pointCloud->aabb_dirty = true;
 }
 
 void BkPointCloud_SetOrientation(BkPointCloud* pointCloud,
@@ -172,4 +174,5 @@ void BkPointCloud_SetOrientation(BkPointCloud* pointCloud,
   BK_ASSERT(BK_ISNULL(pointCloud));
   BK_ASSERT(BK_ISNULL(orientation));
   BkTransform_SetOrientation(&pointCloud->transform, orientation);
+  pointCloud->aabb_dirty = true;
 }

@@ -12,7 +12,7 @@ void FrameCameraOn(BkPointCloud* cloud, BkOrbitalCamera* camera,
     return;
   }
 
-  struct BkAABB const aabb = BkPointCloud_GetWorldAABB(cloud);
+  struct BkAABB const aabb = BkPointCloud_GetAABB(cloud);
   struct BkPoint3 const target = BkAABB_Center(&aabb);
   struct BkVector3 const size = BkAABB_Size(&aabb);
   real const bounding_sphere_radius = BkVector3_Magnitude(&size) * BK_REAL(0.5);
@@ -22,6 +22,16 @@ void FrameCameraOn(BkPointCloud* cloud, BkOrbitalCamera* camera,
 
   BkOrbitalCamera_SetTarget(camera, &target);
   BkOrbitalCamera_SetRadius(camera, radius);
+}
+
+void TrackCameraOn(BkPointCloud* cloud, BkOrbitalCamera* camera) {
+  if (cloud == nullptr || camera == nullptr) {
+    return;
+  }
+
+  struct BkAABB const aabb = BkPointCloud_GetAABB(cloud);
+  struct BkPoint3 const target = BkAABB_Center(&aabb);
+  BkOrbitalCamera_SetTarget(camera, &target);
 }
 
 }  // namespace Studio

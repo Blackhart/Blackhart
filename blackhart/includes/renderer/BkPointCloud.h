@@ -10,11 +10,10 @@
  * from a PLY file), read them with getters if needed, and add the cloud to a
  * BkScene so the renderer can draw it.
  *
- * On load, points are recentered so the local origin sits at the AABB center.
- * The model transform's position is set to that center, so the cloud appears
- * in the same place in world space as in the file. Orientation starts as
- * identity. GetAABB returns local (centered) bounds; GetWorldAABB applies the
- * transform.
+ * On load, points are recentered so the local origin sits at the file AABB
+ * center. The model transform's position is set to that center, so the cloud
+ * appears in the same place in world space as in the file. Orientation starts
+ * as identity. GetAABB always returns the world-space axis-aligned bounds.
  *
  * Colors are optional: PLY files without red/green/blue leave GetColors NULL.
  * The GPU upload then uses white for every point.
@@ -69,9 +68,10 @@ typedef struct BkPointCloud BkPointCloud;
  * @brief Creates a point cloud from a PLY file.
  *
  * Loads vertex positions (and optional RGB colors), recenters points on the
- * AABB center, and places the model transform at that center so the world
- * pose matches the file. Returns NULL if the path is invalid, the file cannot
- * be read, or the PLY content is not usable. Does not abort on bad input.
+ * file AABB center, and places the model transform at that center so the
+ * world pose matches the file. Returns NULL if the path is invalid, the file
+ * cannot be read, or the PLY content is not usable. Does not abort on bad
+ * input.
  *
  * @param filename Path to the PLY file to load.
  * @return New point cloud handle, or NULL on failure.
@@ -122,25 +122,16 @@ extern BK_API BkColor3 const* BkPointCloud_GetColors(
     BkPointCloud const* pointCloud);
 
 /**
- * @brief Returns the local axis-aligned bounds of the cloud.
- *
- * Computed once when the cloud is created. Corners are in the cloud's local
- * space (no model transform applied).
- *
- * @param pointCloud Point cloud to query. Must not be NULL.
- */
-extern BK_API BkAABB BkPointCloud_GetAABB(BkPointCloud const* pointCloud);
-
-/**
  * @brief Returns the world-space AABB of the cloud.
  *
- * Transforms the eight corners of the local AABB by the model matrix, then
- * rebuilds an axis-aligned box. Non-const because the transform may rebuild
- * its cached matrix.
+ * Axis-aligned to world axes. Transforms model-space points by the model
+ * matrix, then builds the box via BkAABB_IncludePoint. Cached until
+ * SetPosition / SetOrientation. Non-const because the transform may rebuild
+ * its matrix and the AABB cache may refresh.
  *
  * @param pointCloud Point cloud to query. Must not be NULL.
  */
-extern BK_API BkAABB BkPointCloud_GetWorldAABB(BkPointCloud* pointCloud);
+extern BK_API BkAABB BkPointCloud_GetAABB(BkPointCloud* pointCloud);
 
 /**
  * @brief Returns the cloud's model transform (position + orientation).

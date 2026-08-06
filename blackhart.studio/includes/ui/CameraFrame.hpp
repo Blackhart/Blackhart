@@ -17,6 +17,12 @@ namespace Studio {
 void FrameCameraOn(BkPointCloud* cloud, BkOrbitalCamera* camera,
                    real camera_fov_deg, real frame_margin);
 
+/**
+ * Moves the orbital target to the cloud's world AABB center without changing
+ * radius or orientation angles.
+ */
+void TrackCameraOn(BkPointCloud* cloud, BkOrbitalCamera* camera);
+
 }  // namespace Studio
 
 #endif

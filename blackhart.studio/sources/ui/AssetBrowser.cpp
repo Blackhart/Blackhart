@@ -14,7 +14,11 @@ namespace Studio {
 
 AssetBrowser::CatalogEntry const AssetBrowser::kCatalog[] = {
     {"Stanford Bunny", "bunny.ply"},
-    {"Colored Fragment", "frag_colored.ply"},
+    {"Stanford Dragon", "dragon.ply"},
+    {"Stanford Happy Buddha", "happy.ply"},
+    {"Stanford Armadillo", "armadillo.ply"},
+    {"Stanford Drill", "drill.ply"},
+    {"Colored Eagle", "eagle_large.ply"},
 };
 
 int const AssetBrowser::kCatalogCount =
@@ -246,7 +250,7 @@ void AssetBrowser::DrawContents() {
 
       struct BkAABB const aabb = BkPointCloud_GetAABB(details);
       ImGui::Spacing();
-      ImGui::Text("Bounds");
+      ImGui::Text("AABB");
       ImGui::Text("  min  %.3f  %.3f  %.3f", (float)aabb.min.x,
                   (float)aabb.min.y, (float)aabb.min.z);
       ImGui::Text("  max  %.3f  %.3f  %.3f", (float)aabb.max.x,

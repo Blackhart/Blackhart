@@ -14,7 +14,7 @@ struct ToolbarViewportHelpers {
 void Toolbar_Update();
 
 /**
- * Draws the top toolbar (point size + helper toggles + FPS).
+ * Draws the top toolbar (point size + helper toggles + FPS/ms).
  * @return Toolbar height in pixels (for placing other panels below).
  */
 float Toolbar_Draw();

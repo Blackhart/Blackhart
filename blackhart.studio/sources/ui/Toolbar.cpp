@@ -16,6 +16,7 @@ double g_previous_seconds = 0.0;
 int g_frame_count = 0;
 float g_fps = 0.0f;
 float g_ms_per_frame = 0.0f;
+bool g_vsync = false;
 
 ToolbarViewportHelpers g_helpers = {};
 
@@ -90,7 +91,7 @@ float Toolbar_Draw() {
   float point_size = static_cast<float>(BkRender_GetPointSize());
   bool point_changed = false;
 
-  float const center_block_w = 640.0f;
+  float const center_block_w = 720.0f;
   float const center_x = (bar_w - center_block_w) * 0.5f;
   ImGui::SetCursorPos(ImVec2(center_x, row_y));
 
@@ -121,13 +122,19 @@ float Toolbar_Draw() {
   Toolbar_VerticalSep();
   ImGui::Checkbox("Axes", &g_helpers.orientation_gizmo_visible);
 
+  Toolbar_VerticalSep();
+  if (ImGui::Checkbox("VSync", &g_vsync)) {
+    glfwSwapInterval(g_vsync ? 1 : 0);
+  }
+
   if (point_changed) {
     BkRender_SetPointSize(static_cast<real>(point_size));
   }
 
-  // Right — FPS
-  char fps_buf[48];
-  std::snprintf(fps_buf, sizeof(fps_buf), "FPS %.0f", g_fps);
+  // Right — FPS + frame time
+  char fps_buf[64];
+  std::snprintf(fps_buf, sizeof(fps_buf), "FPS %.0f  %.1f ms", g_fps,
+                g_ms_per_frame);
   float const fps_w = ImGui::CalcTextSize(fps_buf).x;
   ImGui::SetCursorPos(
       ImVec2(bar_w - fps_w - ImGui::GetStyle().WindowPadding.x, row_y + 4.0f));

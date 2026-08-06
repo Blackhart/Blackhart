@@ -24,26 +24,28 @@ struct BkAABB BkAABB_FromMinMax(struct BkPoint3 const* min,
   return aabb;
 }
 
+void BkAABB_IncludePoint(struct BkAABB* aabb, struct BkPoint3 const* point) {
+  BK_ASSERT(BK_ISNULL(aabb));
+  BK_ASSERT(BK_ISNULL(point));
+
+  aabb->min.x = BkMath_Min(point->x, aabb->min.x);
+  aabb->min.y = BkMath_Min(point->y, aabb->min.y);
+  aabb->min.z = BkMath_Min(point->z, aabb->min.z);
+  aabb->max.x = BkMath_Max(point->x, aabb->max.x);
+  aabb->max.y = BkMath_Max(point->y, aabb->max.y);
+  aabb->max.z = BkMath_Max(point->z, aabb->max.z);
+}
+
 struct BkAABB BkAABB_FromPoints(struct BkPoint3 const* points,
                                 size_t const count) {
   if (BK_ISNULL(points) || count == 0) {
     return BkAABB_Zero();
   }
 
-  struct BkAABB aabb;
-  aabb.min = BkPoint3_Copy(&points[0]);
-  aabb.max = BkPoint3_Copy(&points[0]);
-
+  struct BkAABB aabb = BkAABB_FromMinMax(&points[0], &points[0]);
   for (size_t i = 1; i < count; ++i) {
-    struct BkPoint3 const* p = &points[i];
-    aabb.min.x = BkMath_Min(p->x, aabb.min.x);
-    aabb.min.y = BkMath_Min(p->y, aabb.min.y);
-    aabb.min.z = BkMath_Min(p->z, aabb.min.z);
-    aabb.max.x = BkMath_Max(p->x, aabb.max.x);
-    aabb.max.y = BkMath_Max(p->y, aabb.max.y);
-    aabb.max.z = BkMath_Max(p->z, aabb.max.z);
+    BkAABB_IncludePoint(&aabb, &points[i]);
   }
-
   return aabb;
 }
 

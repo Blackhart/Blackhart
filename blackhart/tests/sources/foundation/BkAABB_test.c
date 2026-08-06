@@ -16,6 +16,7 @@ void BkAABB_RunTests(void) {
   RUN_TEST(BkAABB_FromMinMax_test);
   RUN_TEST(BkAABB_FromPoints_test);
   RUN_TEST(BkAABB_FromPoints_Empty_test);
+  RUN_TEST(BkAABB_IncludePoint_test);
   RUN_TEST(BkAABB_Center_test);
   RUN_TEST(BkAABB_Size_test);
   RUN_TEST(BkAABB_Union_test);
@@ -65,6 +66,21 @@ void BkAABB_FromPoints_Empty_test(void) {
   struct BkAABB aabb = BkAABB_FromPoints(NULL, 0);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.x, (float)0.0);
   TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.x, (float)0.0);
+}
+
+void BkAABB_IncludePoint_test(void) {
+  struct BkPoint3 p0 = BkPoint3_FromXYZ(BK_REAL(1), BK_REAL(1), BK_REAL(1));
+  struct BkAABB aabb = BkAABB_FromMinMax(&p0, &p0);
+
+  struct BkPoint3 p1 = BkPoint3_FromXYZ(BK_REAL(-2), BK_REAL(3), BK_REAL(0));
+  BkAABB_IncludePoint(&aabb, &p1);
+
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.x, (float)-2.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.y, (float)1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.min.z, (float)0.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.x, (float)1.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.y, (float)3.0);
+  TEST_ASSERT_FLOAT_WITHIN(ERROR_LIMIT, (float)aabb.max.z, (float)1.0);
 }
 
 void BkAABB_Center_test(void) {
