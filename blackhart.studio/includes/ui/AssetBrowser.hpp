@@ -1,6 +1,8 @@
 #ifndef __BK_STUDIO_ASSET_BROWSER_HPP__
 #define __BK_STUDIO_ASSET_BROWSER_HPP__
 
+#include <vector>
+
 extern "C" {
 #include "foundation/BkAtomicDataType.h"
 }
@@ -20,21 +22,28 @@ class AssetBrowser {
   /** Draws the left sidebar (Assets | Scene tabs). */
   void Draw();
 
-  BkPointCloud* LoadedCloud() const { return loaded_; }
-
  private:
   struct CatalogEntry {
     char const* name;
     char const* filename;
   };
 
+  struct LoadedEntry {
+    int catalog_index = -1;
+    BkPointCloud* cloud = nullptr;
+  };
+
   void DrawContents();
   void Select(int index);
   void LoadSelected();
-  void UnloadLoaded();
+  void UnloadSelected();
+  void UnloadAll();
   void ReleaseInspected();
-  void FrameCameraOn(BkPointCloud* cloud);
   void BuildAbsolutePath(char const* filename);
+
+  LoadedEntry* FindLoaded(int catalog_index);
+  LoadedEntry const* FindLoaded(int catalog_index) const;
+  bool IsCatalogLoaded(int catalog_index) const;
 
   static CatalogEntry const kCatalog[];
   static int const kCatalogCount;
@@ -45,9 +54,8 @@ class AssetBrowser {
   real camera_frame_margin_ = BK_REAL(1.25);
 
   int selected_index_ = -1;
-  int loaded_index_ = -1;
   BkPointCloud* inspected_ = nullptr;
-  BkPointCloud* loaded_ = nullptr;
+  std::vector<LoadedEntry> loaded_;
 
   char absolute_path_[1024] = {};
   char status_[256] = {};

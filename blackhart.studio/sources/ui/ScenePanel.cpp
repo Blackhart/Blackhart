@@ -5,6 +5,7 @@
 #include <cstdio>
 
 #include "../../blackhart/export/cpp/Blackhart.hpp"
+#include "ui/CameraFrame.hpp"
 
 namespace Studio {
 
@@ -14,11 +15,12 @@ int g_selected_index = -1;
 
 }  // namespace
 
-void ScenePanel_Draw(BkScene* scene) {
+void ScenePanel_Draw(BkScene* scene, BkOrbitalCamera* camera,
+                     real camera_fov_deg, real camera_frame_margin) {
   size_t const count = (scene != nullptr) ? BkScene_GetCloudCount(scene) : 0;
 
   if (g_selected_index >= 0 && static_cast<size_t>(g_selected_index) >= count) {
-    g_selected_index = (count > 0) ? static_cast<int>(count) - 1 : -1;
+    g_selected_index = (count > 0) ? 0 : -1;
   }
 
   ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.55f, 0.57f, 0.60f, 1.00f));
@@ -44,6 +46,7 @@ void ScenePanel_Draw(BkScene* scene) {
     bool const selected = (static_cast<int>(i) == g_selected_index);
     if (ImGui::Selectable(label, selected)) {
       g_selected_index = static_cast<int>(i);
+      FrameCameraOn(cloud, camera, camera_fov_deg, camera_frame_margin);
     }
 
     ImGui::SameLine();
@@ -64,6 +67,23 @@ BkPointCloud* ScenePanel_GetSelectedCloud(BkScene* scene) {
   }
 
   return BkScene_GetCloud(scene, static_cast<size_t>(g_selected_index));
+}
+
+void ScenePanel_SelectCloud(BkScene* scene, BkPointCloud* cloud) {
+  if (scene == nullptr || cloud == nullptr) {
+    g_selected_index = -1;
+    return;
+  }
+
+  size_t const count = BkScene_GetCloudCount(scene);
+  for (size_t i = 0; i < count; ++i) {
+    if (BkScene_GetCloud(scene, i) == cloud) {
+      g_selected_index = static_cast<int>(i);
+      return;
+    }
+  }
+
+  g_selected_index = -1;
 }
 
 }  // namespace Studio
